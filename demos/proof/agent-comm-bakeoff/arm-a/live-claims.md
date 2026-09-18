@@ -20,3 +20,9 @@ Kill: one-leg fill, book wipe, API lag, stop-loss.
 Roles: Scout→Arbiter→Executor; dual-limit simultaneous legs only.
 
 **Wakes to reach this:** 9 (3 rounds × 3 agents)
+
+## Researcher (r2)
+Require fresh CEX BTC mid as fair-value feed; kill if CEX or cross-feed lag exceeds SLA.
+
+## Researcher (r3)
+Kill if <60s to resolution AND book depth at target price below min USDC — no size-down, no chase.

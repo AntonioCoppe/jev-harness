@@ -45,3 +45,11 @@ On the same design task, gated who-speaks cuts **planned** wakes by **two-thirds
 
 - `arm-a/` — PROTOCOL, metrics, wake-schedule, design, live-wakes
 - `arm-b/` — metrics, rounds.jsonl, wake-queue, transcript, runner
+
+## Design quality (side observation)
+
+Both arms converged on Scout→Judge/Arbiter→Executor with fee/depth/time kills.
+
+**Arm B distinctive:** explicitly splits **code-owned** book/limit checks from **Jev-owned** place-vs-skip confidence gate — matches jev-harness thesis (System One decides, code controls).
+
+**Arm A distinctive:** stronger emphasis on independent CEX mid fair-value SLA (Researcher r2).

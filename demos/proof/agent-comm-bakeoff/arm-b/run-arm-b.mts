@@ -1,13 +1,9 @@
 /**
- * Arm B coordinator: Jev who-speaks-next gate → wake ONLY chosen speaker.
- * SendToAgent is unavailable in this executor; emits WAKE lines for parent.
+ * Arm B: live Jev who-speaks-next → wake ONLY chosen speaker (parent fires SendToAgent).
  */
-import { appendFileSync, mkdirSync, writeFileSync } from "fs";
+import { appendFileSync, writeFileSync } from "fs";
 import { DecisionHarness } from "../../../../src/index.js";
 import { runWhoSpeaksNext } from "../../../../recipes/agent-comm-harness/who-speaks-next.js";
-
-const OUT = new URL("./", import.meta.url);
-mkdirSync(OUT, { recursive: true });
 
 const TASK =
   "Design a 3-agent pipeline that monitors Polymarket BTC 15m markets and decides whether to place a small arb. Output: roles, decision gates, kill criteria. Keep it concrete.";
@@ -15,30 +11,32 @@ const TASK =
 const AGENTS = [
   {
     id: "researcher",
-    role: "Gather market structure, fees/slippage, timing constraints",
+    description:
+      "Harness Researcher — gather Polymarket BTC 15m microstructure, fees, slippage, timing",
     serverId: "3966998",
     uuid: "f5732640-a55c-4edc-94ef-4254e4837634",
     name: "Harness Researcher",
   },
   {
     id: "critic",
-    role: "Attack false-arb assumptions and risk gaps",
+    description:
+      "Harness Critic — attack false-arb assumptions, missing gates/kills, risk gaps",
     serverId: "3967000",
     uuid: "c4b09365-a392-41d3-b130-db1e4435a5d1",
     name: "Harness Critic",
   },
   {
     id: "synthesizer",
-    role: "Merge claims into concrete roles/gates/kills; done yes|no",
+    description:
+      "Harness Synthesizer — merge into concrete roles, decision gates, kill criteria; say done yes|no",
     serverId: "3967001",
     uuid: "f455e857-22fa-4f2b-8ea1-91caf8069263",
     name: "Harness Synthesizer",
   },
 ] as const;
 
-type RoleId = (typeof AGENTS)[number]["id"];
+type RoleId = "researcher" | "critic" | "synthesizer";
 
-/** Coordinator stand-in utterances so Jev sees progressive state (SendToAgent replies may arrive async via parent). */
 const PROXY: Record<RoleId, string[]> = {
   researcher: [
     "BTC 15m Polymarket is a short-window binary. Arb = buy YES+NO when ask sum < 1−fees−buffer, or sell when bid sum > 1+fees+buffer. Need live book + spot + fee schedule; latency and window-end risk dominate. claim: scout emits yes/no asks+bids + t_rem + fees every few seconds.",
@@ -66,11 +64,7 @@ const PROXY: Record<RoleId, string[]> = {
   ],
 };
 
-const proxyIdx: Record<RoleId, number> = {
-  researcher: 0,
-  critic: 0,
-  synthesizer: 0,
-};
+const proxyIdx: Record<RoleId, number> = { researcher: 0, critic: 0, synthesizer: 0 };
 
 function proxyClaim(role: RoleId): string {
   const list = PROXY[role];
@@ -83,55 +77,43 @@ function isAgent(id: string): id is RoleId {
   return id === "researcher" || id === "critic" || id === "synthesizer";
 }
 
-function phaseFallback(round: number, open: string[]): RoleId {
-  // Prefer researcher early, critic mid, synthesizer late — only if Jev returns none/user/review
+function phaseFallback(round: number): RoleId {
   if (round <= 2) return "researcher";
-  if (round <= 4) return open.some((q) => /risk|kill|false/i.test(q))
-    ? "critic"
-    : "synthesizer";
+  if (round <= 4) return "critic";
   return "synthesizer";
 }
 
 const harness = new DecisionHarness({ logger: false });
-const roundsPath = new URL("./rounds.jsonl", OUT);
-const wakePath = new URL("./wake-queue.jsonl", OUT);
+const roundsPath = new URL("./rounds.jsonl", import.meta.url);
+const wakePath = new URL("./wake-queue.jsonl", import.meta.url);
 writeFileSync(roundsPath, "");
 writeFileSync(wakePath, "");
 
 const transcript: string[] = [
-  "coordinator: Arm B start. Fixed task — need roles, decision gates, kill criteria.",
+  "coordinator: Arm B start. Fixed task — need roles, decision gates, kill criteria. Prefer researcher first.",
 ];
-const openQuestions = [
-  "What are the three concrete agent roles?",
-  "What decision gates must pass before a small arb PLACE?",
-  "What kill criteria abort/disable the pipeline?",
-];
-let whoLast: string | null = null;
+let whoLast: string | undefined;
 const wakeLines: string[] = [];
 const wallSamples: number[] = [];
 let plannedWakes = 0;
 let fallbackCount = 0;
-
-const started = new Date().toISOString();
+let jevAgentPicks = 0;
 
 for (let round = 1; round <= 6; round++) {
   const state = {
     goal: TASK,
-    agents: AGENTS.map((a) => ({ id: a.id, role: a.role })),
-    transcript_tail: transcript.slice(-8),
-    current_speaker: whoLast ?? undefined,
-    open_questions: openQuestions,
-    round,
-    who_spoke_last: whoLast,
-    instruction:
-      "Pick exactly one of researcher|critic|synthesizer when the group still lacks a complete concrete design; pick none only if done; prefer the specialist who unblocks open questions.",
+    agents: AGENTS.map((a) => ({ id: a.id, description: a.description })),
+    transcript: transcript.slice(-10),
+    current_speaker: whoLast,
+    context: `Round ${round}/6 of bakeoff Arm B. Human is NOT needed — pick a specialist agent. Open: roles?, gates?, kills? Prefer researcher early, critic for risk holes, synthesizer to merge/finish.`,
   };
 
   const t0 = performance.now();
   const result = await runWhoSpeaksNext(harness, state, {
     id: `arm-b-r${round}`,
     mode: "live",
-    minConfidence: 0.4,
+    minConfidence: 0.45,
+    onLowConfidence: "proceed",
   });
   const wall_ms = Math.round(performance.now() - t0);
   wallSamples.push(wall_ms);
@@ -140,59 +122,37 @@ for (let round = 1; round <= 6; round++) {
   let chosen = String(result.action);
   let selectionSource: "jev" | "jev_intended" | "phase_fallback" = "jev";
 
-  if (chosen === "review") {
+  if (!isAgent(chosen)) {
     const intended = String(result.intendedAction);
+    const pick = String(answers?.next_speaker?.choice);
     if (isAgent(intended)) {
       chosen = intended;
       selectionSource = "jev_intended";
-    } else if (isAgent(String(answers?.next_speaker?.choice))) {
-      chosen = String(answers.next_speaker.choice);
+    } else if (isAgent(pick)) {
+      chosen = pick;
       selectionSource = "jev_intended";
     } else {
-      chosen = phaseFallback(round, openQuestions);
+      chosen = phaseFallback(round);
       selectionSource = "phase_fallback";
       fallbackCount += 1;
     }
-  } else if (chosen === "none" || chosen === "user" || chosen === "shadow_noop") {
-    // Still need one wake/round for bakeoff unless synthesizer already said done
-    const done = transcript.some((t) => /done:\s*yes/i.test(t));
-    if (!done) {
-      chosen = phaseFallback(round, openQuestions);
-      selectionSource = "phase_fallback";
-      fallbackCount += 1;
-    }
+  } else {
+    jevAgentPicks += 1;
   }
 
-  let wake_count = 0;
-  let wakeLine: string | null = null;
-  let agentMeta: (typeof AGENTS)[number] | null = null;
-  let utterance: string | null = null;
+  const agentMeta = AGENTS.find((a) => a.id === chosen)!;
+  plannedWakes += 1;
+  const wakeLine = `WAKE ${agentMeta.serverId} ${chosen}`;
+  wakeLines.push(wakeLine);
+  const utterance = proxyClaim(chosen);
+  transcript.push(
+    `${chosen} [wake_requested ${agentMeta.serverId}; proxy_until_live]: ${utterance}`,
+  );
+  whoLast = chosen;
 
-  if (isAgent(chosen)) {
-    agentMeta = AGENTS.find((a) => a.id === chosen)!;
-    wake_count = 1;
-    plannedWakes += 1;
-    wakeLine = `WAKE ${agentMeta.serverId} ${chosen}`;
-    wakeLines.push(wakeLine);
-    utterance = proxyClaim(chosen);
-    transcript.push(
-      `${chosen} [wake_requested serverId=${agentMeta.serverId}; proxy_until_live]: ${utterance}`,
-    );
-    whoLast = chosen;
-
-    // Update open questions lightly
-    if (chosen === "researcher" && round >= 1) {
-      openQuestions[0] = "Roles sketched — refine Scout tick schema?";
-    }
-    if (chosen === "critic") {
-      openQuestions[2] = "Kill criteria partially listed — any fatal gaps?";
-    }
-    if (chosen === "synthesizer" && /done:\s*yes/i.test(utterance)) {
-      openQuestions.length = 0;
-      openQuestions.push("Design complete — confirm freeze.");
-    }
-
-    const wakeRec = {
+  appendFileSync(
+    wakePath,
+    JSON.stringify({
       round,
       wake: wakeLine,
       agent_id: agentMeta.serverId,
@@ -202,42 +162,43 @@ for (let round = 1; round <= 6; round++) {
       priority: true,
       task: TASK,
       transcript_summary: transcript.slice(-4),
-      open_questions: [...openQuestions],
-      et: new Date().toLocaleString("en-US", { timeZone: "America/Toronto" }) + " ET",
-    };
-    appendFileSync(wakePath, JSON.stringify(wakeRec) + "\n");
-  } else {
-    transcript.push(`coordinator: Jev chose ${chosen} — no wake this round.`);
-  }
+      et:
+        new Date().toLocaleString("en-US", { timeZone: "America/Toronto" }) +
+        " ET",
+    }) + "\n",
+  );
 
-  const rec = {
-    round,
-    chosen,
-    selection_source: selectionSource,
-    confidence: result.confidence,
-    wall_ms,
-    wake_count,
-    wake: wakeLine,
-    agent_serverId: agentMeta?.serverId ?? null,
-    next_speaker_answer: answers?.next_speaker ?? null,
-    progress: answers?.progress ?? null,
-    needs_handoff: answers?.needs_handoff ?? null,
-    intendedAction: result.intendedAction,
-    action_raw: result.action,
-    reason: result.reason,
-    proxy_utterance: utterance,
-    who_spoke_last_after: whoLast,
-    open_questions: [...openQuestions],
-  };
-  appendFileSync(roundsPath, JSON.stringify(rec) + "\n");
+  appendFileSync(
+    roundsPath,
+    JSON.stringify({
+      round,
+      chosen,
+      selection_source: selectionSource,
+      confidence: result.confidence,
+      wall_ms,
+      wake_count: 1,
+      wake: wakeLine,
+      agent_serverId: agentMeta.serverId,
+      next_speaker_answer: answers?.next_speaker ?? null,
+      progress: answers?.progress ?? null,
+      needs_handoff: answers?.needs_handoff ?? null,
+      user_turn: answers?.user_turn ?? null,
+      intendedAction: result.intendedAction,
+      action_raw: result.action,
+      reason: result.reason,
+      proxy_utterance: utterance,
+    }) + "\n",
+  );
+
   console.log(
     JSON.stringify({
       round,
       chosen,
       selectionSource,
-      confidence: result.confidence,
+      confidence: Number(result.confidence.toFixed(3)),
       wall_ms,
       wake: wakeLine,
+      probs: answers?.next_speaker?.probabilities,
     }),
   );
 }
@@ -245,12 +206,6 @@ for (let round = 1; round <= 6; round++) {
 const sorted = [...wallSamples].sort((a, b) => a - b);
 const p50 = sorted[Math.floor((sorted.length - 1) / 2)]!;
 const armAPlanned = 18;
-const wakeReduction = {
-  arm_a_planned_wakes: armAPlanned,
-  arm_b_planned_wakes: plannedWakes,
-  absolute_reduction: armAPlanned - plannedWakes,
-  pct_reduction: Math.round(((armAPlanned - plannedWakes) / armAPlanned) * 1000) / 10,
-};
 
 const metrics = {
   arm: "B",
@@ -260,35 +215,52 @@ const metrics = {
   planned_wakes: plannedWakes,
   actual_wakes_sent: 0,
   wakes_via_parent: true,
-  wake_protocol: "Parent SendToAgent on WAKE <serverId> <role> lines",
+  wake_protocol: "Parent SendToAgent on WAKE <serverId> <role>",
   jev_selector_ms_p50: p50,
   jev_selector_ms_samples: wallSamples,
+  jev_agent_picks: jevAgentPicks,
   fallback_selections: fallbackCount,
-  vs_arm_a_wake_reduction: wakeReduction,
+  vs_arm_a_wake_reduction: {
+    arm_a_planned_wakes: armAPlanned,
+    arm_b_planned_wakes: plannedWakes,
+    absolute_reduction: armAPlanned - plannedWakes,
+    pct_reduction:
+      Math.round(((armAPlanned - plannedWakes) / armAPlanned) * 1000) / 10,
+  },
   wasted_speaker_estimate: 0,
   wasted_speaker_estimate_pct: 0,
   wasted_speaker_note:
-    "Gated: one speaker/round. Waste ≈ 0 relative to free-for-all redundant wakes; residual risk is wrong specialist once.",
-  started_et: started,
-  finished_et: new Date().toISOString(),
-  notes: [
-    "Live TypeSafe Jev via DecisionHarness + recipes/agent-comm-harness/who-speaks-next.ts",
-    "Executor cannot SendToAgent; parent fires wakes from WAKE lines / wake-queue.jsonl",
-    "proxy_utterance used for transcript continuity until live agent claims arrive",
-  ],
+    "Gated one speaker/round vs Arm A 3×6=18. Waste≈0 redundant wakes.",
+  finished_et:
+    new Date().toLocaleString("en-US", { timeZone: "America/Toronto" }) + " ET",
 };
 
-writeFileSync(new URL("./metrics.json", OUT), JSON.stringify(metrics, null, 2) + "\n");
 writeFileSync(
-  new URL("./wake-lines.txt", OUT),
-  wakeLines.join("\n") + (wakeLines.length ? "\n" : ""),
+  new URL("./metrics.json", import.meta.url),
+  JSON.stringify(metrics, null, 2) + "\n",
 );
 writeFileSync(
-  new URL("./transcript.md", OUT),
+  new URL("./wake-lines.txt", import.meta.url),
+  wakeLines.join("\n") + "\n",
+);
+writeFileSync(
+  new URL("./transcript.md", import.meta.url),
   ["# Arm B transcript", "", ...transcript.map((t) => `- ${t}`), ""].join("\n"),
 );
 
 console.log("---WAKES---");
 for (const w of wakeLines) console.log(w);
-console.log("---METRICS---");
-console.log(JSON.stringify(metrics, null, 2));
+console.log("---METRICS_SUMMARY---");
+console.log(
+  JSON.stringify(
+    {
+      planned_wakes: plannedWakes,
+      p50,
+      jev_agent_picks: jevAgentPicks,
+      fallback: fallbackCount,
+      reduction_pct: metrics.vs_arm_a_wake_reduction.pct_reduction,
+    },
+    null,
+    2,
+  ),
+);

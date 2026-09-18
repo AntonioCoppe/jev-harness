@@ -1,6 +1,6 @@
 WAKE 3966998 researcher
-WAKE 3966998 researcher
 WAKE 3967000 critic
-WAKE 3967000 critic
+WAKE 3967001 synthesizer
+WAKE 3967001 synthesizer
 WAKE 3967001 synthesizer
 WAKE 3967001 synthesizer
