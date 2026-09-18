@@ -1,0 +1,31 @@
+{
+  "arm": "A",
+  "mode": "free_for_all_all_wake",
+  "agents": 3,
+  "rounds": 6,
+  "planned_wakes": 18,
+  "actual_wakes_sent": 0,
+  "wakes_blocked": true,
+  "block_reason": "SendToAgent not in executor subagent tool surface; channel post also unavailable",
+  "wasted_speaker_estimate": 9,
+  "wasted_speaker_estimate_pct": 50,
+  "wasted_speaker_note": "Free-for-all control assumes ≥50% of wakes are agents with nothing new. Floor: ceil(18 * 0.5) = 9. Upper bound in practice often higher once synthesizer stabilizes mid-bakeoff.",
+  "cost_model": {
+    "equation": "wasted_speaker_turns ~= $ + wallclock",
+    "wake_tax_per_round": 3,
+    "selective_wake_counterfactual_per_round": "1..2 (Arm B gated)",
+    "estimated_excess_wakes_vs_gated": "≥6..12 across 6 rounds"
+  },
+  "wall_clock": {
+    "note": "No in-process replies collected (wakes not sent). Simulated schedule spacing: 30s/round × 6 = 180s nominal collect window.",
+    "simulated_first_wake_et": "2026-09-17 22:03:08 EDT",
+    "simulated_last_round_start_et": "2026-09-17 22:05:38 EDT",
+    "simulated_nominal_span_s": 180
+  },
+  "notes": [
+    "CONTROL arm: always wake all 3 agents every round — no Jev/TypeSafe/who-speaks-next.",
+    "SendToAgent unavailable; metrics reflect PLANNED free-for-all cost model rather than live reply collection.",
+    "design.md is coordinator synthesis of the fixed Polymarket BTC 15m arb pipeline so Arm A still yields a concrete comparable artifact.",
+    "Compare against Arm B wasted_speaker_estimate for same task/rounds."
+  ]
+}
