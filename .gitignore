@@ -1,13 +1,15 @@
-node_modules/
-dist/
-.env
-.env.local
-*.log
-.DS_Store
-coverage/
-*.tsbuildinfo
 
 # VitePress
-docs-site/.vitepress/dist
+*.log
+*.tsbuildinfo
+.DS_Store
+.env
+.env.local
+coverage/
+dist/
 docs-site/.vitepress/cache
+docs-site/.vitepress/dist
 docs-site/.vitepress/generated-sidebar.json
+docs/assets/marketing/_deprecated_designed_cards/
+docs/assets/marketing/proof/card-*.png
+node_modules/
