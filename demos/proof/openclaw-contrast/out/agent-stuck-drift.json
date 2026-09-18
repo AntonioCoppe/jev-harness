@@ -1,0 +1,72 @@
+{
+  "id": "agent-stuck-drift",
+  "label": "agent-stuck-drift",
+  "recipe": "recipes/verify-gate/agent-stuck-drift.ts",
+  "measured": "MEASURED_LIVE",
+  "wall_ms": 559,
+  "started_at": "2026-09-18T17:35:56.980Z",
+  "finished_at": "2026-09-18T17:35:57.538Z",
+  "n": 8,
+  "quality": {
+    "actions": {
+      "continue": 3,
+      "recover": 4,
+      "review": 1
+    },
+    "concurrency": 4,
+    "input_tokens": 4955,
+    "output_tokens": 921,
+    "per_case_avg_ms": 70
+  },
+  "items": [
+    {
+      "id": "asd01",
+      "goal": "Add rate limiting to the login endpoint",
+      "action": "continue",
+      "confidence": 0.5960000000000001
+    },
+    {
+      "id": "asd02",
+      "goal": "Fix flaky checkout test",
+      "action": "recover",
+      "confidence": 0.69
+    },
+    {
+      "id": "asd03",
+      "goal": "Migrate Redis client to ioredis",
+      "action": "recover",
+      "confidence": 0.8619999999999999
+    },
+    {
+      "id": "asd04",
+      "goal": "Ship feature X",
+      "action": "recover",
+      "confidence": 0.6739999999999999
+    },
+    {
+      "id": "asd05",
+      "goal": "Write integration test for webhook handler",
+      "action": "continue",
+      "confidence": 0.622
+    },
+    {
+      "id": "asd06",
+      "goal": "Remove dead code in utils/",
+      "action": "continue",
+      "confidence": 0.86
+    },
+    {
+      "id": "asd07",
+      "goal": "Implement OAuth callback",
+      "action": "recover",
+      "confidence": 0.622
+    },
+    {
+      "id": "asd08",
+      "goal": "Ambiguous large refactor",
+      "action": "review",
+      "confidence": 0.41
+    }
+  ],
+  "openclaw_map": "agent-stuck-drift"
+}

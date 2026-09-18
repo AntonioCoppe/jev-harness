@@ -1,0 +1,85 @@
+{
+  "id": "browser-next-action",
+  "label": "browser-next-action",
+  "recipe": "recipes/candidate-action-selection/browser-next-action.ts",
+  "measured": "MEASURED_LIVE",
+  "wall_ms": 490,
+  "started_at": "2026-09-18T17:35:56.489Z",
+  "finished_at": "2026-09-18T17:35:56.979Z",
+  "n": 8,
+  "quality": {
+    "actions": {
+      "company": 1,
+      "logic": 1,
+      "STOP": 1,
+      "login": 1,
+      "accept": 1,
+      "submit": 1,
+      "qm": 1,
+      "close": 1
+    },
+    "concurrency": 4,
+    "input_tokens": 3597,
+    "output_tokens": 448,
+    "per_case_avg_ms": 61
+  },
+  "items": [
+    {
+      "id": "bn01",
+      "goal": "Reach Apple Inc. company page from fruit disambiguation",
+      "url": "https://en.wikipedia.org/wiki/Apple",
+      "action": "company",
+      "confidence": 0.815
+    },
+    {
+      "id": "bn02",
+      "goal": "Get to Philosophy starting from Mathematics",
+      "url": "https://en.wikipedia.org/wiki/Mathematics",
+      "action": "logic",
+      "confidence": 0.965
+    },
+    {
+      "id": "bn03",
+      "goal": "Find Toronto city page",
+      "url": "https://en.wikipedia.org/wiki/Toronto",
+      "action": "STOP",
+      "confidence": 0.915
+    },
+    {
+      "id": "bn04",
+      "goal": "Open the login button on checkout",
+      "url": "https://shop.example/checkout",
+      "action": "login",
+      "confidence": 0.94
+    },
+    {
+      "id": "bn05",
+      "goal": "Accept cookies then continue",
+      "url": "https://news.example/",
+      "action": "accept",
+      "confidence": 0.95
+    },
+    {
+      "id": "bn06",
+      "goal": "Click the primary Submit order button",
+      "url": "https://shop.example/pay",
+      "action": "submit",
+      "confidence": 0.94
+    },
+    {
+      "id": "bn07",
+      "goal": "Navigate toward Quantum mechanics from Physics",
+      "url": "https://en.wikipedia.org/wiki/Physics",
+      "action": "qm",
+      "confidence": 0.9
+    },
+    {
+      "id": "bn08",
+      "goal": "Close the modal overlay",
+      "url": "https://app.example/dashboard",
+      "action": "close",
+      "confidence": 0.96
+    }
+  ],
+  "openclaw_map": "browser-next-action"
+}

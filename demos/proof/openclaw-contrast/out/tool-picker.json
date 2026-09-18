@@ -1,0 +1,78 @@
+{
+  "id": "tool-picker",
+  "label": "tool-picker / candidate-action-select",
+  "recipe": "recipes/candidate-action-selection/tool-picker.ts",
+  "measured": "MEASURED_LIVE",
+  "wall_ms": 1054,
+  "started_at": "2026-09-18T17:35:55.431Z",
+  "finished_at": "2026-09-18T17:35:56.487Z",
+  "n": 8,
+  "quality": {
+    "actions": {
+      "none": 3,
+      "read_file": 1,
+      "calculator": 1,
+      "http_get": 1,
+      "run_shell": 1,
+      "web_search": 1
+    },
+    "concurrency": 4,
+    "input_tokens": 4382,
+    "output_tokens": 644,
+    "per_case_avg_ms": 132
+  },
+  "items": [
+    {
+      "id": "tp01",
+      "goal": "What is the capital of Japan?",
+      "action": "none",
+      "confidence": 0.635
+    },
+    {
+      "id": "tp02",
+      "goal": "Summarize package.json dependencies",
+      "action": "read_file",
+      "confidence": 0.92
+    },
+    {
+      "id": "tp03",
+      "goal": "Compute 17 * 43",
+      "action": "calculator",
+      "confidence": 0.605
+    },
+    {
+      "id": "tp04",
+      "goal": "Fetch https://example.com and report the title",
+      "action": "http_get",
+      "confidence": 0.97
+    },
+    {
+      "id": "tp05",
+      "goal": "List git status for this repo",
+      "action": "run_shell",
+      "confidence": 0.95
+    },
+    {
+      "id": "tp06",
+      "goal": "Thanks, that answers it — stop.",
+      "action": "none",
+      "confidence": 0.96
+    },
+    {
+      "id": "tp07",
+      "goal": "Find recent CVE notes for openssl",
+      "action": "web_search",
+      "confidence": 0.945
+    },
+    {
+      "id": "tp08",
+      "goal": "Hi",
+      "action": "none",
+      "confidence": 0.96
+    }
+  ],
+  "notes": [
+    "OpenClaw map: tool-picker / candidate-action-select (same Choice-over-ids shape)"
+  ],
+  "openclaw_map": "tool-picker / candidate-action-select"
+}

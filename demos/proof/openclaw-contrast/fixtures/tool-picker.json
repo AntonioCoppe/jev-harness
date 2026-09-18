@@ -1,0 +1,60 @@
+{
+  "label": "tool-picker / candidate-action-select (OpenClaw hot path)",
+  "tools_catalog": [
+    { "id": "web_search", "description": "Search the public web" },
+    { "id": "read_file", "description": "Read a local file by path" },
+    { "id": "run_shell", "description": "Run a shell command" },
+    { "id": "http_get", "description": "HTTP GET a URL" },
+    { "id": "calculator", "description": "Evaluate arithmetic" }
+  ],
+  "cases": [
+    {
+      "id": "tp01",
+      "goal": "What is the capital of Japan?",
+      "context": "User asked a factual geography question; no files involved.",
+      "history": []
+    },
+    {
+      "id": "tp02",
+      "goal": "Summarize package.json dependencies",
+      "context": "Working in a Node repo; package.json exists at repo root.",
+      "history": ["listed files"]
+    },
+    {
+      "id": "tp03",
+      "goal": "Compute 17 * 43",
+      "context": "Pure arithmetic; no network needed.",
+      "history": []
+    },
+    {
+      "id": "tp04",
+      "goal": "Fetch https://example.com and report the title",
+      "context": "Need live page content.",
+      "history": []
+    },
+    {
+      "id": "tp05",
+      "goal": "List git status for this repo",
+      "context": "Local git checkout; shell is allowed for read-only.",
+      "history": []
+    },
+    {
+      "id": "tp06",
+      "goal": "Thanks, that answers it — stop.",
+      "context": "Prior turn already answered the user.",
+      "history": ["answered capital of Japan: Tokyo"]
+    },
+    {
+      "id": "tp07",
+      "goal": "Find recent CVE notes for openssl",
+      "context": "Need current public information.",
+      "history": []
+    },
+    {
+      "id": "tp08",
+      "goal": "Hi",
+      "context": "Greeting only; no tool required.",
+      "history": []
+    }
+  ]
+}

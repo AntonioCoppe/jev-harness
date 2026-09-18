@@ -1,0 +1,61 @@
+{
+  "label": "agent-stuck-drift (OpenClaw hot path)",
+  "cases": [
+    {
+      "id": "asd01",
+      "goal": "Add rate limiting to the login endpoint",
+      "trace_tail": ["read auth.ts", "add token bucket", "run unit tests green"],
+      "test_summary": "12 passed",
+      "claimed_done": false
+    },
+    {
+      "id": "asd02",
+      "goal": "Fix flaky checkout test",
+      "trace_tail": ["opened unrelated CSS refactor", "renamed components", "still failing checkout"],
+      "test_summary": "checkout still flaky",
+      "claimed_done": false
+    },
+    {
+      "id": "asd03",
+      "goal": "Migrate Redis client to ioredis",
+      "trace_tail": ["retry same broken import", "retry same broken import", "retry same broken import"],
+      "test_summary": "TypeError on import",
+      "claimed_done": false
+    },
+    {
+      "id": "asd04",
+      "goal": "Ship feature X",
+      "trace_tail": ["claimed done", "tests still red", "no new changes"],
+      "test_summary": "8 failed, 2 passed",
+      "claimed_done": true
+    },
+    {
+      "id": "asd05",
+      "goal": "Write integration test for webhook handler",
+      "trace_tail": ["created test file", "mocked stripe", "one assertion failing on status code"],
+      "test_summary": "1 failed, 4 passed",
+      "claimed_done": false
+    },
+    {
+      "id": "asd06",
+      "goal": "Remove dead code in utils/",
+      "trace_tail": ["deleted unused helper", "ran lint", "CI green"],
+      "test_summary": "all green",
+      "claimed_done": true
+    },
+    {
+      "id": "asd07",
+      "goal": "Implement OAuth callback",
+      "trace_tail": ["started reading Kubernetes docs", "cluster troubleshooting", "still no OAuth code"],
+      "test_summary": "no new tests",
+      "claimed_done": false
+    },
+    {
+      "id": "asd08",
+      "goal": "Ambiguous large refactor",
+      "trace_tail": ["touched many files", "unclear intent", "mixed test results"],
+      "test_summary": "mixed",
+      "claimed_done": false
+    }
+  ]
+}

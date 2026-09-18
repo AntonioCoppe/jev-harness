@@ -1,0 +1,28 @@
+{
+  "status": "SKIPPED",
+  "reason": "BEFORE requires Mac Claude CLI (claude -p, tools off)",
+  "openclaw_approximation": "frontier LLM path ≈ normal OpenClaw hot-path decisions",
+  "measured_before": {
+    "row-semantic-match": {
+      "wall_s": 48.856,
+      "wall_ms": 48856,
+      "source": "docs/assets/marketing/proof/measured.json"
+    }
+  },
+  "pending_before": [
+    "shell-command-gate",
+    "keystroke-launcher",
+    "alert-gate",
+    "model-cost-router",
+    "tool-picker",
+    "browser-next-action",
+    "agent-stuck-drift",
+    "ship-gate",
+    "inbox-triage"
+  ],
+  "how_to_run_on_mac": [
+    "export PATH=\"/opt/homebrew/bin:$HOME/.local/bin:$PATH\"",
+    "bash demos/proof/row-filter/mac-llm-cli-bakeoff.sh",
+    "For each fixtures/*.json: loop items through `claude -p` asking for the same action enum as the recipe; time wall clock; write out/<id>-claude-before.json stamped MEASURED_LIVE"
+  ]
+}

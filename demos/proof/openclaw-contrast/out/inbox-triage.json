@@ -1,0 +1,85 @@
+{
+  "id": "inbox-triage",
+  "label": "inbox-triage (alert-gate-shaped batch)",
+  "recipe": "recipes/confidence-front-door/inbox-triage.ts",
+  "measured": "MEASURED_LIVE",
+  "wall_ms": 505,
+  "started_at": "2026-09-18T17:35:58.137Z",
+  "finished_at": "2026-09-18T17:35:58.642Z",
+  "n": 10,
+  "quality": {
+    "actions": {
+      "review": 1,
+      "spam": 4,
+      "support": 2,
+      "bookings": 3
+    },
+    "concurrency": 5,
+    "input_tokens": 4747,
+    "output_tokens": 853,
+    "per_case_avg_ms": 51
+  },
+  "items": [
+    {
+      "id": "in01",
+      "subject": "AC broken in cabin 4",
+      "action": "review",
+      "confidence": 0.47
+    },
+    {
+      "id": "in02",
+      "subject": "Buy 10k followers NOW",
+      "action": "spam",
+      "confidence": 0.9466666666666667
+    },
+    {
+      "id": "in03",
+      "subject": "Order #4412 missing item",
+      "action": "support",
+      "confidence": 0.66
+    },
+    {
+      "id": "in04",
+      "subject": "Extend stay two nights",
+      "action": "bookings",
+      "confidence": 0.6166666666666667
+    },
+    {
+      "id": "in05",
+      "subject": "Hello",
+      "action": "spam",
+      "confidence": 0.7466666666666667
+    },
+    {
+      "id": "in06",
+      "subject": "Check-in time?",
+      "action": "bookings",
+      "confidence": 0.5833333333333333
+    },
+    {
+      "id": "in07",
+      "subject": "SEO backlinks cheap",
+      "action": "spam",
+      "confidence": 0.9433333333333334
+    },
+    {
+      "id": "in08",
+      "subject": "Damaged jar in order 8821",
+      "action": "support",
+      "confidence": 0.5666666666666667
+    },
+    {
+      "id": "in09",
+      "subject": "?",
+      "action": "spam",
+      "confidence": 0.7566666666666665
+    },
+    {
+      "id": "in10",
+      "subject": "Cancel booking REF-991",
+      "action": "bookings",
+      "confidence": 0.5633333333333334
+    }
+  ],
+  "openclaw_map": "inbox-triage"
+}

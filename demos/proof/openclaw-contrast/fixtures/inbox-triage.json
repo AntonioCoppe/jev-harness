@@ -1,0 +1,65 @@
+{
+  "label": "inbox-triage (OpenClaw hot path; alert-gate-shaped batch)",
+  "cases": [
+    {
+      "id": "in01",
+      "from": "guest@example.com",
+      "subject": "AC broken in cabin 4",
+      "body": "The air conditioning stopped working last night. Can someone fix it today?"
+    },
+    {
+      "id": "in02",
+      "from": "promo@spam.biz",
+      "subject": "Buy 10k followers NOW",
+      "body": "Limited offer: buy followers and likes. Click here."
+    },
+    {
+      "id": "in03",
+      "from": "alice@corp.com",
+      "subject": "Order #4412 missing item",
+      "body": "My farm box arrived but the eggs were missing. Order 4412."
+    },
+    {
+      "id": "in04",
+      "from": "bob@travel.com",
+      "subject": "Extend stay two nights",
+      "body": "Can we extend our reservation through Thursday? Cabin 2."
+    },
+    {
+      "id": "in05",
+      "from": "unknown@mail.tld",
+      "subject": "Hello",
+      "body": "Just checking in."
+    },
+    {
+      "id": "in06",
+      "from": "vip@customer.com",
+      "subject": "Check-in time?",
+      "body": "What time can we check in on Saturday for the lakeside cabin?"
+    },
+    {
+      "id": "in07",
+      "from": "scraper@bot.net",
+      "subject": "SEO backlinks cheap",
+      "body": "We build high DA backlinks. Reply STOP to unsubscribe."
+    },
+    {
+      "id": "in08",
+      "from": "carol@example.org",
+      "subject": "Damaged jar in order 8821",
+      "body": "The honey jar arrived cracked and leaked. Need replacement."
+    },
+    {
+      "id": "in09",
+      "from": "dave@example.org",
+      "subject": "?",
+      "body": "?"
+    },
+    {
+      "id": "in10",
+      "from": "erin@example.org",
+      "subject": "Cancel booking REF-991",
+      "body": "Please cancel our booking REF-991 due to illness. Need refund policy."
+    }
+  ]
+}

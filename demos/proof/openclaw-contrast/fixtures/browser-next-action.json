@@ -1,0 +1,93 @@
+{
+  "label": "browser-next-action (OpenClaw hot path)",
+  "cases": [
+    {
+      "id": "bn01",
+      "goal": "Reach Apple Inc. company page from fruit disambiguation",
+      "url": "https://en.wikipedia.org/wiki/Apple",
+      "candidates": [
+        { "id": "company", "description": "Apple Inc. (technology company)" },
+        { "id": "fruit", "description": "Apple (fruit)" },
+        { "id": "album", "description": "Apple (album)" }
+      ],
+      "history": []
+    },
+    {
+      "id": "bn02",
+      "goal": "Get to Philosophy starting from Mathematics",
+      "url": "https://en.wikipedia.org/wiki/Mathematics",
+      "candidates": [
+        { "id": "logic", "description": "Logic" },
+        { "id": "number", "description": "Number" },
+        { "id": "set_theory", "description": "Set theory" }
+      ],
+      "history": ["started at Mathematics"]
+    },
+    {
+      "id": "bn03",
+      "goal": "Find Toronto city page",
+      "url": "https://en.wikipedia.org/wiki/Toronto",
+      "candidates": [
+        { "id": "history", "description": "History of Toronto" },
+        { "id": "ontario", "description": "Ontario" },
+        { "id": "canada", "description": "Canada" }
+      ],
+      "history": ["arrived at Toronto — goal achieved"]
+    },
+    {
+      "id": "bn04",
+      "goal": "Open the login button on checkout",
+      "url": "https://shop.example/checkout",
+      "candidates": [
+        { "id": "login", "description": "Log in" },
+        { "id": "guest", "description": "Continue as guest" },
+        { "id": "cart", "description": "Back to cart" }
+      ],
+      "history": []
+    },
+    {
+      "id": "bn05",
+      "goal": "Accept cookies then continue",
+      "url": "https://news.example/",
+      "candidates": [
+        { "id": "accept", "description": "Accept all cookies" },
+        { "id": "reject", "description": "Reject non-essential" },
+        { "id": "settings", "description": "Cookie settings" }
+      ],
+      "history": []
+    },
+    {
+      "id": "bn06",
+      "goal": "Click the primary Submit order button",
+      "url": "https://shop.example/pay",
+      "candidates": [
+        { "id": "submit", "description": "Submit order" },
+        { "id": "cancel", "description": "Cancel" },
+        { "id": "edit", "description": "Edit address" }
+      ],
+      "history": ["filled payment"]
+    },
+    {
+      "id": "bn07",
+      "goal": "Navigate toward Quantum mechanics from Physics",
+      "url": "https://en.wikipedia.org/wiki/Physics",
+      "candidates": [
+        { "id": "qm", "description": "Quantum mechanics" },
+        { "id": "thermo", "description": "Thermodynamics" },
+        { "id": "optics", "description": "Optics" }
+      ],
+      "history": []
+    },
+    {
+      "id": "bn08",
+      "goal": "Close the modal overlay",
+      "url": "https://app.example/dashboard",
+      "candidates": [
+        { "id": "close", "description": "Close (X)" },
+        { "id": "learn_more", "description": "Learn more about Pro" },
+        { "id": "backdrop", "description": "Click backdrop" }
+      ],
+      "history": ["modal appeared"]
+    }
+  ]
+}
