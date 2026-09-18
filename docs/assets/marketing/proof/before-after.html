@@ -1,0 +1,46 @@
+<!doctype html>
+<html><head><meta charset="utf-8"/><title>jev-harness proof</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;background:#0b0f19;color:#e8eefc;padding:48px}
+  .card{max-width:1100px;margin:0 auto;background:#121826;border:1px solid #2a3550;border-radius:24px;padding:40px 48px;box-shadow:0 20px 80px rgba(0,0,0,.45)}
+  .eq{font-size:22px;color:#8fb4ff;letter-spacing:.02em;margin-bottom:12px}
+  h1{font-size:44px;line-height:1.15;margin-bottom:28px}
+  .grid{display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:stretch;margin:32px 0}
+  .box{background:#0b0f19;border-radius:18px;padding:28px;border:1px solid #2a3550}
+  .box.before{border-color:#7a3b3b}
+  .box.after{border-color:#2f6b4a}
+  .label{font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:#9aa6c2;margin-bottom:10px}
+  .big{font-size:72px;font-weight:800;line-height:1}
+  .before .big{color:#ff8f8f}
+  .after .big{color:#5dffb0}
+  .sub{margin-top:12px;color:#b7c2db;font-size:18px}
+  .arrow{font-size:48px;align-self:center;color:#8fb4ff}
+  .meta{display:flex;gap:28px;flex-wrap:wrap;margin-top:8px;color:#9aa6c2;font-size:16px}
+  .pill{background:#1a2236;border:1px solid #2a3550;border-radius:999px;padding:10px 16px}
+  .foot{margin-top:28px;color:#7f8aa6;font-size:14px}
+</style></head><body>
+<div class="card">
+  <div class="eq">semantic WHERE (no embeddings) = money + speed</div>
+  <h1>Our measured bakeoff — Claude CLI vs Jev row-judgment</h1>
+  <div class="grid">
+    <div class="box before">
+      <div class="label">Before · Claude Code CLI</div>
+      <div class="big">19.7s</div>
+      <div class="sub">24 rows · one batch · sonnet · tools off</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="box after">
+      <div class="label">After · Jev + jev-harness</div>
+      <div class="big">0.96s</div>
+      <div class="sub">24 rows · concurrency 8 · $0.0005</div>
+    </div>
+  </div>
+  <div class="meta">
+    <div class="pill"><b>20.44×</b> faster wall clock</div>
+    <div class="pill">cache replay <b>0ms</b></div>
+    <div class="pill">predicate: could work fully remote…</div>
+  </div>
+  <div class="foot">MEASURED 2026-09-18T01:46:55.883Z · Claude timed on MacBookPro CLI · Jev via TypeSafe live API · not community numbers</div>
+</div>
+</body></html>
