@@ -36,6 +36,24 @@ export {
 } from "./agent-comm-harness/who-speaks-next.js";
 
 export {
+  toolGateRecipe,
+  toolGateQuestions,
+  runToolGate,
+  type ToolGateAction,
+  type ToolGateState,
+  type ToolGateQuestions,
+} from "./agent-comm-harness/tool-gate.js";
+export {
+  messageRouteRecipe,
+  messageRouteQuestions,
+  runMessageRoute,
+  type MessageRouteAction,
+  type MessageRouteState,
+  type RouteOption,
+  type MessageRouteQuestions,
+} from "./agent-comm-harness/message-route.js";
+
+export {
   rowSemanticMatchQuestions,
   runRowSemanticMatch,
   type RowMatchAction,

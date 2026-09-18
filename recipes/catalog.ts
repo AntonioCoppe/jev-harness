@@ -236,6 +236,25 @@ export const catalog = [
     tags: ["on-call", "paging", "routing"],
   },
   {
+    id: "message-route",
+    name: "Message Route",
+    category: "confidence-front-door",
+    description:
+      "Route an inter-agent message to a specialist, broadcast, drop, or escalate (secret-aware).",
+    module: "recipes/agent-comm-harness/message-route.ts",
+    runner: "runMessageRoute",
+    questions: [
+      { name: "route", kind: "choice" },
+      { name: "urgency", kind: "score" },
+      { name: "contains_secrets", kind: "noul" },
+      { name: "escalate", kind: "noul" },
+    ],
+    actions: ["<specialist-id>", "broadcast", "drop", "escalate"],
+    defaultMinConfidence: 0.55,
+    defaultOnLowConfidence: "review",
+    tags: ["agent-comm-harness", "routing", "multi-agent", "bus", "secrets"],
+  },
+  {
     id: "llm-verifier",
     name: "LLM Verifier",
     category: "verify-gate",
@@ -303,6 +322,26 @@ export const catalog = [
     defaultMinConfidence: 0.6,
     defaultOnLowConfidence: "review",
     tags: ["tools", "allowlist", "gate"],
+  },
+  {
+    id: "tool-gate",
+    name: "Tool Gate",
+    category: "verify-gate",
+    description:
+      "Gate a proposed tool call by risk class, policy, blast radius, then handoff disposition.",
+    module: "recipes/agent-comm-harness/tool-gate.ts",
+    runner: "runToolGate",
+    questions: [
+      { name: "risk_class", kind: "choice" },
+      { name: "policy_ok", kind: "noul" },
+      { name: "irreversible", kind: "noul" },
+      { name: "blast_radius", kind: "score" },
+      { name: "handoff", kind: "choice" },
+    ],
+    actions: ["continue", "ask_user", "escalate_specialist", "abort"],
+    defaultMinConfidence: 0.6,
+    defaultOnLowConfidence: "suppress",
+    tags: ["agent-comm-harness", "tools", "allowlist", "gate", "verify-gate"],
   },
   {
     id: "rubric-scorer",

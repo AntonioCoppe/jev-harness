@@ -42,6 +42,8 @@ import { spanPickQuestions } from "../recipes/semantic-find/span-pick.js";
 import { mmBuySellQuestions } from "../recipes/high-freq-reflex/mm-buy-sell.js";
 import { hotPathAllowQuestions } from "../recipes/high-freq-reflex/hot-path-allow.js";
 import { whoSpeaksNextQuestions } from "../recipes/agent-comm-harness/who-speaks-next.js";
+import { toolGateQuestions } from "../recipes/agent-comm-harness/tool-gate.js";
+import { messageRouteQuestions } from "../recipes/agent-comm-harness/message-route.js";
 
 type RecipeId = (typeof catalog)[number]["id"];
 
@@ -273,6 +275,42 @@ function decideWhoSpeaksNext(c: FixtureCase, answers: Record<string, AnyAnswer>)
   return next.choice;
 }
 
+
+function decideToolGate(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  const toolName = String(state.tool_name ?? "");
+  const allowlist = Array.isArray(state.allowlist) ? (state.allowlist as string[]) : null;
+  const onAllowlist = allowlist ? allowlist.includes(toolName) : true;
+  const risk = answers.risk_class as { choice: string };
+  const policyOk = answers.policy_ok as { noul: number };
+  const irreversible = answers.irreversible as { noul: number };
+  const blast = answers.blast_radius as { score: number };
+  const handoff = answers.handoff as { choice: string };
+  if (!onAllowlist || risk.choice === "forbidden" || policyOk.noul < 0.35 || handoff.choice === "abort") {
+    return "abort";
+  }
+  if (irreversible.noul >= 0.55 || blast.score >= 1.5 || risk.choice === "irreversible") {
+    if (handoff.choice === "escalate_specialist") return "escalate_specialist";
+    return "ask_user";
+  }
+  if (handoff.choice === "ask_user") return "ask_user";
+  if (handoff.choice === "escalate_specialist") return "escalate_specialist";
+  if (policyOk.noul < 0.55 || risk.choice === "reversible") {
+    return handoff.choice === "continue" ? "ask_user" : handoff.choice;
+  }
+  return "continue";
+}
+
+function decideMessageRoute(answers: Record<string, AnyAnswer>): string {
+  const route = answers.route as { choice: string };
+  const secrets = answers.contains_secrets as { noul: number };
+  const escalate = answers.escalate as { noul: number };
+  if (escalate.noul >= 0.6) return "escalate";
+  if (secrets.noul >= 0.55 && route.choice === "broadcast") return "escalate";
+  if (route.choice === "drop") return "drop";
+  return route.choice;
+}
+
 function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
   switch (c.recipe) {
     case "candidate-action-select":
@@ -320,6 +358,10 @@ function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
       return decideHotPathAllow(answers);
     case "who-speaks-next":
       return decideWhoSpeaksNext(c, answers);
+    case "tool-gate":
+      return decideToolGate(c, answers);
+    case "message-route":
+      return decideMessageRoute(answers);
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);
@@ -390,6 +432,12 @@ function questionsFor(c: FixtureCase) {
     case "who-speaks-next": {
       const agents = (state.agents as { id: string; description: string }[]) ?? [];
       return whoSpeaksNextQuestions(agents);
+    }
+    case "tool-gate":
+      return toolGateQuestions();
+    case "message-route": {
+      const specialists = (state.specialists as { id: string; description: string }[]) ?? [];
+      return messageRouteQuestions(specialists);
     }
     default: {
       const _exhaustive: never = c.recipe;
