@@ -1,4 +1,5 @@
 
+# Large reference demos (format study only; do not push)
 # VitePress
 *.log
 *.tsbuildinfo
@@ -6,6 +7,8 @@
 .env
 .env.local
 coverage/
+demos/proof/ego-style/out/*.ffmpeg.log
+demos/proof/ego-style/out/*.mp4
 dist/
 docs-site/.vitepress/cache
 docs-site/.vitepress/dist
@@ -13,3 +16,6 @@ docs-site/.vitepress/generated-sidebar.json
 docs/assets/marketing/_deprecated_designed_cards/
 docs/assets/marketing/proof/card-*.png
 node_modules/
+research/refs/*.mp4
+demos/proof/ego-style/out/_run-*.sh
+demos/proof/ego-style/out/frame-*.jpg

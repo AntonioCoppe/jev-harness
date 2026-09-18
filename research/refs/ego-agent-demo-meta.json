@@ -1,0 +1,11 @@
+{
+  "id": "2100970015977804008",
+  "url": "https://x.com/ego_agent/status/2100970015977804008",
+  "text": "ego lite + Jev + DeepSeek Flash = stupid fast. \u26a1\n\n3.71s for 20 Amazon product decisions.\n\nGPT-5.6 Sol: 54.45s\n\nSame task. Same result.\n10/10 on both.\n\nLess reasoning. Faster decisions.\n1\u00d7 speed.",
+  "duration_s": 30.334,
+  "width": 1920,
+  "height": 1080,
+  "downloaded": "1280x720 mp4 for format study only; THEIR numbers 3.71s vs 54.45s Amazon \u2014 NOT ours",
+  "our_numbers_source": "docs/assets/marketing/proof/measured.json",
+  "our_numbers": "Claude CLI 48.9s \u2192 Jev+harness 1.3s on 24-row NL filter"
+}
