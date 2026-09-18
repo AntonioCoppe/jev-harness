@@ -63,6 +63,7 @@ Primary IDs are kebab-case. Aliases are acceptable synonyms in tags/docs. Cluste
 | [trycua / jev-use](https://x.com/trycua/status/2100649543079502213) | Constrained action-ID menu; verify after exec |
 | Docs: [function_calling](https://docs.typesafe.ai/cookbooks/function_calling.md) | Closed-set tool+arg Choice (trading demo) — catalog pick |
 | Docs: [skill_suggestion](https://docs.typesafe.ai/cookbooks/skill_suggestion.md) | Rank 182 skills → shortlist → reject-or-load |
+| Crazy-fast: **agent-comm** who-speaks-next | Stub `recipes/agent-comm-harness/who-speaks-next.ts` — Swarm/AutoGen selector replacement |
 
 **Primitives:** `Choice(dynamic_candidates)` ± `Noul(done)` ± `Score(risk)`.
 
@@ -194,8 +195,29 @@ Primary IDs are kebab-case. Aliases are acceptable synonyms in tags/docs. Cluste
 | [jarrodwatts/jev-trader](https://github.com/jarrodwatts/jev-trader) | ~300ms block; ~81ms model; buy/sell |
 | Doom @ ~10 q/s | Structured state → action |
 | Docs “real-time applications” claim | Latency budget tag — not a separate root (see Rejected) |
+| Crazy-fast map: prediction-market / sports-bet / rtb / order-allow-deny | Stubs under `recipes/high-freq-reflex/` — see `crazy-fast-decisions.md` |
 
 ---
+
+
+---
+
+## Crazy-fast decision recipes (latency / decision-count scarcity)
+
+Research map: [`research/crazy-fast-decisions.md`](crazy-fast-decisions.md). These are **product packs / tags**, not new taxonomy roots — they sit on existing shape IDs.
+
+| Pack / tag | Primary shape ID(s) | Recipe path | Equation (one-liner) |
+|---|---|---|---|
+| **agent-comm** | `candidate-action-selection`, `verify-gate` | `recipes/agent-comm-harness/` (`who-speaks-next`, `tool-exec-gate`) | agent RTT / tool mishap = $ + wallclock |
+| **swarm-consensus** | `composite-rubric` | `recipes/composite-rubric/swarm-consensus.ts` (+ agent-comm re-export) | endless debate tokens = $ + time-to-consensus |
+| **prediction-market** | `high-freq-reflex` | `recipes/prediction-market-gate/` | stale fill residual = $ + arb half-life |
+| **sports-bet** | `high-freq-reflex` | `recipes/sports-bet-gate/` | −CLV bets = $ + line-move ms |
+| **rtb** | `high-freq-reflex` | `recipes/high-freq-reflex/rtb-bid-gate.ts` (+ `recipes/rtb-bid-gate/` alias) | bad impressions / missed auctions = $ + auction budget |
+| trading order gate | `high-freq-reflex` | `recipes/high-freq-reflex/order-allow-deny.ts` (+ `mm-buy-sell`, `hot-path-allow`) | adverse fills / oversize = $ + ms to cancel |
+
+Also covered by existing recipes in the same research ranking: cyber alert (`confidence-front-door` / `alert-gate`), fraud (`hot-path-allow`), content mod (`verify-gate` / `ship-gate`), esports reflex (`candidate-action-selection`).
+
+**Proof discipline:** do not invent measured timings. Screenshot YOUR shadow logs / eval fixtures; research lists *targets*, not harness-measured p50s.
 
 ## Frequency (this evidence set)
 

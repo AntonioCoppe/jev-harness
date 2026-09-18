@@ -66,3 +66,9 @@ Do NOT invent metrics. Do NOT reuse iam_zachi 129-row / $0.0009 figures as ours.
 ## Do not post without attaching the PNGs
 
 Repo links alone are not the proof. The screenshots are.
+
+---
+
+## Related paste prompts (crazy-fast packs)
+
+For agent-comm, Polymarket, sports-bet, and trading gates (no measured timings claimed yet — stubs + research targets only), see [`demos/marketing/PROMPTS.md`](../marketing/PROMPTS.md) §§7–10 and [`research/crazy-fast-decisions.md`](../../research/crazy-fast-decisions.md).

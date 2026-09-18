@@ -8,5 +8,18 @@ Empirical category from `research/taxonomy.md` (cluster **H**).
 |---|---|
 | `mm-buy-sell` | Block-time buy / sell / hold from a compact book snapshot. |
 | `hot-path-allow` | Sub-100ms allow / deny on a compact event. |
+| `order-allow-deny` | Trading order allow / deny / cancel / hold + news conflict. |
+| `fraud-score-gate` | Payment / login fraud score gate. |
+| `rtb-bid-gate` | Ads RTB brand-safety / bid-or-pass. |
 
-Soak in `shadow` before live; keep state tiny and `minConfidence` tight.
+Related crazy-fast packs (own folders, same shape ID):
+
+| Pack | Path |
+|---|---|
+| `prediction-market-gate` | [`recipes/prediction-market-gate/`](../prediction-market-gate/) |
+| `sports-bet-gate` | [`recipes/sports-bet-gate/`](../sports-bet-gate/) |
+| `rtb-bid-gate` alias | [`recipes/rtb-bid-gate/`](../rtb-bid-gate/) |
+
+Map: [`research/crazy-fast-decisions.md`](../../research/crazy-fast-decisions.md).
+
+Soak in `shadow` before live; keep state tiny and `minConfidence` tight. **Do not invent measured timings.**

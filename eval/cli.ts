@@ -44,6 +44,17 @@ import { hotPathAllowQuestions } from "../recipes/high-freq-reflex/hot-path-allo
 import { whoSpeaksNextQuestions } from "../recipes/agent-comm-harness/who-speaks-next.js";
 import { toolGateQuestions } from "../recipes/agent-comm-harness/tool-gate.js";
 import { messageRouteQuestions } from "../recipes/agent-comm-harness/message-route.js";
+import { orderAllowDenyQuestions } from "../recipes/high-freq-reflex/order-allow-deny.js";
+import { predictionMarketGateQuestions } from "../recipes/prediction-market-gate/prediction-market-gate.js";
+import { sportsBetGateQuestions } from "../recipes/sports-bet-gate/sports-bet-gate.js";
+import { swarmConsensusQuestions } from "../recipes/agent-comm-harness/swarm-consensus.js";
+import { toolExecGateQuestions } from "../recipes/agent-comm-harness/tool-exec-gate.js";
+import { fraudScoreGateQuestions } from "../recipes/high-freq-reflex/fraud-score-gate.js";
+import { esportsReflexQuestions } from "../recipes/candidate-action-selection/esports-reflex.js";
+import { edgeContentModQuestions } from "../recipes/verify-gate/edge-content-mod.js";
+import { cyberAlertTriageQuestions } from "../recipes/confidence-front-door/cyber-alert-triage.js";
+import { rtbBidGateQuestions } from "../recipes/high-freq-reflex/rtb-bid-gate.js";
+
 
 type RecipeId = (typeof catalog)[number]["id"];
 
@@ -311,6 +322,161 @@ function decideMessageRoute(answers: Record<string, AnyAnswer>): string {
   return route.choice;
 }
 
+
+function decideOrderAllowDeny(answers: Record<string, AnyAnswer>): string {
+  const allowOrder = answers.allow_order as { noul: number };
+  const side = answers.side_intent as { choice: string };
+  const edge = answers.edge as { score: number };
+  const risk = answers.risk as { score: number };
+  const newsConflict = answers.news_conflict as { noul: number };
+  if (newsConflict.noul >= 0.55) return "deny";
+  if (risk.score >= 1.5) return "deny";
+  if (side.choice === "cancel") return "cancel";
+  if (side.choice === "hold") return "hold";
+  if (allowOrder.noul < 0.55) return "deny";
+  if (edge.score < 0.9) return "hold";
+  if (risk.score >= 1.0 && edge.score < 1.4) return "deny";
+  return "allow";
+}
+
+function decidePredictionMarketGate(answers: Record<string, AnyAnswer>): string {
+  const isArb = answers.is_arb as { noul: number };
+  const edgeAfter = answers.edge_after_costs as { score: number };
+  const depthOk = answers.depth_ok as { noul: number };
+  const fairFresh = answers.fair_fresh as { noul: number };
+  const tradeoff = answers.tradeoff as { score: number };
+  const action = answers.action as { choice: string };
+  if (fairFresh.noul < 0.45) {
+    return action.choice === "cancel" ? "cancel" : "skip";
+  }
+  if (tradeoff.score < 0.5) return "skip";
+  if (tradeoff.score >= 0.5 && tradeoff.score < 1.2 && depthOk.noul < 0.5) return "skip";
+  if (isArb.noul >= 0.55 && edgeAfter.score >= 0.9 && depthOk.noul >= 0.55) {
+    if (action.choice === "hedge_other") return "hedge_other";
+    return "post_bid";
+  }
+  if (action.choice === "cancel") return "cancel";
+  if (action.choice === "hedge_other" && depthOk.noul >= 0.45) return "hedge_other";
+  return "skip";
+}
+
+function decideSportsBetGate(answers: Record<string, AnyAnswer>): string {
+  const bet = answers.bet as { noul: number };
+  const book = answers.book as { choice: string };
+  const edge = answers.edge as { score: number };
+  const clv = answers.meets_clv_filter as { noul: number };
+  const liq = answers.liquidity_ok as { score: number };
+  if (clv.noul < 0.5) return "no_bet";
+  if (edge.score < 0.7) return "no_bet";
+  if (liq.score < 0.6) return "shop_elsewhere";
+  if (bet.noul >= 0.55 && edge.score >= 0.9 && clv.noul >= 0.55) return "bet";
+  if (bet.noul >= 0.45 && book.choice !== "none" && edge.score >= 0.7) return "shop_elsewhere";
+  return "no_bet";
+}
+
+
+function decideSwarmConsensus(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const consensus = answers.consensus_reached as { noul: number };
+  const winner = answers.winner as { choice: string };
+  const evidence = answers.evidence_quality as { score: number };
+  const fatal = answers.fatal_objection as { noul: number };
+  const disposition = answers.disposition as { choice: string };
+  const state = asRecord(c.state);
+  if (fatal.noul >= 0.65) {
+    return disposition.choice === "abort" ? "abort" : "escalate_human";
+  }
+  if (consensus.noul >= 0.6 && evidence.score >= 1.0 && winner.choice !== "none") return "adopt";
+  if (disposition.choice === "abort") return "abort";
+  if (disposition.choice === "escalate_human") return "escalate_human";
+  const maxRounds = Number(state.max_rounds ?? 5);
+  const round = Number(state.round ?? 1);
+  if (round >= maxRounds) return "escalate_human";
+  return "another_round";
+}
+
+function decideToolExecGate(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  const risk = answers.risk_class as { choice: string };
+  const policyOk = answers.policy_ok as { noul: number };
+  const irreversible = answers.irreversible as { noul: number };
+  const blast = answers.blast_radius as { score: number };
+  if (risk.choice === "forbidden" || policyOk.noul < 0.4) return "deny";
+  if (risk.choice === "irreversible" || irreversible.noul >= 0.6) {
+    return blast.score >= 1.5 ? "escalate" : "ask_user";
+  }
+  if (state.allowlist_hit === false) return "ask_user";
+  return "exec";
+}
+
+function decideFraudScoreGate(answers: Record<string, AnyAnswer>): string {
+  const fraud = answers.fraud_risk as { score: number };
+  const disposition = answers.disposition as { choice: string };
+  const device = answers.device_anomaly as { noul: number };
+  const velocity = answers.velocity_anomaly as { noul: number };
+  const anomaly = device.noul >= 0.6 || velocity.noul >= 0.6;
+  if (fraud.score >= 1.5 || disposition.choice === "deny") return "deny";
+  if (fraud.score >= 1.0 || (anomaly && fraud.score >= 0.7)) return "step_up";
+  if (disposition.choice === "review" || disposition.choice === "step_up") return disposition.choice;
+  if (fraud.score < 0.7 && !anomaly) return "allow";
+  return "review";
+}
+
+function decideEsportsReflex(answers: Record<string, AnyAnswer>): string {
+  const done = answers.done as { noul: number };
+  const regroup = answers.regroup as { noul: number };
+  const urgency = answers.urgency as { score: number };
+  const legal = answers.legal_action as { choice: string };
+  if (done.noul >= 0.7) return "STOP";
+  if (regroup.noul >= 0.65 && urgency.score < 1.2) return "REGROUP";
+  return legal.choice;
+}
+
+function decideEdgeContentMod(answers: Record<string, AnyAnswer>): string {
+  const verdict = answers.verdict as { choice: string };
+  const severity = answers.severity as { score: number };
+  const hate = answers.hate as { noul: number };
+  const sexual = answers.sexual as { noul: number };
+  const selfHarm = answers.self_harm as { noul: number };
+  const spam = answers.spam as { noul: number };
+  const anyHard =
+    hate.noul >= 0.65 || sexual.noul >= 0.65 || selfHarm.noul >= 0.55 || severity.score >= 1.5;
+  if (anyHard || verdict.choice === "block") return "block";
+  if (spam.noul >= 0.7 && severity.score >= 0.8) return "block";
+  if (
+    verdict.choice === "review" ||
+    severity.score >= 1.0 ||
+    hate.noul >= 0.4 ||
+    sexual.noul >= 0.4 ||
+    selfHarm.noul >= 0.35
+  ) {
+    return "review";
+  }
+  if (verdict.choice === "warn" || spam.noul >= 0.45) return "warn";
+  return "allow";
+}
+
+function decideCyberAlertTriage(answers: Record<string, AnyAnswer>): string {
+  const disposition = answers.disposition as { choice: string };
+  const severity = answers.severity as { score: number };
+  const needsHuman = answers.needs_human as { noul: number };
+  const actionable = answers.actionable as { noul: number };
+  if (disposition.choice === "suppress" || actionable.noul < 0.35) return "suppress";
+  if (needsHuman.noul >= 0.6 || actionable.noul < 0.55) return "queue_review";
+  if (disposition.choice === "notify" && severity.score >= 1.2) return "notify";
+  return "queue_review";
+}
+
+function decideRtbBidGate(answers: Record<string, AnyAnswer>): string {
+  const bid = answers.bid as { noul: number };
+  const brandSafety = answers.brand_safety as { choice: string };
+  const ivt = answers.ivt_risk as { score: number };
+  const align = answers.creative_page_align as { noul: number };
+  if (brandSafety.choice === "block" || ivt.score >= 1.5) return "block";
+  if (brandSafety.choice === "sensitive" || ivt.score >= 0.9 || align.noul < 0.4) return "pass";
+  if (bid.noul >= 0.55 && brandSafety.choice === "safe") return "bid";
+  return "pass";
+}
+
 function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
   switch (c.recipe) {
     case "candidate-action-select":
@@ -362,6 +528,26 @@ function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
       return decideToolGate(c, answers);
     case "message-route":
       return decideMessageRoute(answers);
+    case "order-allow-deny":
+      return decideOrderAllowDeny(answers);
+    case "prediction-market-gate":
+      return decidePredictionMarketGate(answers);
+    case "sports-bet-gate":
+      return decideSportsBetGate(answers);
+    case "swarm-consensus":
+      return decideSwarmConsensus(c, answers);
+    case "tool-exec-gate":
+      return decideToolExecGate(c, answers);
+    case "fraud-score-gate":
+      return decideFraudScoreGate(answers);
+    case "esports-reflex":
+      return decideEsportsReflex(answers);
+    case "edge-content-mod":
+      return decideEdgeContentMod(answers);
+    case "cyber-alert-triage":
+      return decideCyberAlertTriage(answers);
+    case "rtb-bid-gate":
+      return decideRtbBidGate(answers);
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);
@@ -439,6 +625,36 @@ function questionsFor(c: FixtureCase) {
       const specialists = (state.specialists as { id: string; description: string }[]) ?? [];
       return messageRouteQuestions(specialists);
     }
+    case "order-allow-deny":
+      return orderAllowDenyQuestions();
+    case "prediction-market-gate":
+      return predictionMarketGateQuestions();
+    case "sports-bet-gate":
+      return sportsBetGateQuestions({
+        ticket: (state.ticket as Record<string, string | number | boolean | null>) ?? {},
+        offerings: state.offerings as
+          | { id: string; book: string; description: string }[]
+          | undefined,
+        clv: state.clv as Record<string, string | number | boolean | null> | undefined,
+      });
+    case "swarm-consensus": {
+      const proposals = (state.proposals as { id: string; summary: string }[]) ?? [];
+      return swarmConsensusQuestions(proposals);
+    }
+    case "tool-exec-gate":
+      return toolExecGateQuestions();
+    case "fraud-score-gate":
+      return fraudScoreGateQuestions();
+    case "esports-reflex": {
+      const candidates = (state.candidates as { id: string; description: string }[]) ?? [];
+      return esportsReflexQuestions(candidates);
+    }
+    case "edge-content-mod":
+      return edgeContentModQuestions();
+    case "cyber-alert-triage":
+      return cyberAlertTriageQuestions();
+    case "rtb-bid-gate":
+      return rtbBidGateQuestions();
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);

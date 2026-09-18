@@ -84,3 +84,55 @@ Perceive DOM/OCR locally. recipes/candidate-action-selection — Choice over ids
 
 ---
 
+
+## 7. Multi-agent who-speaks-next + tool gate
+
+**Equation:** agent RTT / tool mishap = $ + wallclock  
+**Shape:** `Choice(next_speaker) + Score(progress) + Noul(needs_handoff)`; tool path = risk Choice + policy Nouls  
+**Research:** `research/crazy-fast-decisions.md` · pack `recipes/agent-comm-harness/`  
+**Proof:** YOUR shadow handoff log + tool deny confusion matrix — do not invent ms.
+
+```
+Wire recipes/agent-comm-harness/who-speaks-next.ts as the Swarm/AutoGen/CrewAI selector: Choice over agent ids (+ none|user), Score progress, Noul needs_handoff. Pair with recipes/agent-comm-harness/tool-exec-gate.ts (or verify-gate/tool-call-allowlist) before irreversible tools. mode=shadow first; onLowConfidence → review/suppress. Log intendedAction vs human labels. Measure YOUR selector p50 — never paste invented timings.
+```
+
+---
+
+## 8. Polymarket / prediction-market edge gate
+
+**Equation:** stale fill residual = $ + arb half-life  
+**Shape:** `Choice(take|kill_leg|pass) + Score(edge) + Noul(stale)`  
+**Recipe:** `recipes/prediction-market-gate/prediction-market-gate.ts` (extends mm-buy-sell)  
+**Proof:** YOUR arb episode capture / naked-leg kills in shadow — no invented fill rates.
+
+```
+Use recipes/prediction-market-gate/prediction-market-gate.ts on each Polymarket (or similar) arb/edge episode. Compact book_snapshot + proposed_legs only. Policy: stale → kill_leg; thin edge → pass; else take. SHADOW=1 soak; suppress on low conf. Compare intendedAction to a labeled fixture JSONL before live. Do not claim arb capture % you did not measure.
+```
+
+---
+
+## 9. Sports bet / no-bet + CLV filter
+
+**Equation:** −CLV bets = $ + line-move ms  
+**Shape:** `Noul(bet) + Score(edge) + Noul(clv_ok)`  
+**Recipe:** `recipes/sports-bet-gate/sports-bet-gate.ts`  
+**Proof:** YOUR % +CLV on a labeled book — measure live; suppress on low conf.
+
+```
+Run recipes/sports-bet-gate/sports-bet-gate.ts per candidate wager with a compact line_snapshot. Bet only when Noul bet + clv_ok clear and edge Score strong; else no_bet. onLowConfidence → suppress. Shadow against CLV labels before promoting. Log YOUR micro-decision wall time — do not invent p50s.
+```
+
+---
+
+## 10. Trading order allow/deny + risk throttle
+
+**Equation:** adverse fills / oversize = $ + ms to cancel  
+**Shape:** `Noul(allow) + Score(risk) + Noul(news_conflict)` (or mm-buy-sell Choice side + edge)  
+**Recipes:** `recipes/high-freq-reflex/order-allow-deny.ts`, `mm-buy-sell.ts`, `hot-path-allow.ts`  
+**Proof:** YOUR shadow↔live agreement + throttle effect on drawdown — no invented gate p99.
+
+```
+Gate every order with recipes/high-freq-reflex/order-allow-deny.ts (allow|throttle|deny). Tiny risk_snapshot state; news_conflict → deny; elevated risk → throttle. Optionally compose mm-buy-sell for side/edge. Shadow mode for a week; promote only when intendedAction matches desk labels. Measure YOUR gate latency on the hot path — never invent ms.
+```
+
+---

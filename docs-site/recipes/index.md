@@ -7,7 +7,7 @@ description: Catalog recipes grouped by taxonomy shape ID
 
 Machine-readable entries from `recipes/catalog.ts`, grouped by taxonomy ID (`research/taxonomy.md`).
 
-22 recipes in catalog.
+35 recipes in catalog.
 
 ## `candidate-action-selection` {#candidate-action-selection}
 
@@ -19,6 +19,8 @@ Candidate action selection. See [taxonomy](/taxonomy).
 | [`browser-next-action`](/recipes/browser-next-action) — **Browser Next Action** | Pick the next click/candidate in computer-use or wiki-race flows. |
 | [`tool-picker`](/recipes/tool-picker) — **Tool Picker** | Pick which tool to invoke next from a declared catalog, or decline. |
 | [`stop-or-continue`](/recipes/stop-or-continue) — **Stop or Continue** | Decide whether an agent loop should keep going, stop, or ask the user. |
+| [`who-speaks-next`](/recipes/who-speaks-next) — **Who Speaks Next** | Pick the next multi-agent speaker (agent id / user / none) with handoff + user-turn gates. |
+| [`esports-reflex`](/recipes/esports-reflex) — **Esports Reflex** | Pick the next legal game action from engine candidates; stop or regroup on Noul. |
 
 ## `row-judgment` {#row-judgment}
 
@@ -38,6 +40,9 @@ Verify gate. See [taxonomy](/taxonomy).
 | [`ship-gate`](/recipes/ship-gate) — **Ship Gate** | Allow / revise / block a candidate output before ship; suppress on low confidence. |
 | [`injection-check`](/recipes/injection-check) — **Injection Check** | Detect prompt injection / jailbreak attempts in untrusted input. |
 | [`tool-call-allowlist`](/recipes/tool-call-allowlist) — **Tool Call Allowlist** | Gate a proposed tool call against policy / allowlist before execution. |
+| [`tool-gate`](/recipes/tool-gate) — **Tool Gate** | Gate a proposed tool call by risk class, policy, blast radius, then handoff disposition. |
+| [`edge-content-mod`](/recipes/edge-content-mod) — **Edge Content Mod** | Edge moderation: allow / warn / review / block with hate/sexual/self-harm/spam fan-out. |
+| [`tool-exec-gate`](/recipes/tool-exec-gate) — **Tool Exec Gate** | Allow/deny tool execution with risk class, policy Noul, and blast-radius Score. |
 
 ## `confidence-front-door` {#confidence-front-door}
 
@@ -51,6 +56,8 @@ Confidence front door. See [taxonomy](/taxonomy).
 | [`inbox-triage`](/recipes/inbox-triage) — **Inbox Triage** | Route inbound messages into bookings, orders, support, spam, or other. |
 | [`incident-severity`](/recipes/incident-severity) — **Incident Severity** | Classify incident severity from signals, blast radius, and customer impact. |
 | [`oncall-page`](/recipes/oncall-page) — **On-call Page** | Decide whether an event should page on-call, soft-notify, defer, or be ignored. |
+| [`message-route`](/recipes/message-route) — **Message Route** | Route an inter-agent message to a specialist, broadcast, drop, or escalate (secret-aware). |
+| [`cyber-alert-triage`](/recipes/cyber-alert-triage) — **Cyber Alert Triage** | Triage SOC/SIEM alerts: notify, queue for review, or suppress — with actionable + needs_human gates. |
 
 ## `composite-rubric` {#composite-rubric}
 
@@ -59,6 +66,7 @@ Composite rubric. See [taxonomy](/taxonomy).
 | Recipe | Description |
 |---|---|
 | [`rubric-scorer`](/recipes/rubric-scorer) — **Rubric Scorer** | Score a submission against an ordered multi-dimension rubric. |
+| [`swarm-consensus`](/recipes/swarm-consensus) — **Swarm Consensus** | Judge multi-agent debate: consensus?, winner, evidence quality, fatal objection → disposition. |
 
 ## `semantic-find` {#semantic-find}
 
@@ -86,4 +94,9 @@ High-freq reflex. See [taxonomy](/taxonomy).
 |---|---|
 | [`mm-buy-sell`](/recipes/mm-buy-sell) — **MM Buy Sell** | Block-time buy/sell/hold reflex from a compact book snapshot. |
 | [`hot-path-allow`](/recipes/hot-path-allow) — **Hot Path Allow** | Sub-100ms allow/deny reflex on a compact hot-path event. |
+| [`prediction-market-gate`](/recipes/prediction-market-gate) — **Prediction Market Gate** | Arb / liquidity-vs-edge gate for prediction markets (post, cancel, hedge, or skip). |
+| [`sports-bet-gate`](/recipes/sports-bet-gate) — **Sports Bet Gate** | Bet / no-bet / shop-elsewhere gate with edge score and CLV filter. |
+| [`order-allow-deny`](/recipes/order-allow-deny) — **Order Allow Deny** | Pre-trade allow/deny/cancel/hold gate with edge, risk, and news-conflict checks. |
+| [`fraud-score-gate`](/recipes/fraud-score-gate) — **Fraud Score Gate** | Score payment/login fraud risk and dispose: allow, step-up, deny, or review. |
+| [`rtb-bid-gate`](/recipes/rtb-bid-gate) — **RTB Bid Gate** | Pre-bid filter: bid, pass, or block on brand-safety + IVT risk for RTB auctions. |
 

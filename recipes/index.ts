@@ -172,3 +172,86 @@ export {
   type HotPathAllowAction,
   type HotPathAllowState,
 } from "./high-freq-reflex/hot-path-allow.js";
+
+export {
+  toolExecGateRecipe,
+  toolExecGateQuestions,
+  runToolExecGate,
+  type ToolExecGateAction,
+  type ToolExecGateState,
+  type ToolExecGateQuestions,
+} from "./agent-comm-harness/tool-exec-gate.js";
+
+export {
+  swarmConsensusRecipe,
+  swarmConsensusQuestions,
+  runSwarmConsensus,
+  type SwarmConsensusAction,
+  type SwarmConsensusState,
+  type SwarmProposal,
+  type SwarmConsensusQuestions,
+} from "./agent-comm-harness/swarm-consensus.js";
+
+export {
+  orderAllowDenyRecipe,
+  orderAllowDenyQuestions,
+  runOrderAllowDeny,
+  type OrderAllowDenyAction,
+  type OrderAllowDenyState,
+  type OrderAllowDenyQuestions,
+} from "./high-freq-reflex/order-allow-deny.js";
+export {
+  fraudScoreGateRecipe,
+  fraudScoreGateQuestions,
+  runFraudScoreGate,
+  type FraudScoreAction,
+  type FraudScoreState,
+} from "./high-freq-reflex/fraud-score-gate.js";
+export {
+  rtbBidGateRecipe,
+  rtbBidGateQuestions,
+  runRtbBidGate,
+  type RtbBidAction,
+  type RtbBidState,
+  type RtbBidQuestions,
+} from "./high-freq-reflex/rtb-bid-gate.js";
+
+export {
+  predictionMarketGateRecipe,
+  predictionMarketGateQuestions,
+  runPredictionMarketGate,
+  type PredictionMarketAction,
+  type PredictionMarketGateState,
+} from "./prediction-market-gate/prediction-market-gate.js";
+
+export {
+  sportsBetGateRecipe,
+  sportsBetGateQuestions,
+  runSportsBetGate,
+  type SportsBetAction,
+  type SportsBetGateState,
+} from "./sports-bet-gate/sports-bet-gate.js";
+
+export {
+  esportsReflexRecipe,
+  esportsReflexQuestions,
+  runEsportsReflex,
+  type EsportsReflexAction,
+  type EsportsReflexState,
+} from "./candidate-action-selection/esports-reflex.js";
+
+export {
+  edgeContentModRecipe,
+  edgeContentModQuestions,
+  runEdgeContentMod,
+  type EdgeContentModAction,
+  type EdgeContentModState,
+} from "./verify-gate/edge-content-mod.js";
+
+export {
+  cyberAlertTriageRecipe,
+  cyberAlertTriageQuestions,
+  runCyberAlertTriage,
+  type CyberAlertAction,
+  type CyberAlertState,
+} from "./confidence-front-door/cyber-alert-triage.js";

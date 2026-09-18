@@ -22,7 +22,7 @@ npm run eval -- eval/fixtures/ship-gate.jsonl            # → proof.suppressOnL
 npm run eval -- eval/fixtures/alert-gate.jsonl
 ```
 
-**Docs:** `npm run docs:dev` · [demos](demos/marketing/) · [paste prompts](demos/marketing/PROMPTS.md) · [positioning](research/marketing-why-us.md)
+**Docs:** `npm run docs:dev` · [demos](demos/marketing/) · [paste prompts](demos/marketing/PROMPTS.md) · [crazy-fast decisions](research/crazy-fast-decisions.md) · [positioning](research/marketing-why-us.md)
 
 ---
 
@@ -113,6 +113,30 @@ Full prompt pack: [`demos/marketing/PROMPTS.md`](demos/marketing/PROMPTS.md). Re
 
 ---
 
+
+---
+
+## Crazy-fast decision recipes
+
+When the scarce resource is **latency budget**, **decision count**, or **confidence-gated automation**, typed Choice / Score / Noul beats LLM-agent loops. Full ranking, shapes, and proof *targets*: [`research/crazy-fast-decisions.md`](research/crazy-fast-decisions.md).
+
+**Do not invent measured timings** — equations below are the product framing; screenshot YOUR shadow/eval numbers.
+
+| # | Recipe | Equation | Folder |
+|---|---|---|---|
+| 1 | Multi-agent who-speaks-next + tool allow/deny | agent RTT / tool mishap = $ + wallclock | [`recipes/agent-comm-harness/`](recipes/agent-comm-harness/) |
+| 2 | Trading order allow/deny + risk throttle | adverse fills / oversize = $ + ms to cancel | [`recipes/high-freq-reflex/`](recipes/high-freq-reflex/) (`order-allow-deny`, `mm-buy-sell`, `hot-path-allow`) |
+| 3 | Polymarket arb / liquidity-vs-edge gate | stale fill residual = $ + arb half-life | [`recipes/prediction-market-gate/`](recipes/prediction-market-gate/) |
+| 4 | Sports betting bet/no-bet + CLV filter | −CLV bets = $ + line-move ms | [`recipes/sports-bet-gate/`](recipes/sports-bet-gate/) |
+| 5 | Cybersecurity alert triage | pages / analyst hours = $ + MTTR | [`recipes/confidence-front-door/`](recipes/confidence-front-door/) (`cyber-alert-triage`, `alert-gate`, `oncall-page`) |
+| 6 | Ads RTB brand-safety / bid-or-pass | bad impressions / missed auctions = $ + auction budget | [`rtb-bid-gate.ts`](recipes/high-freq-reflex/rtb-bid-gate.ts) ([alias folder](recipes/rtb-bid-gate/)) |
+| 7 | Payment / login fraud score gate | chargebacks + false declines = $ + checkout ms | [`fraud-score-gate.ts`](recipes/high-freq-reflex/fraud-score-gate.ts) (+ `hot-path-allow`) |
+| 8 | Content mod at the edge | toxic ships / overblocks = $ + stream lag | [`recipes/verify-gate/`](recipes/verify-gate/) (`edge-content-mod`, `ship-gate`, `llm-verifier`) |
+| 9 | Esports / game reflex next-action | frames lost to planning = $ (rank) + ms/tick | [`esports-reflex.ts`](recipes/candidate-action-selection/esports-reflex.ts) |
+| 10 | Swarm debate judge / consensus gate | endless debate tokens = $ + time-to-consensus | [`swarm-consensus.ts`](recipes/composite-rubric/swarm-consensus.ts) ([agent-comm re-export](recipes/agent-comm-harness/swarm-consensus.ts)) |
+
+Paste prompts for agent-comm / polymarket / sports / trading: [`demos/marketing/PROMPTS.md`](demos/marketing/PROMPTS.md).
+
 ## Install / quick start
 
 ```bash
@@ -184,6 +208,7 @@ npm run eval -- eval/fixtures/alert-gate.jsonl
 | `verify-gate` | `ship-gate`, `llm-verifier`, `injection-check`, `tool-call-allowlist` |
 | `confidence-front-door` | `alert-gate`, `model-cost-router`, `model-router`, `inbox-triage` |
 | `composite-rubric` / `semantic-find` / `live-multi-judgment` / `high-freq-reflex` | see `recipes/catalog.ts` |
+| `agent-comm-harness` *(pack)* | `who-speaks-next`, `tool-exec-gate`, `swarm-consensus` — see [crazy-fast](research/crazy-fast-decisions.md) |
 
 ---
 
