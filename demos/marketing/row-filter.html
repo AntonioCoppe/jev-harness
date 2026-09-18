@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NL Row Filter — jev-harness demo</title>
+  <style>
+    :root {
+      --bg: #0a0d12; --panel: #11161f; --panel2: #171e29; --border: #273246;
+      --text: #eef3fb; --muted: #8fa0b8; --accent: #6ee7b7; --accent2: #60a5fa;
+      --include: #34d399; --exclude: #64748b; --review: #fbbf24;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; font-family: var(--sans); color: var(--text);
+      background:
+        radial-gradient(1000px 500px at 0% 0%, #123028 0%, transparent 55%),
+        radial-gradient(800px 400px at 100% 10%, #1a2540 0%, transparent 50%),
+        var(--bg);
+    }
+    .shell { max-width: 1180px; margin: 0 auto; padding: 20px 22px 36px; }
+    .top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 16px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .brand h1 { margin: 0 0 4px; font-size: 20px; letter-spacing: -.02em; }
+    .brand p { margin: 0; color: var(--muted); font-size: 13px; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      font-size: 11px; font-weight: 650; padding: 5px 11px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--panel2); color: var(--muted);
+    }
+    .chip.demo { color: #fbbf24; border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.08); }
+    .chip.metric { color: var(--accent); border-color: rgba(110,231,183,.3); background: rgba(110,231,183,.08); font-family: var(--mono); }
+    .query-card {
+      background: linear-gradient(180deg, var(--panel), #0d1219);
+      border: 1px solid var(--border); border-radius: 16px; padding: 16px;
+      box-shadow: 0 16px 48px rgba(0,0,0,.4); margin-bottom: 14px;
+    }
+    .sql {
+      font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
+      background: #0b1017; border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px 16px; color: #c7d2e0; margin-bottom: 12px;
+    }
+    .sql .kw { color: #93c5fd; }
+    .sql .fn { color: var(--accent); }
+    .sql .str { color: #f9a8d4; }
+    .input-row { display: flex; gap: 10px; }
+    input[type="text"] {
+      flex: 1; background: #0b1017; border: 1px solid var(--border); border-radius: 12px;
+      color: var(--text); font: 500 14px var(--sans); padding: 12px 14px; outline: none;
+    }
+    input[type="text"]:focus { border-color: rgba(110,231,183,.5); box-shadow: 0 0 0 3px rgba(110,231,183,.12); }
+    button.run {
+      border: 0; border-radius: 12px; padding: 0 18px; cursor: pointer;
+      font: 700 13px var(--sans); color: #042016;
+      background: linear-gradient(135deg, #34d399, #60a5fa);
+    }
+    .presets { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .presets button {
+      background: var(--panel2); border: 1px solid var(--border); color: var(--muted);
+      border-radius: 999px; padding: 6px 12px; font: 600 11.5px var(--sans); cursor: pointer;
+    }
+    .presets button:hover { color: var(--text); border-color: #3b4d66; }
+    .table-card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0,0,0,.35);
+    }
+    .thead, .row {
+      display: grid; grid-template-columns: 56px 1.2fr 1fr 1fr .9fr 140px 110px;
+      gap: 8px; align-items: center; padding: 10px 14px;
+    }
+    .thead {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted);
+      border-bottom: 1px solid var(--border); background: rgba(255,255,255,.02);
+    }
+    .row { border-bottom: 1px solid rgba(39,50,70,.65); font-size: 13px; transition: .2s ease; }
+    .row:last-child { border-bottom: 0; }
+    .row.include { background: rgba(52,211,153,.07); }
+    .row.exclude { opacity: .42; filter: saturate(.6); }
+    .row.review { background: rgba(251,191,36,.06); }
+    .row.pending { opacity: .85; }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
+      font: 700 11px var(--mono); color: #041018;
+    }
+    .name { font-weight: 650; }
+    .sub { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+    .conf {
+      height: 6px; border-radius: 999px; background: #1a2330; overflow: hidden; margin-top: 4px;
+    }
+    .conf > i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .tag {
+      font: 700 10.5px var(--mono); padding: 4px 8px; border-radius: 7px; text-transform: uppercase;
+      letter-spacing: .04em; text-align: center;
+    }
+    .tag.include { background: rgba(52,211,153,.15); color: var(--include); }
+    .tag.exclude { background: rgba(100,116,139,.2); color: #94a3b8; }
+    .tag.review { background: rgba(251,191,36,.15); color: var(--review); }
+    .tag.pending { background: rgba(96,165,250,.12); color: #93c5fd; }
+    .legend {
+      display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px;
+      font-size: 12px; color: var(--muted);
+    }
+    .legend span::before {
+      content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      margin-right: 6px; vertical-align: middle;
+    }
+    .legend .i::before { background: var(--include); }
+    .legend .e::before { background: #64748b; }
+    .legend .r::before { background: var(--review); }
+    .foot { margin-top: 10px; font: 12px var(--mono); color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="top">
+      <div class="brand">
+        <h1>NL row filter</h1>
+        <p>row-judgment · same predicate over every row · DecisionHarness policy → include / exclude / review</p>
+      </div>
+      <div class="chips">
+        <span class="chip demo">DEMO · no API key</span>
+        <span class="chip metric" id="costChip">— rows · — · —</span>
+      </div>
+    </div>
+
+    <div class="query-card">
+      <div class="sql">
+        <span class="kw">SELECT</span> * <span class="kw">FROM</span> people<br/>
+        <span class="kw">WHERE</span> <span class="fn">jev</span>(row, <span class="str" id="sqlPred">'could work from home'</span>);
+      </div>
+      <div class="input-row">
+        <input id="pred" type="text" value="could work from home" placeholder="Natural-language predicate…" />
+        <button class="run" id="runBtn">Judge rows</button>
+      </div>
+      <div class="presets">
+        <button data-p="could work from home">could work from home</button>
+        <button data-p="senior enough to lead a small team">senior enough to lead</button>
+        <button data-p="likely in a coastal US timezone">coastal US timezone</button>
+        <button data-p="open to contract / freelance work">open to contract</button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="thead">
+        <div></div><div>Person</div><div>Role</div><div>Location</div><div>Notes</div><div>Match</div><div>Action</div>
+      </div>
+      <div id="rows"></div>
+    </div>
+    <div class="legend">
+      <span class="i">include (Noul ≥ threshold)</span>
+      <span class="e">exclude</span>
+      <span class="r">review (low confidence)</span>
+    </div>
+    <p class="foot" id="foot">Shape: row-judgment · questions: matches (Noul) + strength (Score) · canned demo probabilities</p>
+  </div>
+
+  <script>
+    const PEOPLE = [
+      { id: "p01", name: "Maya Chen", role: "Staff eng", loc: "Portland, OR", notes: "async-first, home office", color: "#6ee7b7",
+        preds: {
+          "could work from home": { noul: 0.92, strength: 1.8, conf: 0.94, action: "include" },
+          "senior enough to lead a small team": { noul: 0.88, strength: 1.7, conf: 0.9, action: "include" },
+          "likely in a coastal US timezone": { noul: 0.86, strength: 1.5, conf: 0.88, action: "include" },
+          "open to contract / freelance work": { noul: 0.25, strength: 0.4, conf: 0.72, action: "exclude" },
+        }},
+      { id: "p02", name: "Jordan Blake", role: "Site tech", loc: "Houston, TX", notes: "on-site plant shifts", color: "#f472b6",
+        preds: {
+          "could work from home": { noul: 0.12, strength: 0.2, conf: 0.91, action: "exclude" },
+          "senior enough to lead a small team": { noul: 0.45, strength: 0.9, conf: 0.55, action: "review" },
+          "likely in a coastal US timezone": { noul: 0.2, strength: 0.3, conf: 0.8, action: "exclude" },
+          "open to contract / freelance work": { noul: 0.3, strength: 0.5, conf: 0.7, action: "exclude" },
+        }},
+      { id: "p03", name: "Priya Nair", role: "PM", loc: "Remote · IST", notes: "overlap 2h ET mornings", color: "#60a5fa",
+        preds: {
+          "could work from home": { noul: 0.97, strength: 2.0, conf: 0.97, action: "include" },
+          "senior enough to lead a small team": { noul: 0.78, strength: 1.4, conf: 0.82, action: "include" },
+          "likely in a coastal US timezone": { noul: 0.08, strength: 0.1, conf: 0.93, action: "exclude" },
+          "open to contract / freelance work": { noul: 0.4, strength: 0.7, conf: 0.58, action: "review" },
+        }},
+      { id: "p04", name: "Sam Ortiz", role: "Designer", loc: "Brooklyn, NY", notes: "hybrid 2d office", color: "#fbbf24",
+        preds: {
+          "could work from home": { noul: 0.71, strength: 1.3, conf: 0.76, action: "include" },
+          "senior enough to lead a small team": { noul: 0.55, strength: 1.0, conf: 0.52, action: "review" },
+          "likely in a coastal US timezone": { noul: 0.95, strength: 1.9, conf: 0.96, action: "include" },
+          "open to contract / freelance work": { noul: 0.82, strength: 1.5, conf: 0.85, action: "include" },
+        }},
+      { id: "p05", name: "Elena Vogt", role: "SRE", loc: "Berlin", notes: "on-call rotation EU", color: "#a78bfa",
+        preds: {
+          "could work from home": { noul: 0.9, strength: 1.7, conf: 0.9, action: "include" },
+          "senior enough to lead a small team": { noul: 0.83, strength: 1.6, conf: 0.86, action: "include" },
+          "likely in a coastal US timezone": { noul: 0.05, strength: 0.05, conf: 0.95, action: "exclude" },
+          "open to contract / freelance work": { noul: 0.18, strength: 0.3, conf: 0.84, action: "exclude" },
+        }},
+      { id: "p06", name: "Chris Ng", role: "Support L1", loc: "Manila", notes: "phone queue required", color: "#fb7185",
+        preds: {
+          "could work from home": { noul: 0.35, strength: 0.6, conf: 0.6, action: "review" },
+          "senior enough to lead a small team": { noul: 0.15, strength: 0.2, conf: 0.88, action: "exclude" },
+          "likely in a coastal US timezone": { noul: 0.1, strength: 0.15, conf: 0.9, action: "exclude" },
+          "open to contract / freelance work": { noul: 0.22, strength: 0.35, conf: 0.8, action: "exclude" },
+        }},
+      { id: "p07", name: "Ava Brooks", role: "Data eng", loc: "Austin, TX", notes: "WFH since 2020", color: "#2dd4bf",
+        preds: {
+          "could work from home": { noul: 0.94, strength: 1.9, conf: 0.95, action: "include" },
+          "senior enough to lead a small team": { noul: 0.7, strength: 1.3, conf: 0.74, action: "include" },
+          "likely in a coastal US timezone": { noul: 0.28, strength: 0.4, conf: 0.7, action: "exclude" },
+          "open to contract / freelance work": { noul: 0.33, strength: 0.5, conf: 0.65, action: "exclude" },
+        }},
+      { id: "p08", name: "Noah Kim", role: "Sales AE", loc: "SF Bay", notes: "field visits weekly", color: "#38bdf8",
+        preds: {
+          "could work from home": { noul: 0.48, strength: 0.8, conf: 0.54, action: "review" },
+          "senior enough to lead a small team": { noul: 0.6, strength: 1.1, conf: 0.63, action: "include" },
+          "likely in a coastal US timezone": { noul: 0.98, strength: 2.0, conf: 0.98, action: "include" },
+          "open to contract / freelance work": { noul: 0.12, strength: 0.2, conf: 0.9, action: "exclude" },
+        }},
+      { id: "p09", name: "Riley Moss", role: "Contractor", loc: "Denver, CO", notes: "1099 · 20h/wk", color: "#c084fc",
+        preds: {
+          "could work from home": { noul: 0.96, strength: 1.9, conf: 0.96, action: "include" },
+          "senior enough to lead a small team": { noul: 0.4, strength: 0.7, conf: 0.58, action: "review" },
+          "likely in a coastal US timezone": { noul: 0.35, strength: 0.5, conf: 0.68, action: "exclude" },
+          "open to contract / freelance work": { noul: 0.99, strength: 2.0, conf: 0.99, action: "include" },
+        }},
+      { id: "p10", name: "Tom Hale", role: "Warehouse lead", loc: "Columbus, OH", notes: "forklift certified", color: "#f87171",
+        preds: {
+          "could work from home": { noul: 0.04, strength: 0.05, conf: 0.97, action: "exclude" },
+          "senior enough to lead a small team": { noul: 0.8, strength: 1.5, conf: 0.84, action: "include" },
+          "likely in a coastal US timezone": { noul: 0.06, strength: 0.1, conf: 0.94, action: "exclude" },
+          "open to contract / freelance work": { noul: 0.2, strength: 0.3, conf: 0.78, action: "exclude" },
+        }},
+    ];
+
+    // Expand visual density for "129 rows" chip narrative — we show 10 live, claim is illustrative of seed
+    const TOTAL_CLAIM = 129;
+    const LATENCY = "~1s";
+    const COST = "$0.0009";
+
+    let judged = false;
+    let current = "could work from home";
+
+    const el = id => document.getElementById(id);
+
+    function judgment(p) {
+      const hit = p.preds[current];
+      if (hit) return hit;
+      // fallback heuristic for free-typed predicates
+      const hay = (p.name + " " + p.role + " " + p.loc + " " + p.notes).toLowerCase();
+      const q = current.toLowerCase();
+      let noul = 0.35;
+      if (q.includes("home") || q.includes("remote")) noul = /remote|wfh|home|async|1099|contractor/.test(hay) ? 0.9 : /on-site|plant|warehouse|forklift|field|phone/.test(hay) ? 0.12 : 0.55;
+      else if (q.includes("senior") || q.includes("lead")) noul = /staff|lead|sre|pm|senior/.test(hay) ? 0.82 : 0.35;
+      else noul = 0.45 + (hay.length % 40) / 100;
+      const conf = 0.55 + (noul > 0.7 || noul < 0.3 ? 0.3 : 0);
+      const action = conf < 0.6 ? "review" : noul >= 0.55 ? "include" : "exclude";
+      return { noul, strength: noul * 2, conf, action };
+    }
+
+    function render(animate) {
+      el("sqlPred").textContent = "'" + current.replace(/'/g, "\\'") + "'";
+      const nodes = PEOPLE.map((p, i) => {
+        const j = judged ? judgment(p) : null;
+        const cls = judged ? j.action : "pending";
+        const delay = animate ? `style="transition-delay:${i*45}ms"` : "";
+        return `
+          <div class="row ${cls}" ${delay}>
+            <div class="avatar" style="background:${p.color}">${p.name.split(" ").map(x=>x[0]).join("")}</div>
+            <div><div class="name">${p.name}</div><div class="sub">${p.id}</div></div>
+            <div>${p.role}</div>
+            <div>${p.loc}</div>
+            <div class="sub">${p.notes}</div>
+            <div>
+              ${judged ? `<div class="sub">noul ${j.noul.toFixed(2)} · ${(j.conf*100).toFixed(0)}%</div>
+              <div class="conf"><i style="width:${j.noul*100}%"></i></div>` : `<div class="sub">—</div>`}
+            </div>
+            <div><span class="tag ${cls}">${judged ? j.action : "pending"}</span></div>
+          </div>`;
+      }).join("");
+      el("rows").innerHTML = nodes;
+      if (judged) {
+        const inc = PEOPLE.filter(p => judgment(p).action === "include").length;
+        el("costChip").textContent = `${TOTAL_CLAIM} rows · ${LATENCY} · ${COST}`;
+        el("foot").textContent = `Demo sample ${PEOPLE.length}/${TOTAL_CLAIM} shown · ${inc} include · seed metrics from research/taxonomy (iam_zachi) · canned scores`;
+      } else {
+        el("costChip").textContent = `${TOTAL_CLAIM} rows · awaiting · —`;
+      }
+    }
+
+    function run() {
+      current = el("pred").value.trim() || "could work from home";
+      judged = true;
+      render(true);
+    }
+
+    el("runBtn").onclick = run;
+    el("pred").addEventListener("keydown", e => { if (e.key === "Enter") run(); });
+    document.querySelectorAll(".presets button").forEach(b => {
+      b.onclick = () => { el("pred").value = b.dataset.p; run(); };
+    });
+
+    render(false);
+    setTimeout(run, 350);
+  </script>
+</body>
+</html>

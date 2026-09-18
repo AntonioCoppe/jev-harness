@@ -48,6 +48,14 @@ export {
   type ModelRouterState,
 } from "./confidence-front-door/model-router.js";
 export {
+  modelCostRouterRecipe,
+  modelCostRouterQuestions,
+  runModelCostRouter,
+  pctRoutedCheap,
+  type CostTier,
+  type ModelCostRouterState,
+} from "./confidence-front-door/model-cost-router.js";
+export {
   alertGateRecipe,
   alertGateQuestions,
   runAlertGate,
@@ -71,6 +79,13 @@ export {
 } from "./confidence-front-door/oncall-page.js";
 
 export { llmVerifierQuestions, runLlmVerifier, type VerifyAction } from "./verify-gate/llm-verifier.js";
+export {
+  shipGateRecipe,
+  shipGateQuestions,
+  runShipGate,
+  type ShipAction,
+  type ShipGateState,
+} from "./verify-gate/ship-gate.js";
 export {
   injectionCheckQuestions,
   runInjectionCheck,

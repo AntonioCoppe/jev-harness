@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Savings gallery — jev-harness</title>
+<style>
+:root{--bg:#06080c;--panel:#10151e;--border:#243044;--text:#f1f5fb;--muted:#8b9bb2;--accent:#5eead4;
+--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--sans:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);color:var(--text);background:
+ radial-gradient(1000px 500px at 0% 0%,#14304a 0%,transparent 50%),
+ radial-gradient(800px 400px at 100% 0%,#2a1840 0%,transparent 45%),var(--bg)}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 22px 48px}
+.hdr{margin-bottom:22px}
+.hdr h1{margin:0 0 8px;font-size:28px;letter-spacing:-.03em}
+.hdr p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.5;max-width:720px}
+.eqrule{margin:16px 0 22px;padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:#0b1018;
+ font:650 14px var(--mono);color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.tile{display:block;text-decoration:none;color:inherit;background:linear-gradient(180deg,#131b27,#0c1119);
+ border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 16px 40px rgba(0,0,0,.35);transition:.15s}
+.tile:hover{border-color:rgba(94,234,212,.4);transform:translateY(-2px)}
+.k{font:700 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tile h2{margin:6px 0 12px;font-size:17px;letter-spacing:-.02em}
+.eqmini{display:grid;grid-template-columns:1.1fr auto 1fr auto 1fr;gap:6px;align-items:stretch}
+.eqmini div{background:#0a0e15;border:1px solid var(--border);border-radius:10px;padding:8px}
+.eqmini .p{border-color:rgba(251,113,133,.3)}
+.eqmini .m{border-color:rgba(52,211,153,.3)}
+.eqmini .s{border-color:rgba(96,165,250,.3)}
+.eqmini b{display:block;font-size:15px;letter-spacing:-.02em}
+.eqmini span{display:block;margin-top:3px;font:10.5px var(--mono);color:var(--muted)}
+.eqmini i{display:flex;align-items:center;justify-content:center;font-style:normal;color:var(--muted);font-weight:800}
+.meta{display:flex;justify-content:space-between;gap:8px;margin-top:12px;font:11px var(--mono);color:var(--muted)}
+.tag{color:#fbbf24}
+.note{margin-top:18px;font:12px var(--mono);color:var(--muted)}
+</style></head><body>
+<div class="wrap">
+  <div class="hdr">
+    <h1>Decision savings gallery</h1>
+    <p>Each card is one job with undeniable before→after. Hero equation matches the compaction bar:
+    <strong>painful resource = money savings + speed</strong>. Interactive mocks live on the gallery index.</p>
+  </div>
+  <div class="eqrule">&lt;painful resource&gt; = &lt;$ savings&gt; + &lt;speed&gt;</div>
+  <div class="grid">
+    
+    <a class="tile" href="cards/tool-retain.html">
+      <div class="k">compaction-adjacent · keep/delete</div>
+      <h2>Which tool results still matter?</h2>
+      <div class="eqmini">
+        <div class="p"><b>Context tokens</b><span>lossy /compact kills paths</span></div>
+        <i>=</i>
+        <div class="m"><b>−62% tokens</b><span>DEMO · vs full history</span></div>
+        <i>+</i>
+        <div class="s"><b>−41% TTFT</b><span>DEMO · next turn</span></div>
+      </div>
+      <div class="meta"><span class="tag">DEMO</span><span>Choice(keep|drop) · never rewrite</span></div>
+    </a>
+    <a class="tile" href="cards/model-router.html">
+      <div class="k">confidence-front-door · model-router</div>
+      <h2>Stop paying frontier for FAQ</h2>
+      <div class="eqmini">
+        <div class="p"><b>Always-frontier</b><span>$ waste on easy turns</span></div>
+        <i>=</i>
+        <div class="m"><b>−68% $</b><span>DEMO · vs always-frontier</span></div>
+        <i>+</i>
+        <div class="s"><b>−55% p50</b><span>DEMO · routed latency</span></div>
+      </div>
+      <div class="meta"><span class="tag">DEMO</span><span>Choice(cheap|mid|frontier) + Score(risk)</span></div>
+    </a>
+    <a class="tile" href="cards/ship-gate.html">
+      <div class="k">verify-gate · llm-verifier</div>
+      <h2>Ship gate before the incident</h2>
+      <div class="eqmini">
+        <div class="p"><b>Ungated ship</b><span>incident $ + rollback</span></div>
+        <i>=</i>
+        <div class="m"><b>−$12k</b><span>DEMO · avoided incident class</span></div>
+        <i>+</i>
+        <div class="s"><b>38 blocked</b><span>DEMO · before prod</span></div>
+      </div>
+      <div class="meta"><span class="tag">DEMO</span><span>Choice(allow|revise|block) + Noul(grounded) + Noul(jailbreak)</span></div>
+    </a>
+    <a class="tile" href="cards/alert-fp.html">
+      <div class="k">confidence-front-door · alert-gate</div>
+      <h2>Pager burn → sleep</h2>
+      <div class="eqmini">
+        <div class="p"><b>Alert flood</b><span>pager burn / eng hours</span></div>
+        <i>=</i>
+        <div class="m"><b>−9.4h/wk</b><span>DEMO · on-call reclaimed</span></div>
+        <i>+</i>
+        <div class="s"><b>94% FP↓</b><span>DEMO · storm suppressed</span></div>
+      </div>
+      <div class="meta"><span class="tag">DEMO</span><span>Choice(disposition) + Score(severity) + Noul(needs_human)</span></div>
+    </a>
+    <a class="tile" href="cards/row-filter.html">
+      <div class="k">row-judgment · NL predicate</div>
+      <h2>Semantic WHERE without embeddings</h2>
+      <div class="eqmini">
+        <div class="p"><b>LLM-per-row</b><span>$ + wallclock blowup</span></div>
+        <i>=</i>
+        <div class="m"><b>$0.0009</b><span>seed · 129 judgments</span></div>
+        <i>+</i>
+        <div class="s"><b>~1s</b><span>seed · then cache ~6ms</span></div>
+      </div>
+      <div class="meta"><span class="tag">SEED</span><span>Noul(matches) + Score(strength) per row</span></div>
+    </a>
+    <a class="tile" href="cards/ui-action.html">
+      <div class="k">candidate-action-selection · ui-grounding</div>
+      <h2>Click without a vision agent</h2>
+      <div class="eqmini">
+        <div class="p"><b>Vision-agent loop</b><span>$ + multi-second steps</span></div>
+        <i>=</i>
+        <div class="m"><b>cents/step</b><span>labels only to Jev</span></div>
+        <i>+</i>
+        <div class="s"><b>~90ms</b><span>seed · per decision</span></div>
+      </div>
+      <div class="meta"><span class="tag">SEED</span><span>Choice(dynamic candidates) + Noul(done)</span></div>
+    </a>
+  </div>
+  <p class="note">DEMO cards are synthetic screenshot scenarios. SEED cards cite research/seeds.md + taxonomy.md.
+  Compaction specialist (Claude Code): github.com/tamaratran/fast-jev-compaction — complementary, not a dunk.</p>
+</div>
+</body></html>

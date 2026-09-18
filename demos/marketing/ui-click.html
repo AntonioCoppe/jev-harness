@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UI Candidate Click — jev-harness demo</title>
+  <style>
+    :root {
+      --bg: #090b10; --chrome: #1c1f26; --panel: #12151c; --border: #2a3140;
+      --text: #eef2f8; --muted: #8b96a8; --accent: #5eead4; --pick: #38bdf8;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; font-family: var(--sans); color: var(--text);
+      background:
+        radial-gradient(900px 480px at 80% -10%, #1a2a48 0%, transparent 55%),
+        radial-gradient(700px 400px at 0% 100%, #0f2f2a 0%, transparent 50%),
+        var(--bg);
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 18px 20px 32px; }
+    .hdr { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .hdr h1 { margin: 0 0 4px; font-size: 18px; }
+    .hdr p { margin: 0; color: var(--muted); font-size: 13px; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-start; }
+    .chip {
+      font: 650 11px var(--sans); padding: 5px 10px; border-radius: 999px;
+      border: 1px solid var(--border); background: #151922; color: var(--muted);
+    }
+    .chip.demo { color: #fbbf24; border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.08); }
+    .chip.fast { color: var(--accent); border-color: rgba(94,234,212,.35); background: rgba(94,234,212,.08); font-family: var(--mono); }
+    .chip.priv { color: #c4b5fd; border-color: rgba(196,181,253,.3); background: rgba(196,181,253,.08); }
+    .grid { display: grid; grid-template-columns: 1.25fr .85fr; gap: 14px; }
+    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+    .browser {
+      border-radius: 14px; overflow: hidden; border: 1px solid var(--border);
+      box-shadow: 0 20px 50px rgba(0,0,0,.45); background: var(--chrome);
+    }
+    .tb {
+      display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+      background: #161920; border-bottom: 1px solid var(--border);
+    }
+    .dots span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+    .dots .r { background: #ff5f57; } .dots .y { background: #febc2e; } .dots .g { background: #28c840; }
+    .url {
+      flex: 1; background: #0d1016; border: 1px solid var(--border); border-radius: 8px;
+      padding: 6px 10px; font: 12px var(--mono); color: var(--muted);
+    }
+    .page {
+      position: relative; background: linear-gradient(180deg, #f4f6fb, #e8edf6);
+      color: #0f172a; min-height: 460px; padding: 28px 32px; font-family: var(--sans);
+    }
+    .page h2 { margin: 0 0 6px; font-size: 22px; }
+    .page .sub { color: #64748b; font-size: 13px; margin-bottom: 22px; }
+    .form {
+      background: #fff; border: 1px solid #dbe3f0; border-radius: 14px; padding: 18px;
+      max-width: 420px; box-shadow: 0 8px 24px rgba(15,23,42,.06);
+    }
+    .form label { display: block; font-size: 12px; font-weight: 650; color: #475569; margin: 10px 0 4px; }
+    .form input, .form select {
+      width: 100%; padding: 9px 10px; border-radius: 8px; border: 1px solid #cbd5e1;
+      font: 13px var(--sans); background: #f8fafc;
+    }
+    .actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+    .fake-btn {
+      position: relative; border: 0; border-radius: 9px; padding: 9px 14px;
+      font: 650 13px var(--sans); cursor: default;
+    }
+    .fake-btn.primary { background: #2563eb; color: #fff; }
+    .fake-btn.ghost { background: #e2e8f0; color: #334155; }
+    .fake-btn.linkish { background: transparent; color: #2563eb; text-decoration: underline; padding-left: 0; }
+    .badge {
+      position: absolute; top: -10px; left: -10px; width: 22px; height: 22px; border-radius: 50%;
+      background: #0f172a; color: #5eead4; font: 800 11px var(--mono);
+      display: grid; place-items: center; border: 2px solid #5eead4; z-index: 2;
+      box-shadow: 0 0 0 3px rgba(94,234,212,.25);
+    }
+    .cand.pick .badge { background: #0ea5e9; color: #fff; border-color: #fff; transform: scale(1.1); }
+    .cand.pick {
+      outline: 3px solid #0ea5e9; outline-offset: 3px;
+      box-shadow: 0 0 0 6px rgba(14,165,233,.2);
+    }
+    .cand.dim { opacity: .45; filter: grayscale(.3); }
+    .side {
+      background: linear-gradient(180deg, var(--panel), #0c0f15);
+      border: 1px solid var(--border); border-radius: 14px; padding: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.35);
+    }
+    .side h3 { margin: 0 0 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    .goal {
+      background: #0b0e14; border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px 12px; font-size: 13px; margin-bottom: 12px;
+    }
+    .goal strong { color: var(--accent); }
+    .dist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .row { display: grid; grid-template-columns: 28px 1fr 52px; gap: 8px; align-items: center; font-size: 12.5px; }
+    .bar { height: 8px; background: #1a2030; border-radius: 999px; overflow: hidden; }
+    .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--pick)); }
+    .row.best .bar i { background: linear-gradient(90deg, #38bdf8, #818cf8); }
+    .row.best span:last-child { color: var(--pick); font-weight: 700; }
+    .loop {
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+      padding: 10px; border-radius: 10px; background: rgba(94,234,212,.06);
+      border: 1px solid rgba(94,234,212,.2); font: 12px var(--mono); color: var(--muted);
+    }
+    .controls { display: flex; gap: 8px; margin-top: 12px; }
+    button.act {
+      flex: 1; border: 1px solid var(--border); background: #171b24; color: var(--text);
+      border-radius: 10px; padding: 10px; font: 650 12.5px var(--sans); cursor: pointer;
+    }
+    button.act.primary {
+      border: 0; color: #042f2e; background: linear-gradient(135deg, #5eead4, #38bdf8);
+    }
+    .trace { margin-top: 12px; font: 11.5px var(--mono); color: var(--muted); line-height: 1.5; max-height: 120px; overflow: auto; }
+    .trace .ok { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hdr">
+      <div>
+        <h1>UI candidate click · computer-use</h1>
+        <p>Local DOM/OCR labels → Jev Choice distribution → click → loop. Shape: <code>candidate-action-selection</code></p>
+      </div>
+      <div class="chips">
+        <span class="chip demo">DEMO · canned distribution</span>
+        <span class="chip fast" id="latBadge">~90ms / decision</span>
+        <span class="chip priv">no pixels leave device</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="browser">
+        <div class="tb">
+          <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+          <div class="url">https://app.example.com/checkout · a11y/DOM candidates only</div>
+        </div>
+        <div class="page" id="page">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <aside class="side">
+        <h3>Jev distribution</h3>
+        <div class="goal">Goal: <strong id="goal">Complete checkout with saved card</strong></div>
+        <div class="dist" id="dist"></div>
+        <div class="loop">
+          <span>step <span id="step">1</span> · done Noul <span id="done">0.18</span></span>
+          <span id="ms">92ms</span>
+        </div>
+        <div class="controls">
+          <button class="act" id="perceive">Re-perceive</button>
+          <button class="act primary" id="clickBest">Click best</button>
+        </div>
+        <div class="trace" id="trace"></div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const STEPS = [
+      {
+        goal: "Complete checkout with saved card",
+        done: 0.18,
+        ms: 92,
+        html: `
+          <h2>Checkout</h2>
+          <div class="sub">Ship to home · Order #48219</div>
+          <div class="form">
+            <label>Shipping address</label>
+            <input class="cand" data-id="1" data-label="Shipping address field" value="184 Pine St, Toronto" readonly />
+            <label>Payment</label>
+            <select class="cand" data-id="2" data-label="Payment method dropdown"><option>Visa ••4242 (saved)</option></select>
+            <div class="actions">
+              <button class="fake-btn ghost cand" data-id="3" data-label="Back to cart">Back to cart</button>
+              <button class="fake-btn primary cand" data-id="4" data-label="Place order">Place order</button>
+              <button class="fake-btn linkish cand" data-id="5" data-label="Apply promo code">Apply promo code</button>
+            </div>
+          </div>`,
+        dist: [
+          { id: "4", label: "Place order", p: 0.71 },
+          { id: "2", label: "Payment method dropdown", p: 0.14 },
+          { id: "5", label: "Apply promo code", p: 0.08 },
+          { id: "1", label: "Shipping address field", p: 0.05 },
+          { id: "3", label: "Back to cart", p: 0.02 },
+        ],
+        pick: "4",
+        narrate: "Choice → Place order (0.71) · STOP Noul low → continue",
+      },
+      {
+        goal: "Confirm order success",
+        done: 0.86,
+        ms: 87,
+        html: `
+          <h2>Order confirmed</h2>
+          <div class="sub">Thanks — receipt sent to you@example.com</div>
+          <div class="form">
+            <p style="margin:0 0 12px;font-size:14px;color:#334155">Order <strong>#48219</strong> is processing.</p>
+            <div class="actions">
+              <button class="fake-btn primary cand" data-id="1" data-label="View order details">View order details</button>
+              <button class="fake-btn ghost cand" data-id="2" data-label="Continue shopping">Continue shopping</button>
+              <button class="fake-btn linkish cand" data-id="3" data-label="Download PDF receipt">Download PDF receipt</button>
+            </div>
+          </div>`,
+        dist: [
+          { id: "STOP", label: "STOP (goal achieved)", p: 0.64 },
+          { id: "1", label: "View order details", p: 0.22 },
+          { id: "3", label: "Download PDF receipt", p: 0.09 },
+          { id: "2", label: "Continue shopping", p: 0.05 },
+        ],
+        pick: "STOP",
+        narrate: "done Noul 0.86 → policy STOP · no further clicks",
+      },
+    ];
+
+    let idx = 0;
+    const el = id => document.getElementById(id);
+    const log = [];
+
+    function paint(animatePick) {
+      const s = STEPS[idx];
+      el("goal").textContent = s.goal;
+      el("step").textContent = String(idx + 1);
+      el("done").textContent = s.done.toFixed(2);
+      el("ms").textContent = s.ms + "ms";
+      el("latBadge").textContent = `~${s.ms}ms / decision`;
+      el("page").innerHTML = s.html;
+      // number badges
+      el("page").querySelectorAll(".cand").forEach(node => {
+        const id = node.dataset.id;
+        const b = document.createElement("span");
+        b.className = "badge";
+        b.textContent = id;
+        node.style.position = "relative";
+        node.prepend(b);
+      });
+      el("dist").innerHTML = s.dist.map((d, i) => `
+        <div class="row ${i === 0 ? "best" : ""}">
+          <span>${d.id === "STOP" ? "⏹" : "#" + d.id}</span>
+          <div><div>${d.label}</div><div class="bar"><i style="width:${d.p * 100}%"></i></div></div>
+          <span>${(d.p * 100).toFixed(0)}%</span>
+        </div>`).join("");
+
+      // highlight
+      el("page").querySelectorAll(".cand").forEach(n => {
+        n.classList.remove("pick", "dim");
+        if (s.pick === "STOP") n.classList.add("dim");
+        else if (n.dataset.id === s.pick) n.classList.add("pick");
+        else if (animatePick) n.classList.add("dim");
+      });
+
+      el("trace").innerHTML = log.map(l => `<div class="ok">→ ${l}</div>`).join("") ||
+        `<div>Perception: DOM/a11y labels only · Jev never sees pixels</div>`;
+    }
+
+    el("clickBest").onclick = () => {
+      const s = STEPS[idx];
+      log.push(`t+${s.ms}ms  click ${s.pick}  · ${s.narrate}`);
+      paint(true);
+      if (s.pick === "STOP") return;
+      setTimeout(() => {
+        if (idx < STEPS.length - 1) { idx++; paint(false); }
+      }, 550);
+    };
+
+    el("perceive").onclick = () => {
+      idx = 0; log.length = 0; paint(false);
+      log.push("re-perceive · candidate set refreshed");
+      paint(false);
+    };
+
+    paint(false);
+    setTimeout(() => el("clickBest").click(), 400);
+  </script>
+</body>
+</html>

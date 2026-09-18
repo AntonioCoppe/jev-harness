@@ -23,10 +23,12 @@ import { stopOrContinueQuestions } from "../recipes/candidate-action-selection/s
 import { rowSemanticMatchQuestions } from "../recipes/row-judgment/row-semantic-match.js";
 import { alertGateQuestions } from "../recipes/confidence-front-door/alert-gate.js";
 import { modelRouterQuestions } from "../recipes/confidence-front-door/model-router.js";
+import { modelCostRouterQuestions } from "../recipes/confidence-front-door/model-cost-router.js";
 import { inboxTriageQuestions } from "../recipes/confidence-front-door/inbox-triage.js";
 import { incidentSeverityQuestions } from "../recipes/confidence-front-door/incident-severity.js";
 import { oncallPageQuestions } from "../recipes/confidence-front-door/oncall-page.js";
 import { llmVerifierQuestions } from "../recipes/verify-gate/llm-verifier.js";
+import { shipGateQuestions } from "../recipes/verify-gate/ship-gate.js";
 import { injectionCheckQuestions } from "../recipes/verify-gate/injection-check.js";
 import { toolCallAllowlistQuestions } from "../recipes/verify-gate/tool-call-allowlist.js";
 import {
@@ -105,6 +107,14 @@ function decideModelRouter(answers: Record<string, AnyAnswer>): string {
   return tier.choice;
 }
 
+function decideModelCostRouter(answers: Record<string, AnyAnswer>): string {
+  const tier = answers.tier as { choice: string };
+  const risk = answers.risk as { score: number };
+  if (risk.score >= 1.5) return "frontier";
+  if (tier.choice === "mid" && risk.score < 0.6) return "cheap";
+  return tier.choice;
+}
+
 function decideAlertGate(answers: Record<string, AnyAnswer>): string {
   const disposition = answers.disposition as { choice: string };
   const severity = answers.severity as { score: number };
@@ -152,6 +162,15 @@ function decideLlmVerifier(answers: Record<string, AnyAnswer>): string {
   if (jailbreak.noul >= 0.5 || verdict.choice === "block") return "block";
   if (grounded.noul < 0.45 || verdict.choice === "revise") return "revise";
   return "allow";
+}
+
+function decideShipGate(answers: Record<string, AnyAnswer>): string {
+  const verdict = answers.verdict as { choice: string };
+  const grounded = answers.grounded as { noul: number };
+  const unsafe = answers.unsafe as { noul: number };
+  if (unsafe.noul >= 0.5 || verdict.choice === "block") return "block";
+  if (grounded.noul < 0.45 || verdict.choice === "revise") return "revise";
+  return "ship";
 }
 
 function decideInjectionCheck(answers: Record<string, AnyAnswer>): string {
@@ -246,6 +265,8 @@ function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
       return decideRowSemanticMatch(c, answers);
     case "model-router":
       return decideModelRouter(answers);
+    case "model-cost-router":
+      return decideModelCostRouter(answers);
     case "alert-gate":
       return decideAlertGate(answers);
     case "inbox-triage":
@@ -256,6 +277,8 @@ function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
       return decideOncallPage(c, answers);
     case "llm-verifier":
       return decideLlmVerifier(answers);
+    case "ship-gate":
+      return decideShipGate(answers);
     case "injection-check":
       return decideInjectionCheck(answers);
     case "tool-call-allowlist":
@@ -301,6 +324,8 @@ function questionsFor(c: FixtureCase) {
       return rowSemanticMatchQuestions(String(state.predicate ?? "matches criteria"));
     case "model-router":
       return modelRouterQuestions();
+    case "model-cost-router":
+      return modelCostRouterQuestions();
     case "alert-gate":
       return alertGateQuestions();
     case "inbox-triage":
@@ -311,6 +336,8 @@ function questionsFor(c: FixtureCase) {
       return oncallPageQuestions();
     case "llm-verifier":
       return llmVerifierQuestions();
+    case "ship-gate":
+      return shipGateQuestions();
     case "injection-check":
       return injectionCheckQuestions();
     case "tool-call-allowlist":
@@ -424,6 +451,7 @@ async function runFile(
   const cases = loadCases(resolve(file));
   let passed = 0;
   let failed = 0;
+  const actions: string[] = [];
   for (const c of cases) {
     if (!getRecipe(c.recipe)) {
       failed += 1;
@@ -432,6 +460,7 @@ async function runFile(
     }
     try {
       const out = live && harness ? await runLive(harness, c) : await runOffline(c);
+      actions.push(out.action);
       const ok = out.action === c.expectedAction;
       if (ok) {
         passed += 1;
@@ -464,6 +493,26 @@ async function runFile(
       failed += 1;
       console.log(JSON.stringify({ ok: false, file: basename(file), id: c.id, error: String(err) }));
     }
+  }
+  // Proof bar: action mix is screenshotable (tokens/$/ship suppress).
+  if (actions.length > 0) {
+    const counts: Record<string, number> = {};
+    for (const a of actions) counts[a] = (counts[a] ?? 0) + 1;
+    const tierActions = actions.filter((a) => a === "cheap" || a === "mid" || a === "frontier");
+    const cheap = tierActions.filter((a) => a === "cheap").length;
+    const proof: Record<string, unknown> = {
+      file: basename(file),
+      actionCounts: counts,
+    };
+    if (tierActions.length > 0) {
+      proof.pctRoutedCheap = Math.round((1000 * cheap) / tierActions.length) / 10;
+      proof.tierN = tierActions.length;
+    }
+    if (counts.suppress) {
+      proof.suppressCount = counts.suppress;
+      proof.suppressOnLowConf = true;
+    }
+    console.log(JSON.stringify({ proof }));
   }
   return { total: cases.length, passed, failed };
 }

@@ -1,0 +1,364 @@
+[
+  {
+    "id": "tool-retain",
+    "file": "tool-retain.html",
+    "kicker": "compaction-adjacent \u00b7 keep/delete",
+    "title": "Which tool results still matter?",
+    "shape": "Choice(keep|drop) \u00b7 never rewrite",
+    "demo": true,
+    "pain_big": "Context tokens",
+    "pain_sub": "lossy /compact kills paths",
+    "money_big": "\u221262% tokens",
+    "money_sub": "DEMO \u00b7 vs full history",
+    "speed_big": "\u221241% TTFT",
+    "speed_sub": "DEMO \u00b7 next turn",
+    "before_title": "BEFORE \u00b7 summarize",
+    "before_num": "3 paths dead",
+    "after_title": "AFTER \u00b7 keep/delete",
+    "after_num": "0 rewritten",
+    "delta": "Context tokens = money savings + speed  \u00b7  complementary to fast-jev-compaction (Claude Code specialist)",
+    "painline": "Pain: lossy summaries invent soft memory \u2014 paths, hashes, and exact tool I/O disappear. Decision: keep or drop the raw span. Never rewrite.",
+    "prompt": "Paste: Use jev-harness Choice keep|drop over tool-result spans before compact. Never summarize. Point Claude Code /compact UX at fast-jev-compaction; use DecisionHarness when the same keep/drop shape must live in your agent loop with shadow + eval.",
+    "complementary": "Specialist for Claude Code: github.com/tamaratran/fast-jev-compaction",
+    "png": "card-tool-retain.png",
+    "before_rows": [
+      [
+        "tool_calls in window",
+        "128"
+      ],
+      [
+        "kept verbatim",
+        "0 (rewritten)"
+      ],
+      [
+        "recoverable file paths",
+        "lost"
+      ],
+      [
+        "next-turn TTFT",
+        "4.8s"
+      ],
+      [
+        "est. context $ / turn",
+        "$0.084"
+      ]
+    ],
+    "after_rows": [
+      [
+        "tool_calls judged",
+        "128"
+      ],
+      [
+        "kept verbatim",
+        "41"
+      ],
+      [
+        "dropped",
+        "87"
+      ],
+      [
+        "next-turn TTFT",
+        "2.8s"
+      ],
+      [
+        "est. context $ / turn",
+        "$0.032"
+      ]
+    ]
+  },
+  {
+    "id": "model-router",
+    "file": "model-router.html",
+    "kicker": "confidence-front-door \u00b7 model-router",
+    "title": "Stop paying frontier for FAQ",
+    "shape": "Choice(cheap|mid|frontier) + Score(risk)",
+    "demo": true,
+    "pain_big": "Always-frontier",
+    "pain_sub": "$ waste on easy turns",
+    "money_big": "\u221268% $",
+    "money_sub": "DEMO \u00b7 vs always-frontier",
+    "speed_big": "\u221255% p50",
+    "speed_sub": "DEMO \u00b7 routed latency",
+    "before_title": "BEFORE \u00b7 always frontier",
+    "before_num": "$184 / day",
+    "after_title": "AFTER \u00b7 DecisionHarness route",
+    "after_num": "$59 / day",
+    "delta": "Always-frontier routing = $ waste; smart route = $ + latency",
+    "painline": "Pain: every chat turn burns the expensive model. Decision: tier Choice + risk Score, confidence gate, shadow soak before cutover.",
+    "prompt": "Paste: Wire recipes/confidence-front-door/model-router.ts \u2014 Choice cheap|mid|frontier + Score risk. Policy: risk\u22651.5 \u2192 frontier else tier. Shadow=1 for a week; compare $ and p50 to always-frontier.",
+    "complementary": null,
+    "png": "card-model-router.png",
+    "before_rows": [
+      [
+        "requests / day",
+        "10,000"
+      ],
+      [
+        "tier mix",
+        "100% frontier"
+      ],
+      [
+        "p50 latency",
+        "2.1s"
+      ],
+      [
+        "wrong-tier incidents",
+        "n/a"
+      ]
+    ],
+    "after_rows": [
+      [
+        "cheap / mid / frontier",
+        "72% / 21% / 7%"
+      ],
+      [
+        "risk Score \u22651.5 \u2192 frontier",
+        "forced"
+      ],
+      [
+        "p50 latency",
+        "0.95s"
+      ],
+      [
+        "low-conf \u2192 escalate_llm",
+        "on"
+      ]
+    ]
+  },
+  {
+    "id": "ship-gate",
+    "file": "ship-gate.html",
+    "kicker": "verify-gate \u00b7 llm-verifier",
+    "title": "Ship gate before the incident",
+    "shape": "Choice(allow|revise|block) + Noul(grounded) + Noul(jailbreak)",
+    "demo": true,
+    "pain_big": "Ungated ship",
+    "pain_sub": "incident $ + rollback",
+    "money_big": "\u2212$12k",
+    "money_sub": "DEMO \u00b7 avoided incident class",
+    "speed_big": "38 blocked",
+    "speed_sub": "DEMO \u00b7 before prod",
+    "before_title": "BEFORE \u00b7 trust the draft",
+    "before_num": "2 sev-2s / mo",
+    "after_title": "AFTER \u00b7 confidence verify-gate",
+    "after_num": "0 ungated sev-2",
+    "delta": "Ship without gate = incident $; confidence gate = fewer bad deploys + faster catch",
+    "painline": "Pain: a fluent wrong answer ships as truth. Decision: verdict Choice + grounded/jailbreak Noul \u2192 allow, revise, or block.",
+    "prompt": "Paste: Use recipes/verify-gate/llm-verifier.ts on every customer-facing or deploy-bound LLM output. Block if jailbreak Noul\u22650.5 or verdict=block; revise if grounded<0.45. Log intendedAction in shadow first.",
+    "complementary": null,
+    "png": "card-ship-gate.png",
+    "before_rows": [
+      [
+        "LLM replies shipped",
+        "1,240"
+      ],
+      [
+        "human review",
+        "spot only"
+      ],
+      [
+        "fabricated claims",
+        "slipped"
+      ],
+      [
+        "mean time to detect",
+        "41m"
+      ]
+    ],
+    "after_rows": [
+      [
+        "screened",
+        "1,240"
+      ],
+      [
+        "allow / revise / block",
+        "1,111 / 91 / 38"
+      ],
+      [
+        "minConfidence",
+        "0.60"
+      ],
+      [
+        "shadow drift checks",
+        "on"
+      ]
+    ]
+  },
+  {
+    "id": "alert-fp",
+    "file": "alert-fp.html",
+    "kicker": "confidence-front-door \u00b7 alert-gate",
+    "title": "Pager burn \u2192 sleep",
+    "shape": "Choice(disposition) + Score(severity) + Noul(needs_human)",
+    "demo": true,
+    "pain_big": "Alert flood",
+    "pain_sub": "pager burn / eng hours",
+    "money_big": "\u22129.4h/wk",
+    "money_sub": "DEMO \u00b7 on-call reclaimed",
+    "speed_big": "94% FP\u2193",
+    "speed_sub": "DEMO \u00b7 storm suppressed",
+    "before_title": "BEFORE \u00b7 page everything",
+    "before_num": "847 alerts",
+    "after_title": "AFTER \u00b7 alert-gate policy",
+    "after_num": "41 notifies",
+    "delta": "Alert flood = pager burn; gate = $ (eng hours) + sleep",
+    "painline": "Pain: flapping staging + duplicates page humans. Decision: disposition Choice + severity Score + needs_human Noul \u2192 notify | queue_review | suppress.",
+    "prompt": "Paste: Run recipes/confidence-front-door/alert-gate.ts on each alert event. Shadow mode first. Promote to live only when intendedAction matches senior on-call labels on a fixture JSONL.",
+    "complementary": null,
+    "png": "card-alert-fp.png",
+    "before_rows": [
+      [
+        "pages fired",
+        "312"
+      ],
+      [
+        "true customer impact",
+        "41"
+      ],
+      [
+        "FP rate",
+        "~87%"
+      ],
+      [
+        "night pages / on-call",
+        "11"
+      ]
+    ],
+    "after_rows": [
+      [
+        "suppress / queue / notify",
+        "698 / 108 / 41"
+      ],
+      [
+        "FP among pages",
+        "~6%"
+      ],
+      [
+        "shadow soak",
+        "2 weeks"
+      ],
+      [
+        "minConfidence",
+        "0.55"
+      ]
+    ]
+  },
+  {
+    "id": "row-filter",
+    "file": "row-filter.html",
+    "kicker": "row-judgment \u00b7 NL predicate",
+    "title": "Semantic WHERE without embeddings",
+    "shape": "Noul(matches) + Score(strength) per row",
+    "demo": false,
+    "pain_big": "LLM-per-row",
+    "pain_sub": "$ + wallclock blowup",
+    "money_big": "$0.0009",
+    "money_sub": "seed \u00b7 129 judgments",
+    "speed_big": "~1s",
+    "speed_sub": "seed \u00b7 then cache ~6ms",
+    "before_title": "BEFORE \u00b7 LLM judge / row",
+    "before_num": "~$8\u201325",
+    "after_title": "AFTER \u00b7 Jev row-judgment",
+    "after_num": "$0.0009",
+    "delta": "LLM-per-row filter = $ + wallclock; Jev batch = cents + seconds",
+    "painline": "Pain: filtering people/listings with an LLM per row is slow and pricey. Decision: same NL predicate \u2192 Noul/Score map \u2192 threshold policy.",
+    "prompt": "Paste: Use recipes/row-judgment/row-semantic-match.ts (batch helper in batch.ts). Predicate like 'could work from home'. Include if Noul\u2265threshold & conf ok; else review. Cite seed metrics; label your own traffic as measured.",
+    "complementary": "Seed: @iam_zachi 129 rows ~1s / $0.0009 (research/taxonomy.md)",
+    "png": "card-row-filter.png",
+    "before_rows": [
+      [
+        "rows",
+        "129"
+      ],
+      [
+        "est. $/row class",
+        "$0.06\u20130.20"
+      ],
+      [
+        "wallclock class",
+        "minutes"
+      ],
+      [
+        "index / embeddings",
+        "often required"
+      ]
+    ],
+    "after_rows": [
+      [
+        "129 row-judgments",
+        "~1s"
+      ],
+      [
+        "cache hit",
+        "~6ms"
+      ],
+      [
+        "embeddings / index",
+        "none"
+      ],
+      [
+        "actions",
+        "include|exclude|review"
+      ]
+    ]
+  },
+  {
+    "id": "ui-action",
+    "file": "ui-action.html",
+    "kicker": "candidate-action-selection \u00b7 ui-grounding",
+    "title": "Click without a vision agent",
+    "shape": "Choice(dynamic candidates) + Noul(done)",
+    "demo": false,
+    "pain_big": "Vision-agent loop",
+    "pain_sub": "$ + multi-second steps",
+    "money_big": "cents/step",
+    "money_sub": "labels only to Jev",
+    "speed_big": "~90ms",
+    "speed_sub": "seed \u00b7 per decision",
+    "before_title": "BEFORE \u00b7 screenshot \u2192 VLM",
+    "before_num": "seconds / step",
+    "after_title": "AFTER \u00b7 candidate Choice",
+    "after_num": "~90ms",
+    "delta": "Vision-agent click loop = $ + seconds; candidate Choice = ms + cents",
+    "painline": "Pain: shipping screenshots to a frontier VLM every click. Decision: local candidates \u2192 Choice distribution \u2192 click \u2192 loop until done Noul.",
+    "prompt": "Paste: Perceive DOM/a11y/OCR locally into labeled candidates. recipes/candidate-action-selection/candidate-action-select.ts \u2014 Choice over ids + Noul done. Execute best id in code; never send pixels to Jev.",
+    "complementary": "Seed: @milindlabs ~90ms/decision; no pixels leave device (research/seeds.md)",
+    "png": "card-ui-action.png",
+    "before_rows": [
+      [
+        "pixels leave device",
+        "yes"
+      ],
+      [
+        "action space",
+        "open prose"
+      ],
+      [
+        "$/step class",
+        "vision tariff"
+      ],
+      [
+        "loop reliability",
+        "plan drift"
+      ]
+    ],
+    "after_rows": [
+      [
+        "perception",
+        "local OCR/DOM"
+      ],
+      [
+        "Jev input",
+        "text labels only"
+      ],
+      [
+        "pixels leave device",
+        "no"
+      ],
+      [
+        "act \u2192 re-perceive \u2192 loop",
+        "yes"
+      ]
+    ]
+  }
+]

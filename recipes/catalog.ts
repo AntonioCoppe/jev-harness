@@ -132,6 +132,23 @@ export const catalog = [
     tags: ["routing", "cost", "llm"],
   },
   {
+    id: "model-cost-router",
+    name: "Model Cost Router",
+    category: "confidence-front-door",
+    description:
+      "Route prompts to cheap/mid/frontier with a cheap-first bias; escalate on low confidence.",
+    module: "recipes/confidence-front-door/model-cost-router.ts",
+    runner: "runModelCostRouter",
+    questions: [
+      { name: "tier", kind: "choice" },
+      { name: "risk", kind: "score" },
+    ],
+    actions: ["cheap", "mid", "frontier"],
+    defaultMinConfidence: 0.5,
+    defaultOnLowConfidence: "escalate_llm",
+    tags: ["routing", "cost", "llm", "proof"],
+  },
+  {
     id: "alert-gate",
     name: "Alert Gate",
     category: "confidence-front-door",
@@ -215,6 +232,24 @@ export const catalog = [
     defaultMinConfidence: 0.6,
     defaultOnLowConfidence: "review",
     tags: ["safety", "verification", "gate"],
+  },
+  {
+    id: "ship-gate",
+    name: "Ship Gate",
+    category: "verify-gate",
+    description:
+      "Allow / revise / block a candidate output before ship; suppress on low confidence.",
+    module: "recipes/verify-gate/ship-gate.ts",
+    runner: "runShipGate",
+    questions: [
+      { name: "verdict", kind: "choice" },
+      { name: "grounded", kind: "noul" },
+      { name: "unsafe", kind: "noul" },
+    ],
+    actions: ["ship", "revise", "block"],
+    defaultMinConfidence: 0.65,
+    defaultOnLowConfidence: "suppress",
+    tags: ["safety", "verification", "ship", "proof"],
   },
   {
     id: "injection-check",

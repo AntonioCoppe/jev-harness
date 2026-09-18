@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Marketing demos — jev-harness</title>
+<style>
+:root{--bg:#07090d;--panel:#11161f;--border:#273246;--text:#eef3fb;--muted:#8fa0b8;--accent:#5eead4;
+--sans:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);color:var(--text);background:
+ radial-gradient(900px 480px at 15% -10%,#14304a 0%,transparent 55%),
+ radial-gradient(700px 400px at 90% 0%,#2a1848 0%,transparent 50%),var(--bg)}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 22px 56px}
+h1{margin:0 0 8px;font-size:30px;letter-spacing:-.03em}
+.lead{color:var(--muted);max-width:680px;line-height:1.55;margin:0 0 24px}
+.eq{display:inline-block;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:#0c1118;
+ font:650 13px var(--mono);color:var(--accent);margin-bottom:28px}
+.sec{font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:28px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{display:block;text-decoration:none;color:inherit;background:linear-gradient(180deg,#141b27,#0d1219);
+ border:1px solid var(--border);border-radius:16px;padding:16px;min-height:140px}
+.card:hover{border-color:rgba(94,234,212,.4)}
+.card h2{margin:0 0 6px;font-size:16px}
+.card p{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+.card .t{font:650 10px var(--mono);color:var(--accent);margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.foot{margin-top:28px;font:12px var(--mono);color:var(--muted)}
+</style></head><body>
+<div class="wrap">
+  <h1>jev-harness · marketing demos</h1>
+  <p class="lead">Interactive mocks people screenshot — plus a proof gallery where every card leads with
+  <strong>resource = $ + speed</strong>. Canned Jev answers when no API key; labeled DEMO vs SEED.</p>
+  <div class="eq">&lt;painful resource&gt; = &lt;money savings&gt; + &lt;speed&gt;</div>
+
+  <div class="sec">Interactive product mocks</div>
+  <div class="grid">
+    <a class="card" href="alert-gate.html"><div class="t">confidence-front-door</div><h2>Inbox / alert gate</h2><p>FP storm → suppress/queue/notify with Choice·Score·Noul + shadow toggle.</p></a>
+    <a class="card" href="row-filter.html"><div class="t">row-judgment</div><h2>NL row filter</h2><p>Type a predicate; rows light include/exclude with cost/latency chips.</p></a>
+    <a class="card" href="ui-click.html"><div class="t">candidate-action-selection</div><h2>UI candidate click</h2><p>Fake browser chrome, numbered DOM candidates, ~90ms badge, no pixels leave device.</p></a>
+  </div>
+
+  <div class="sec">Proof / savings cards</div>
+  <div class="grid2">
+    <a class="card" href="savings.html"><div class="t">6 equations</div><h2>Savings gallery</h2><p>Compaction-adjacent, model router, ship gate, alert FP, row filter, UI action — before→after.</p></a>
+    <a class="card" href="cards/tool-retain.html"><div class="t">−62% tokens + −41% TTFT</div><h2>Which tool results still matter?</h2><p>Context tokens = money savings + speed  ·  complementary to fast-jev-compaction (Claude Code specialist)</p></a>
+    <a class="card" href="cards/model-router.html"><div class="t">−68% $ + −55% p50</div><h2>Stop paying frontier for FAQ</h2><p>Always-frontier routing = $ waste; smart route = $ + latency</p></a>
+    <a class="card" href="cards/ship-gate.html"><div class="t">−$12k + 38 blocked</div><h2>Ship gate before the incident</h2><p>Ship without gate = incident $; confidence gate = fewer bad deploys + faster catch</p></a>
+    <a class="card" href="cards/alert-fp.html"><div class="t">−9.4h/wk + 94% FP↓</div><h2>Pager burn → sleep</h2><p>Alert flood = pager burn; gate = $ (eng hours) + sleep</p></a>
+    <a class="card" href="cards/row-filter.html"><div class="t">$0.0009 + ~1s</div><h2>Semantic WHERE without embeddings</h2><p>LLM-per-row filter = $ + wallclock; Jev batch = cents + seconds</p></a>
+    <a class="card" href="cards/ui-action.html"><div class="t">cents/step + ~90ms</div><h2>Click without a vision agent</h2><p>Vision-agent click loop = $ + seconds; candidate Choice = ms + cents</p></a>
+  </div>
+
+  <div class="sec">Agent prompts</div>
+  <div class="grid2">
+    <a class="card" href="PROMPTS.md"><div class="t">one per card</div><h2>PROMPTS.md</h2><p>Paste-into-your-agent prompts aligned to each proof card.</p></a>
+    <a class="card" href="README.md"><div class="t">how to open / record</div><h2>README</h2><p>Open locally, capture PNGs into docs/assets/marketing/.</p></a>
+  </div>
+  <p class="foot">Not affiliated with TypeSafe. Claims stay within research/ + docs.typesafe.ai patterns already in-repo.
+  Compaction Claude Code UX → fast-jev-compaction (complementary).</p>
+</div>
+</body></html>

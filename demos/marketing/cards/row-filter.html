@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Semantic WHERE without embeddings — jev-harness proof</title>
+<style>
+:root {
+  --bg:#07090d; --panel:#10151e; --border:#243044; --text:#f1f5fb; --muted:#8b9bb2;
+  --good:#34d399; --bad:#fb7185; --warn:#fbbf24; --accent:#5eead4; --blue:#60a5fa;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:var(--sans);color:var(--text);
+  background:radial-gradient(900px 500px at 10% -20%,#13283a 0%,transparent 55%),
+             radial-gradient(700px 400px at 100% 0%,#1a1530 0%,transparent 50%),var(--bg);
+  display:flex;align-items:center;justify-content:center;padding:28px}
+.card{width:min(920px,100%);background:linear-gradient(180deg,#121925,#0c1018);
+  border:1px solid var(--border);border-radius:22px;box-shadow:0 28px 80px rgba(0,0,0,.55);overflow:hidden}
+.top{display:flex;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.kicker{font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.title{margin:4px 0 0;font-size:18px;letter-spacing:-.02em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{font:650 11px var(--sans);padding:5px 10px;border-radius:999px;border:1px solid var(--border);background:#151c28;color:var(--muted)}
+.chip.demo{color:var(--warn);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+.chip.shape{color:var(--accent);border-color:rgba(94,234,212,.3);background:rgba(94,234,212,.07)}
+.hero{padding:22px 22px 8px}
+.eq{background:#0a0e15;border:1px solid var(--border);border-radius:16px;padding:18px 20px;
+  display:grid;grid-template-columns:1.2fr auto 1fr auto 1fr;gap:10px;align-items:center}
+@media(max-width:720px){.eq{grid-template-columns:1fr;text-align:center}}
+.eq .cell{background:#121925;border:1px solid var(--border);border-radius:14px;padding:14px 12px;min-height:92px}
+.eq .cell.pain{border-color:rgba(251,113,133,.35);background:rgba(251,113,133,.07)}
+.eq .cell.money{border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.07)}
+.eq .cell.speed{border-color:rgba(96,165,250,.35);background:rgba(96,165,250,.07)}
+.eq .lbl{font:650 10px var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.eq .big{font:800 28px/1.05 var(--sans);letter-spacing:-.03em}
+.eq .sub{margin-top:6px;font:12px var(--mono);color:var(--muted)}
+.eq .op{font:800 22px var(--sans);color:var(--muted)}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 22px}
+@media(max-width:720px){.metrics{grid-template-columns:1fr}}
+.box{background:#0a0e15;border:1px solid var(--border);border-radius:14px;padding:14px}
+.box h3{margin:0 0 10px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.before .num{color:var(--bad)} .after .num{color:var(--good)}
+.num{font:800 26px/1 var(--sans);letter-spacing:-.02em}
+.row{display:flex;justify-content:space-between;gap:8px;font:12.5px var(--mono);color:#c6d0e0;padding:5px 0;border-bottom:1px dashed #1e293b}
+.row:last-child{border:0}
+.delta{padding:0 22px 8px;font:650 13px var(--sans);color:var(--good)}
+.shape{padding:8px 22px 0;font:12.5px var(--mono);color:var(--muted)}
+.shape strong{color:var(--text)}
+.painline{padding:10px 22px 0;font-size:13.5px;color:#d5deeb;line-height:1.45}
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 22px 20px;align-items:center}
+.prompt{flex:1;background:#0a0e15;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font:12px var(--mono);color:#b8c4d6}
+.prompt span{color:var(--accent)}
+.btn{border:0;border-radius:10px;padding:10px 14px;font:700 12px var(--sans);cursor:pointer;
+  background:linear-gradient(135deg,#34d399,#60a5fa);color:#042016;white-space:nowrap}
+.note{padding:0 22px 18px;font:11px var(--mono);color:var(--muted)}
+</style>
+</head><body>
+<article class="card" id="row-filter">
+  <div class="top">
+    <div>
+      <div class="kicker">row-judgment · NL predicate</div>
+      <h1 class="title">Semantic WHERE without embeddings</h1>
+    </div>
+    <div class="chips">
+      <span class="chip demo" style="color:#34d399;border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)">SEED-backed after</span>
+      <span class="chip shape">Noul(matches) + Score(strength) per row</span>
+      <span class="chip">jev-harness</span>
+    </div>
+  </div>
+  <div class="hero">
+    <div class="eq">
+      <div class="cell pain"><div class="lbl">Painful resource</div><div class="big">LLM-per-row</div><div class="sub">$ + wallclock blowup</div></div>
+      <div class="op">=</div>
+      <div class="cell money"><div class="lbl">Money savings</div><div class="big">$0.0009</div><div class="sub">seed · 129 judgments</div></div>
+      <div class="op">+</div>
+      <div class="cell speed"><div class="lbl">Speed</div><div class="big">~1s</div><div class="sub">seed · then cache ~6ms</div></div>
+    </div>
+  </div>
+  <p class="painline">Pain: filtering people/listings with an LLM per row is slow and pricey. Decision: same NL predicate → Noul/Score map → threshold policy.</p>
+  <p class="shape">Decision shape: <strong>Noul(matches) + Score(strength) per row</strong></p>
+  <div class="metrics">
+    <div class="box before"><h3>BEFORE · LLM judge / row</h3><div class="num">~$8–25</div><div class="row"><span>rows</span><span>129</span></div>
+<div class="row"><span>est. $/row class</span><span>$0.06–0.20</span></div>
+<div class="row"><span>wallclock class</span><span>minutes</span></div>
+<div class="row"><span>index / embeddings</span><span>often required</span></div></div>
+    <div class="box after"><h3>AFTER · Jev row-judgment</h3><div class="num">$0.0009</div><div class="row"><span>129 row-judgments</span><span>~1s</span></div>
+<div class="row"><span>cache hit</span><span>~6ms</span></div>
+<div class="row"><span>embeddings / index</span><span>none</span></div>
+<div class="row"><span>actions</span><span>include|exclude|review</span></div></div>
+  </div>
+  <p class="delta">LLM-per-row filter = $ + wallclock; Jev batch = cents + seconds</p>
+  <div class="foot">
+    <div class="prompt"><span>Paste into your agent →</span><br/>Paste: Use recipes/row-judgment/row-semantic-match.ts (batch helper in batch.ts). Predicate like 'could work from home'. Include if Noul≥threshold &amp; conf ok; else review. Cite seed metrics; label your own traffic as measured.</div>
+  </div>
+  <p class="note">Seed: @iam_zachi 129 rows ~1s / $0.0009 (research/taxonomy.md) · Before column is illustrative contrast (labeled class), not a vendor benchmark.</p>
+</article>
+</body></html>

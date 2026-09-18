@@ -7,7 +7,7 @@ description: Catalog recipes grouped by taxonomy shape ID
 
 Machine-readable entries from `recipes/catalog.ts`, grouped by taxonomy ID (`research/taxonomy.md`).
 
-20 recipes in catalog.
+22 recipes in catalog.
 
 ## `candidate-action-selection` {#candidate-action-selection}
 
@@ -35,6 +35,7 @@ Verify gate. See [taxonomy](/taxonomy).
 | Recipe | Description |
 |---|---|
 | [`llm-verifier`](/recipes/llm-verifier) — **LLM Verifier** | Verify an LLM or tool output before it ships. |
+| [`ship-gate`](/recipes/ship-gate) — **Ship Gate** | Allow / revise / block a candidate output before ship; suppress on low confidence. |
 | [`injection-check`](/recipes/injection-check) — **Injection Check** | Detect prompt injection / jailbreak attempts in untrusted input. |
 | [`tool-call-allowlist`](/recipes/tool-call-allowlist) — **Tool Call Allowlist** | Gate a proposed tool call against policy / allowlist before execution. |
 
@@ -45,6 +46,7 @@ Confidence front door. See [taxonomy](/taxonomy).
 | Recipe | Description |
 |---|---|
 | [`model-router`](/recipes/model-router) — **Model Router** | Route a user prompt to cheap / mid / frontier tiers by difficulty and risk. |
+| [`model-cost-router`](/recipes/model-cost-router) — **Model Cost Router** | Route prompts to cheap/mid/frontier with a cheap-first bias; escalate on low confidence. |
 | [`alert-gate`](/recipes/alert-gate) — **Alert Gate** | Gate noisy automated alerts before they page a human. |
 | [`inbox-triage`](/recipes/inbox-triage) — **Inbox Triage** | Route inbound messages into bookings, orders, support, spam, or other. |
 | [`incident-severity`](/recipes/incident-severity) — **Incident Severity** | Classify incident severity from signals, blast radius, and customer impact. |

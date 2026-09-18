@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alert Gate — jev-harness demo</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --panel: #121821;
+      --panel2: #18202b;
+      --border: #243041;
+      --text: #e8eef7;
+      --muted: #8b9bb0;
+      --accent: #3dd6c6;
+      --accent-dim: rgba(61, 214, 198, 0.14);
+      --danger: #ff6b6b;
+      --warn: #f0b429;
+      --ok: #3dd68c;
+      --purple: #a78bfa;
+      --shadow: 0 12px 40px rgba(0,0,0,.45);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      font-family: var(--sans); color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #14304a 0%, transparent 55%),
+        radial-gradient(900px 500px at 90% 0%, #1a1535 0%, transparent 50%),
+        var(--bg);
+    }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 22px; border-bottom: 1px solid var(--border);
+      background: rgba(11,15,20,.72); backdrop-filter: blur(10px);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .brand { display: flex; gap: 12px; align-items: center; }
+    .logo {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #4f7cff);
+      display: grid; place-items: center; font-weight: 800; font-size: 12px; color: #041018;
+    }
+    .brand h1 { margin: 0; font-size: 15px; font-weight: 650; letter-spacing: -.01em; }
+    .brand p { margin: 0; font-size: 12px; color: var(--muted); }
+    .badges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .chip {
+      font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--panel2); color: var(--muted);
+    }
+    .chip.demo { color: var(--warn); border-color: rgba(240,180,41,.35); background: rgba(240,180,41,.08); }
+    .chip.live { color: var(--accent); border-color: rgba(61,214,198,.35); background: var(--accent-dim); }
+    .layout {
+      display: grid; grid-template-columns: 1.15fr .95fr; gap: 16px;
+      padding: 18px 22px 28px; max-width: 1280px; margin: 0 auto;
+    }
+    @media (max-width: 980px) { .layout { grid-template-columns: 1fr; } }
+    .card {
+      background: linear-gradient(180deg, var(--panel) 0%, #0e141c 100%);
+      border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-h {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+    }
+    .card-h h2 { margin: 0; font-size: 13px; font-weight: 650; letter-spacing: .02em; text-transform: uppercase; color: var(--muted); }
+    .toggle {
+      display: inline-flex; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 3px; gap: 2px;
+    }
+    .toggle button {
+      border: 0; background: transparent; color: var(--muted); font: 600 12px var(--sans);
+      padding: 6px 12px; border-radius: 8px; cursor: pointer;
+    }
+    .toggle button.active { background: var(--panel2); color: var(--text); box-shadow: inset 0 0 0 1px var(--border); }
+    .stream { height: 520px; overflow: auto; padding: 8px; }
+    .alert {
+      display: grid; grid-template-columns: 46px 1fr auto; gap: 10px; align-items: start;
+      padding: 12px; margin: 6px; border-radius: 12px; border: 1px solid transparent;
+      background: rgba(255,255,255,.02); cursor: pointer; transition: .15s ease;
+    }
+    .alert:hover, .alert.selected { border-color: rgba(61,214,198,.35); background: rgba(61,214,198,.06); }
+    .sev {
+      width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center;
+      font: 800 11px var(--mono); letter-spacing: .04em;
+    }
+    .sev.crit { background: rgba(255,107,107,.15); color: var(--danger); }
+    .sev.warn { background: rgba(240,180,41,.14); color: var(--warn); }
+    .sev.info { background: rgba(79,124,255,.14); color: #7aa2ff; }
+    .alert h3 { margin: 0 0 4px; font-size: 13.5px; font-weight: 600; }
+    .alert .meta { font-size: 11.5px; color: var(--muted); font-family: var(--mono); }
+    .status {
+      font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 8px;
+      text-transform: uppercase; letter-spacing: .04em; white-space: nowrap;
+    }
+    .status.suppress { background: rgba(139,155,176,.12); color: var(--muted); }
+    .status.notify { background: rgba(255,107,107,.14); color: var(--danger); }
+    .status.queue_review { background: rgba(240,180,41,.14); color: var(--warn); }
+    .status.pending { background: rgba(79,124,255,.14); color: #7aa2ff; }
+    .status.shadow_noop { background: rgba(167,139,250,.14); color: var(--purple); }
+    .panel-body { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+    .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .stat {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+    }
+    .stat .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .stat .val { font-size: 22px; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; }
+    .stat .val.ok { color: var(--ok); }
+    .stat .val.warn { color: var(--warn); }
+    .decision {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 14px;
+    }
+    .decision .title {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+    }
+    .decision .title strong { font-size: 13px; }
+    .action-pill {
+      font: 700 12px var(--mono); padding: 6px 10px; border-radius: 8px;
+      background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(61,214,198,.3);
+    }
+    .q { margin-bottom: 12px; }
+    .q .qname { font-size: 11px; color: var(--muted); margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .q .qval { font-size: 14px; font-weight: 600; }
+    .bar {
+      height: 6px; border-radius: 999px; background: #1c2633; margin-top: 6px; overflow: hidden;
+    }
+    .bar > i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--accent), #4f7cff); }
+    .reason {
+      font-size: 12.5px; line-height: 1.45; color: #c5d0df;
+      background: rgba(61,214,198,.05); border-left: 3px solid var(--accent);
+      padding: 10px 12px; border-radius: 0 10px 10px 0;
+    }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      border: 1px solid var(--border); background: var(--panel2); color: var(--text);
+      font: 600 12.5px var(--sans); padding: 9px 14px; border-radius: 10px; cursor: pointer;
+    }
+    .btn.primary { background: linear-gradient(135deg, #2bb8a8, #3d7dff); border: 0; color: #041018; }
+    .btn:hover { filter: brightness(1.08); }
+    .storm-banner {
+      margin: 0 16px 12px; padding: 10px 12px; border-radius: 10px;
+      background: rgba(255,107,107,.08); border: 1px solid rgba(255,107,107,.25);
+      color: #ffb4b4; font-size: 12.5px; display: none;
+    }
+    .storm-banner.on { display: block; }
+    .foot {
+      font-size: 11px; color: var(--muted); padding: 0 4px;
+      font-family: var(--mono);
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">JH</div>
+      <div>
+        <h1>Inbox · Alert Gate</h1>
+        <p>DecisionHarness · confidence-front-door recipe</p>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="chip demo">DEMO · canned Jev answers</span>
+      <span class="chip" id="modeChip">mode: live</span>
+      <span class="chip live">Choice · Score · Noul</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card">
+      <div class="card-h">
+        <h2>Alert stream</h2>
+        <div class="controls">
+          <button class="btn" id="stormBtn">Start FP storm</button>
+          <button class="btn primary" id="cleanBtn">Run gate</button>
+        </div>
+      </div>
+      <div class="storm-banner" id="stormBanner">False-positive storm active — noisy infra flapping. Gate will suppress / queue.</div>
+      <div class="stream" id="stream"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-h">
+        <h2>DecisionHarness panel</h2>
+        <div class="toggle" id="modeToggle">
+          <button data-mode="live" class="active">Live</button>
+          <button data-mode="shadow">Shadow</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="stat-row">
+          <div class="stat"><div class="lbl">Ingested</div><div class="val" id="statIn">0</div></div>
+          <div class="stat"><div class="lbl">Suppressed</div><div class="val ok" id="statSup">0</div></div>
+          <div class="stat"><div class="lbl">Paged</div><div class="val warn" id="statPage">0</div></div>
+        </div>
+
+        <div class="decision" id="decision">
+          <div class="title">
+            <strong>Selected alert</strong>
+            <span class="action-pill" id="actionPill">—</span>
+          </div>
+          <div id="answers"></div>
+          <div class="reason" id="reason">Select an alert or run the gate over the stream.</div>
+        </div>
+
+        <div class="controls">
+          <button class="btn" data-act="suppress">Suppress</button>
+          <button class="btn" data-act="queue_review">Queue review</button>
+          <button class="btn primary" data-act="notify">Notify / page</button>
+        </div>
+        <p class="foot" id="foot">policy: minConfidence 0.55 · onLowConfidence=review · shadow overrides to shadow_noop</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const ALERTS = [
+      { id: "a1", sev: "CRIT", cls: "crit", source: "pagerduty", summary: "p99 latency spike on checkout-api (us-east-1)", signals: { p99_ms: 2400, baseline_ms: 180, error_rate: 0.02 }, answers: { disposition: { choice: "notify", conf: 0.91 }, severity: { score: 2.0, conf: 0.88 }, needs_human: { noul: 0.22, conf: 0.86 } }, action: "notify", reason: "Customer-impacting checkout latency; disposition=notify, severity high, needs_human low → page on-call." },
+      { id: "a2", sev: "WARN", cls: "warn", source: "datadog", summary: "CPU > 85% on staging-worker-3 for 4m", signals: { cpu: 0.87, env: "staging" }, answers: { disposition: { choice: "suppress", conf: 0.93 }, severity: { score: 0.4, conf: 0.9 }, needs_human: { noul: 0.12, conf: 0.92 } }, action: "suppress", reason: "Staging-only CPU flap; policy is production customer impact → suppress." },
+      { id: "a3", sev: "INFO", cls: "info", source: "sentry", summary: "Spike in TypeError: Cannot read 'id' of undefined (web)", signals: { events_5m: 340, users: 12 }, answers: { disposition: { choice: "queue_review", conf: 0.71 }, severity: { score: 1.1, conf: 0.68 }, needs_human: { noul: 0.74, conf: 0.7 } }, action: "queue_review", reason: "Ambiguous blast radius; needs_human elevated → park for review, do not page." },
+      { id: "a4", sev: "CRIT", cls: "crit", source: "cloudwatch", summary: "ALB 5xx rate 12% — payments-edge", signals: { five_xx: 0.12, region: "us-west-2" }, answers: { disposition: { choice: "notify", conf: 0.94 }, severity: { score: 2.0, conf: 0.95 }, needs_human: { noul: 0.18, conf: 0.9 } }, action: "notify", reason: "Payments edge 5xx storm — high confidence notify." },
+      { id: "a5", sev: "WARN", cls: "warn", source: "prometheus", summary: "disk_used > 90% on logs-archive-7", signals: { disk: 0.91 }, answers: { disposition: { choice: "queue_review", conf: 0.62 }, severity: { score: 0.9, conf: 0.66 }, needs_human: { noul: 0.55, conf: 0.61 } }, action: "queue_review", reason: "Capacity warning; not paging yet — queue for platform." },
+      { id: "a6", sev: "INFO", cls: "info", source: "k8s", summary: "PodRestartBackoff: metrics-sidecar ×14", signals: { restarts: 14, ns: "observability" }, answers: { disposition: { choice: "suppress", conf: 0.89 }, severity: { score: 0.3, conf: 0.87 }, needs_human: { noul: 0.2, conf: 0.88 } }, action: "suppress", reason: "Known noisy sidecar restarts; false-positive pattern → suppress." },
+      { id: "a7", sev: "WARN", cls: "warn", source: "pagerduty", summary: "Duplicate: p99 latency spike on checkout-api", signals: { duplicate_of: "a1" }, answers: { disposition: { choice: "suppress", conf: 0.96 }, severity: { score: 1.8, conf: 0.8 }, needs_human: { noul: 0.1, conf: 0.94 } }, action: "suppress", reason: "Duplicate of open incident a1 → suppress." },
+      { id: "a8", sev: "CRIT", cls: "crit", source: "synthetic", summary: "Login flow failed 3/3 regions", signals: { pass: 0, regions: 3 }, answers: { disposition: { choice: "notify", conf: 0.97 }, severity: { score: 2.0, conf: 0.96 }, needs_human: { noul: 0.15, conf: 0.93 } }, action: "notify", reason: "Cross-region auth failure — page immediately." },
+    ];
+
+    const STORM = [
+      { id: "s1", sev: "WARN", cls: "warn", source: "node-exporter", summary: "iowait spike host=ci-runner-12", answers: { disposition: { choice: "suppress", conf: 0.91 }, severity: { score: 0.2, conf: 0.9 }, needs_human: { noul: 0.08, conf: 0.92 } }, action: "suppress", reason: "CI runner noise — suppress." },
+      { id: "s2", sev: "INFO", cls: "info", source: "fluentd", summary: "buffer_queue_length high (staging)", answers: { disposition: { choice: "suppress", conf: 0.88 }, severity: { score: 0.3, conf: 0.86 }, needs_human: { noul: 0.1, conf: 0.9 } }, action: "suppress", reason: "Staging log buffer — suppress." },
+      { id: "s3", sev: "WARN", cls: "warn", source: "rds", summary: "CPUCreditBalance low db-dev-analytics", answers: { disposition: { choice: "suppress", conf: 0.9 }, severity: { score: 0.25, conf: 0.88 }, needs_human: { noul: 0.12, conf: 0.89 } }, action: "suppress", reason: "Dev analytics DB — suppress." },
+      { id: "s4", sev: "INFO", cls: "info", source: "slack-bot", summary: "Webhook timeout from #random", answers: { disposition: { choice: "suppress", conf: 0.94 }, severity: { score: 0.1, conf: 0.95 }, needs_human: { noul: 0.05, conf: 0.96 } }, action: "suppress", reason: "Non-prod webhook — suppress." },
+      { id: "s5", sev: "WARN", cls: "warn", source: "k8s", summary: "FailedScheduling: Insufficient cpu (batch)", answers: { disposition: { choice: "queue_review", conf: 0.58 }, severity: { score: 0.7, conf: 0.55 }, needs_human: { noul: 0.62, conf: 0.57 } }, action: "queue_review", reason: "Batch cluster pressure — queue, don't page." },
+      { id: "s6", sev: "CRIT", cls: "crit", source: "pagerduty", summary: "TEST page — ignore (onboarding)", answers: { disposition: { choice: "suppress", conf: 0.99 }, severity: { score: 0.0, conf: 0.98 }, needs_human: { noul: 0.02, conf: 0.99 } }, action: "suppress", reason: "Explicit test page string → suppress." },
+    ];
+
+    let mode = "live";
+    let items = ALERTS.map(a => ({ ...a, status: "pending" }));
+    let selected = items[0].id;
+    let gated = false;
+
+    const el = id => document.getElementById(id);
+
+    function confOf(a) {
+      const xs = [a.answers.disposition.conf, a.answers.severity.conf, a.answers.needs_human.conf];
+      return xs.reduce((s, x) => s + x, 0) / xs.length;
+    }
+
+    function resolveAction(a) {
+      if (mode === "shadow") return "shadow_noop";
+      return a.action;
+    }
+
+    function renderStream() {
+      const stream = el("stream");
+      stream.innerHTML = items.map(a => `
+        <div class="alert ${a.id === selected ? "selected" : ""}" data-id="${a.id}">
+          <div class="sev ${a.cls}">${a.sev}</div>
+          <div>
+            <h3>${a.summary}</h3>
+            <div class="meta">${a.source} · ${a.id}${gated ? ` · conf ${(confOf(a)*100).toFixed(0)}%` : ""}</div>
+          </div>
+          <span class="status ${a.status}">${a.status}</span>
+        </div>
+      `).join("");
+      stream.querySelectorAll(".alert").forEach(node => {
+        node.onclick = () => { selected = node.dataset.id; render(); };
+      });
+    }
+
+    function renderPanel() {
+      const a = items.find(x => x.id === selected) || items[0];
+      const action = gated ? resolveAction(a) : "—";
+      el("actionPill").textContent = gated ? action : "awaiting gate";
+      const ans = a.answers;
+      el("answers").innerHTML = `
+        <div class="q">
+          <div class="qname"><span>Choice · disposition</span><span>${(ans.disposition.conf*100).toFixed(0)}%</span></div>
+          <div class="qval">${ans.disposition.choice}</div>
+          <div class="bar"><i style="width:${ans.disposition.conf*100}%"></i></div>
+        </div>
+        <div class="q">
+          <div class="qname"><span>Score · severity</span><span>${(ans.severity.conf*100).toFixed(0)}%</span></div>
+          <div class="qval">${ans.severity.score.toFixed(1)} / 2.0</div>
+          <div class="bar"><i style="width:${(ans.severity.score/2)*100}%"></i></div>
+        </div>
+        <div class="q">
+          <div class="qname"><span>Noul · needs_human</span><span>${(ans.needs_human.conf*100).toFixed(0)}%</span></div>
+          <div class="qval">${ans.needs_human.noul.toFixed(2)}</div>
+          <div class="bar"><i style="width:${ans.needs_human.noul*100}%"></i></div>
+        </div>
+        <div class="q">
+          <div class="qname"><span>Aggregate confidence</span></div>
+          <div class="qval">${(confOf(a)*100).toFixed(1)}%</div>
+          <div class="bar"><i style="width:${confOf(a)*100}%"></i></div>
+        </div>
+      `;
+      const intended = a.action;
+      el("reason").innerHTML = gated
+        ? `<strong>${mode === "shadow" ? "intendedAction" : "action"}:</strong> ${intended}` +
+          (mode === "shadow" ? ` → executed <code>shadow_noop</code>` : "") +
+          `<br/>${a.reason}`
+        : "Canned demo answers ready. Click <strong>Run gate</strong> to map policy → action across the stream.";
+
+      const sup = items.filter(x => x.status === "suppress").length;
+      const page = items.filter(x => x.status === "notify").length;
+      el("statIn").textContent = items.length;
+      el("statSup").textContent = gated ? String(sup) : "—";
+      el("statPage").textContent = gated ? String(page) : "—";
+      el("modeChip").textContent = "mode: " + mode;
+      el("foot").textContent = mode === "shadow"
+        ? "SHADOW · intendedAction logged · action=shadow_noop · no pages fired"
+        : "LIVE · policy actions execute · minConfidence 0.55 · onLowConfidence=review";
+    }
+
+    function render() { renderStream(); renderPanel(); }
+
+    function runGate() {
+      gated = true;
+      items = items.map(a => ({ ...a, status: resolveAction(a) === "shadow_noop" ? "shadow_noop" : a.action }));
+      el("stormBanner").classList.toggle("on", items.some(x => x.id.startsWith("s")));
+      // After storm + gate: mostly clean
+      if (items.some(x => x.id.startsWith("s"))) {
+        el("stormBanner").textContent = "Storm gated — " +
+          items.filter(x => x.status === "suppress" || x.status === "shadow_noop").length +
+          " suppressed/shadowed · " +
+          items.filter(x => x.status === "notify").length + " real pages left.";
+      }
+      render();
+    }
+
+    el("stormBtn").onclick = () => {
+      gated = false;
+      items = [...ALERTS, ...STORM].map(a => ({ ...a, status: "pending" }));
+      selected = items[items.length - 1].id;
+      el("stormBanner").classList.add("on");
+      el("stormBanner").textContent = "False-positive storm active — noisy infra flapping. Gate will suppress / queue.";
+      render();
+    };
+
+    el("cleanBtn").onclick = runGate;
+
+    el("modeToggle").onclick = (e) => {
+      const b = e.target.closest("button[data-mode]");
+      if (!b) return;
+      mode = b.dataset.mode;
+      [...el("modeToggle").children].forEach(c => c.classList.toggle("active", c === b));
+      if (gated) runGate(); else render();
+    };
+
+    document.querySelectorAll("[data-act]").forEach(btn => {
+      btn.onclick = () => {
+        const a = items.find(x => x.id === selected);
+        if (!a) return;
+        gated = true;
+        a.action = btn.dataset.act;
+        a.status = resolveAction(a) === "shadow_noop" ? "shadow_noop" : a.action;
+        a.reason = `Manual override → ${a.action}` + (mode === "shadow" ? " (shadowed)" : "");
+        render();
+      };
+    });
+
+    // Auto-run gate shortly so screenshots look "after clean"
+    render();
+    setTimeout(() => {
+      el("stormBtn").click();
+      setTimeout(runGate, 400);
+    }, 200);
+  </script>
+</body>
+</html>
