@@ -41,11 +41,11 @@ state ──► questions ──► TypeSafe systemOne (Jev)
 
 | Path | Responsibility |
 |---|---|
-| `src/harness.ts` | `DecisionHarness` — client wiring, `run()`, shadow override |
+| `src/harness.ts` | `DecisionHarness` — client wiring, `run()`, shadow override, `loggers[]` |
 | `src/types.ts` | `DecisionRequest` / `DecisionResult` / `DecisionPolicy` / modes |
 | `src/confidence.ts` | Per-answer + mean confidence (`Noul` → \|n−0.5\|×2) |
 | `src/policy.ts` | `resolvePolicy` — confidence gate over `decide` |
-| `src/logger.ts` | `ConsoleDecisionLogger` / `MemoryDecisionLogger` |
+| `src/logger.ts` + `src/loggers/` | `DecisionLogger` sinks: console, memory, file, OTEL (optional), PostHog |
 | `src/index.ts` | Public exports + re-exports SDK helpers / catalog |
 | `recipes/catalog.ts` | Machine-readable recipe index |
 | `recipes/{ops,agents,guardrails,emergent}/` | Opinionated question+policy packs (folders provisional) |

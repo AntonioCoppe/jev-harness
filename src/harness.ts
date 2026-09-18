@@ -1,6 +1,10 @@
 import { TypeSafeClient, type EntryType, type Questions } from "@typesafe-ai/sdk";
 import { aggregateConfidence } from "./confidence.js";
-import { ConsoleDecisionLogger, type DecisionLogger } from "./logger.js";
+import {
+  ConsoleDecisionLogger,
+  MultiDecisionLogger,
+  type DecisionLogger,
+} from "./logger.js";
 import { resolvePolicy } from "./policy.js";
 import type {
   DecisionAction,
@@ -13,7 +17,13 @@ export interface DecisionHarnessOptions {
   apiKey?: string;
   /** Defaults to jev-latest */
   defaultModel?: string;
+  /**
+   * Single logger (legacy). Ignored when `loggers` is provided.
+   * Pass `false` to disable logging.
+   */
   logger?: DecisionLogger | false;
+  /** Prefer this for multiple sinks (file, OTEL, PostHog, …). */
+  loggers?: DecisionLogger[];
   client?: TypeSafeClient;
 }
 
@@ -30,8 +40,7 @@ export class DecisionHarness {
         defaultModel: options.defaultModel ?? "jev-latest",
       });
     this.defaultModel = options.defaultModel ?? this.client.defaultModel;
-    this.logger =
-      options.logger === false ? null : (options.logger ?? new ConsoleDecisionLogger());
+    this.logger = resolveLoggers(options);
   }
 
   async run<Q extends Questions, A extends DecisionAction = DecisionAction>(
@@ -70,7 +79,21 @@ export class DecisionHarness {
       raw,
     };
 
-    this.logger?.logDecision(result);
+    try {
+      void this.logger?.logDecision(result);
+    } catch (err) {
+      console.warn("[DecisionHarness] logger failed:", err);
+    }
     return result;
   }
+}
+
+function resolveLoggers(options: DecisionHarnessOptions): DecisionLogger | null {
+  if (options.loggers) {
+    if (options.loggers.length === 0) return null;
+    if (options.loggers.length === 1) return options.loggers[0]!;
+    return new MultiDecisionLogger(options.loggers);
+  }
+  if (options.logger === false) return null;
+  return options.logger ?? new ConsoleDecisionLogger();
 }
