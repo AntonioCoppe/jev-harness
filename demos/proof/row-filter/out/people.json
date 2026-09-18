@@ -1,0 +1,170 @@
+[
+  {
+    "id": "p1",
+    "name": "Person 1",
+    "title": "cashier",
+    "city": "Toronto",
+    "notes": "prefers desk work, has home office"
+  },
+  {
+    "id": "p2",
+    "name": "Person 2",
+    "title": "warehouse",
+    "city": "Dhaka",
+    "notes": "needs physical presence on site daily"
+  },
+  {
+    "id": "p3",
+    "name": "Person 3",
+    "title": "remote support",
+    "city": "Austin",
+    "notes": "hybrid 2 days office"
+  },
+  {
+    "id": "p4",
+    "name": "Person 4",
+    "title": "nurse",
+    "city": "Milan",
+    "notes": "drives routes across province"
+  },
+  {
+    "id": "p5",
+    "name": "Person 5",
+    "title": "truck driver",
+    "city": "Lagos",
+    "notes": "already fully remote for 3 years"
+  },
+  {
+    "id": "p6",
+    "name": "Person 6",
+    "title": "software eng",
+    "city": "Berlin",
+    "notes": "handles cash and floor coverage"
+  },
+  {
+    "id": "p7",
+    "name": "Person 7",
+    "title": "barista",
+    "city": "Sao Paulo",
+    "notes": "lab work requires cleanroom"
+  },
+  {
+    "id": "p8",
+    "name": "Person 8",
+    "title": "teacher",
+    "city": "Tokyo",
+    "notes": "customer visits required weekly"
+  },
+  {
+    "id": "p9",
+    "name": "Person 9",
+    "title": "security",
+    "city": "Nairobi",
+    "notes": "can do video calls; kids at home"
+  },
+  {
+    "id": "p10",
+    "name": "Person 10",
+    "title": "call center",
+    "city": "Vancouver",
+    "notes": "night shifts at facility only"
+  },
+  {
+    "id": "p11",
+    "name": "Person 11",
+    "title": "cashier",
+    "city": "Toronto",
+    "notes": "prefers desk work, has home office"
+  },
+  {
+    "id": "p12",
+    "name": "Person 12",
+    "title": "warehouse",
+    "city": "Dhaka",
+    "notes": "needs physical presence on site daily"
+  },
+  {
+    "id": "p13",
+    "name": "Person 13",
+    "title": "remote support",
+    "city": "Austin",
+    "notes": "hybrid 2 days office"
+  },
+  {
+    "id": "p14",
+    "name": "Person 14",
+    "title": "nurse",
+    "city": "Milan",
+    "notes": "drives routes across province"
+  },
+  {
+    "id": "p15",
+    "name": "Person 15",
+    "title": "truck driver",
+    "city": "Lagos",
+    "notes": "already fully remote for 3 years"
+  },
+  {
+    "id": "p16",
+    "name": "Person 16",
+    "title": "software eng",
+    "city": "Berlin",
+    "notes": "handles cash and floor coverage"
+  },
+  {
+    "id": "p17",
+    "name": "Person 17",
+    "title": "barista",
+    "city": "Sao Paulo",
+    "notes": "lab work requires cleanroom"
+  },
+  {
+    "id": "p18",
+    "name": "Person 18",
+    "title": "teacher",
+    "city": "Tokyo",
+    "notes": "customer visits required weekly"
+  },
+  {
+    "id": "p19",
+    "name": "Person 19",
+    "title": "security",
+    "city": "Nairobi",
+    "notes": "can do video calls; kids at home"
+  },
+  {
+    "id": "p20",
+    "name": "Person 20",
+    "title": "call center",
+    "city": "Vancouver",
+    "notes": "night shifts at facility only"
+  },
+  {
+    "id": "p21",
+    "name": "Person 21",
+    "title": "cashier",
+    "city": "Toronto",
+    "notes": "prefers desk work, has home office"
+  },
+  {
+    "id": "p22",
+    "name": "Person 22",
+    "title": "warehouse",
+    "city": "Dhaka",
+    "notes": "needs physical presence on site daily"
+  },
+  {
+    "id": "p23",
+    "name": "Person 23",
+    "title": "remote support",
+    "city": "Austin",
+    "notes": "hybrid 2 days office"
+  },
+  {
+    "id": "p24",
+    "name": "Person 24",
+    "title": "nurse",
+    "city": "Milan",
+    "notes": "drives routes across province"
+  }
+]

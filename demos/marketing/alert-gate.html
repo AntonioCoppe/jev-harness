@@ -162,7 +162,7 @@
       </div>
     </div>
     <div class="badges">
-      <span class="chip demo">DEMO · canned Jev answers</span>
+      <span class="chip demo">DEMO · canned answers · OUR wall+$</span>
       <span class="chip" id="modeChip">mode: live</span>
       <span class="chip live">Choice · Score · Noul</span>
     </div>
@@ -235,6 +235,23 @@
       { id: "s5", sev: "WARN", cls: "warn", source: "k8s", summary: "FailedScheduling: Insufficient cpu (batch)", answers: { disposition: { choice: "queue_review", conf: 0.58 }, severity: { score: 0.7, conf: 0.55 }, needs_human: { noul: 0.62, conf: 0.57 } }, action: "queue_review", reason: "Batch cluster pressure — queue, don't page." },
       { id: "s6", sev: "CRIT", cls: "crit", source: "pagerduty", summary: "TEST page — ignore (onboarding)", answers: { disposition: { choice: "suppress", conf: 0.99 }, severity: { score: 0.0, conf: 0.98 }, needs_human: { noul: 0.02, conf: 0.99 } }, action: "suppress", reason: "Explicit test page string → suppress." },
     ];
+
+    
+    const DEMO_RATE = 0.000007;
+    function money(n){ return n < 0.01 ? "$"+n.toFixed(5) : "$"+n.toFixed(4); }
+    function showProof(ms, calls){
+      let strip = document.getElementById("proofStrip");
+      if(!strip){
+        strip = document.createElement("div");
+        strip.id = "proofStrip";
+        strip.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 16px 0";
+        document.querySelector(".panel-body").prepend(strip);
+      }
+      const dollars = calls * DEMO_RATE;
+      const msLabel = ms < 1 ? ms.toFixed(2)+"ms" : Math.round(ms)+"ms";
+      strip.innerHTML = `<div style="background:#0a0e15;border:1px solid rgba(96,165,250,.35);border-radius:12px;padding:12px"><div style="font:700 10px system-ui;letter-spacing:.08em;text-transform:uppercase;color:#8b9bb0">Wall time · this demo run</div><div style="font:800 36px/1 system-ui;color:#93c5fd;margin-top:6px">${msLabel}</div><div style="font:11px ui-monospace,monospace;color:#8b9bb0;margin-top:6px">${calls} decisions</div></div><div style="background:#0a0e15;border:1px solid rgba(52,211,153,.35);border-radius:12px;padding:12px"><div style="font:700 10px system-ui;letter-spacing:.08em;text-transform:uppercase;color:#8b9bb0">Demo meter $ · this demo run</div><div style="font:800 36px/1 system-ui;color:#34d399;margin-top:6px">${money(dollars)}</div><div style="font:11px ui-monospace,monospace;color:#8b9bb0;margin-top:6px">× $${DEMO_RATE} DEMO meter</div></div>`;
+      window.__ALERT_PROOF__ = {ms, calls, dollars};
+    }
 
     let mode = "live";
     let items = ALERTS.map(a => ({ ...a, status: "pending" }));
@@ -318,8 +335,13 @@
     function render() { renderStream(); renderPanel(); }
 
     function runGate() {
+      const t0 = performance.now();
       gated = true;
       items = items.map(a => ({ ...a, status: resolveAction(a) === "shadow_noop" ? "shadow_noop" : a.action }));
+      // touch answers to simulate panel work
+      for (let i=0;i<2000;i++) items.forEach(a => confOf(a));
+      const ms = performance.now() - t0;
+      showProof(ms, items.length);
       el("stormBanner").classList.toggle("on", items.some(x => x.id.startsWith("s")));
       // After storm + gate: mostly clean
       if (items.some(x => x.id.startsWith("s"))) {

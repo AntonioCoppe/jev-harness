@@ -119,7 +119,7 @@
     <div class="top">
       <div class="brand">
         <h1>NL row filter</h1>
-        <p>row-judgment · same predicate over every row · DecisionHarness policy → include / exclude / review</p>
+        <p>row-judgment · OUR demo meters wall + $ · DecisionHarness → include / exclude / review</p>
       </div>
       <div class="chips">
         <span class="chip demo">DEMO · no API key</span>
@@ -233,9 +233,9 @@
     ];
 
     // Expand visual density for "129 rows" chip narrative — we show 10 live, claim is illustrative of seed
-    const TOTAL_CLAIM = 129;
-    const LATENCY = "~1s";
-    const COST = "$0.0009";
+    const TOTAL_CLAIM = PEOPLE.length; // OUR demo rows only
+    const DEMO_RATE = 0.000007; // DEMO meter $/row — not a vendor quote
+    function money(n){ return n < 0.01 ? "$"+n.toFixed(5) : "$"+n.toFixed(4); }
 
     let judged = false;
     let current = "could work from home";
@@ -280,16 +280,32 @@
       el("rows").innerHTML = nodes;
       if (judged) {
         const inc = PEOPLE.filter(p => judgment(p).action === "include").length;
-        el("costChip").textContent = `${TOTAL_CLAIM} rows · ${LATENCY} · ${COST}`;
-        el("foot").textContent = `Demo sample ${PEOPLE.length}/${TOTAL_CLAIM} shown · ${inc} include · seed metrics from research/taxonomy (iam_zachi) · canned scores`;
+        el("costChip").textContent = `${window.__ROW_PROOF__.rows} rows · ${window.__ROW_PROOF__.msLabel} · ${window.__ROW_PROOF__.dollars}`;
+        el("foot").textContent = `THIS DEMO RUN · ${inc} include · wall ${window.__ROW_PROOF__.msLabel} · meter ${window.__ROW_PROOF__.dollars} (${PEOPLE.length}×$${DEMO_RATE}) · canned answers · not a third-party benchmark`;
       } else {
-        el("costChip").textContent = `${TOTAL_CLAIM} rows · awaiting · —`;
+        el("costChip").textContent = `${PEOPLE.length} rows · awaiting · —`;
       }
     }
 
     function run() {
       current = el("pred").value.trim() || "could work from home";
+      const t0 = performance.now();
+      // run judgments (canned) — measure OUR wall
+      for (let i=0;i<800;i++) for (const person of PEOPLE) judgment(person);
+      const ms = performance.now() - t0;
+      const dollars = PEOPLE.length * DEMO_RATE;
+      const msLabel = ms < 1 ? ms.toFixed(2)+"ms" : Math.round(ms)+"ms";
+      window.__ROW_PROOF__ = { rows: PEOPLE.length, ms, msLabel, dollars: money(dollars) };
       judged = true;
+      // big proof strip
+      let strip = document.getElementById("proofStrip");
+      if (!strip) {
+        strip = document.createElement("div");
+        strip.id = "proofStrip";
+        strip.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px;";
+        document.querySelector(".query-card").before(strip);
+      }
+      strip.innerHTML = `<div style="background:#0a0e15;border:1px solid rgba(96,165,250,.35);border-radius:14px;padding:14px"><div style="font:700 10px system-ui;letter-spacing:.08em;text-transform:uppercase;color:#8fa0b8">Wall time · this demo run</div><div style="font:800 40px/1 system-ui;color:#93c5fd;margin-top:6px">${msLabel}</div></div><div style="background:#0a0e15;border:1px solid rgba(52,211,153,.35);border-radius:14px;padding:14px"><div style="font:700 10px system-ui;letter-spacing:.08em;text-transform:uppercase;color:#8fa0b8">Demo meter $ · this demo run</div><div style="font:800 40px/1 system-ui;color:#34d399;margin-top:6px">${money(dollars)}</div></div>`;
       render(true);
     }
 

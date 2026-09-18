@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"/><title>jev-harness — our eval proof</title>
+<style>
+body{margin:0;font-family:ui-monospace,Menlo,monospace;background:#0b0f14;color:#e8eef7;padding:28px}
+h1{font:650 18px system-ui;margin:0 0 6px}
+.sub{color:#8b9bb0;font:13px system-ui;margin-bottom:18px}
+.card{background:#121821;border:1px solid #243041;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.eq{color:#3dd6c6;font:650 14px system-ui;margin-bottom:8px}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.stat .k{color:#8b9bb0;font-size:11px}.stat .v{font-size:22px;font-weight:700;color:#3dd68c}
+pre{background:#0e141c;border:1px solid #243041;border-radius:10px;padding:12px;font-size:12px;overflow:auto;color:#c5d0de}
+.badge{display:inline-block;background:rgba(61,214,198,.12);color:#3dd6c6;border:1px solid rgba(61,214,198,.35);border-radius:999px;padding:3px 10px;font:600 11px system-ui}
+</style></head><body>
+<h1>jev-harness — timing/cost proof from <span class="badge">our</span> offline eval</h1>
+<p class="sub">Ran on this repo: <code>npm run eval -- eval/fixtures/…</code> · no community tweet numbers · Sep 17, 2026 ET</p>
+<div class="card">
+  <div class="eq">frontier tokens = $ + latency → route cheap first</div>
+  <div class="row">
+    <div class="stat"><div class="k">pctRoutedCheap</div><div class="v">70%</div></div>
+    <div class="stat"><div class="k">cheap / mid / frontier</div><div class="v">7 / 2 / 1</div></div>
+    <div class="stat"><div class="k">fixture</div><div class="v" style="font-size:14px">model-cost-router.jsonl</div></div>
+  </div>
+  <pre>{"proof":{"pctRoutedCheap":70,"actionCounts":{"cheap":7,"mid":2,"frontier":1,"escalate_llm":1}}}</pre>
+</div>
+<div class="card">
+  <div class="eq">bad ships = incident $ + rollback → suppress on low confidence</div>
+  <div class="row">
+    <div class="stat"><div class="k">suppressOnLowConf</div><div class="v">true</div></div>
+    <div class="stat"><div class="k">ship / revise / block / suppress</div><div class="v">1 / 1 / 2 / 1</div></div>
+    <div class="stat"><div class="k">fixture</div><div class="v" style="font-size:14px">ship-gate.jsonl</div></div>
+  </div>
+  <pre>{"proof":{"suppressOnLowConf":true,"actionCounts":{"ship":1,"revise":1,"block":2,"suppress":1}}}</pre>
+</div>
+<div class="card">
+  <div class="eq">pages = pager $ + sleep → notify | queue | suppress</div>
+  <div class="row">
+    <div class="stat"><div class="k">actions asserted</div><div class="v">4/4</div></div>
+    <div class="stat"><div class="k">notify / suppress / queue / review</div><div class="v">1 / 1 / 1 / 1</div></div>
+    <div class="stat"><div class="k">fixture</div><div class="v" style="font-size:14px">alert-gate.jsonl</div></div>
+  </div>
+  <pre>{"proof":{"actionCounts":{"notify":1,"suppress":1,"queue_review":1,"review":1},"suppressOnLowConf":true}}</pre>
+</div>
+</body></html>

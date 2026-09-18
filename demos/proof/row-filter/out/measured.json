@@ -1,0 +1,218 @@
+{
+  "proof_id": "jev-harness-row-filter-v1",
+  "owner": "AntonioCoppe/jev-harness",
+  "label": "MEASURED",
+  "not_community_seed": true,
+  "measured_at": "2026-09-18T01:46:55.883Z",
+  "timezone_note": "ISO-8601 UTC; display ET for Antonio",
+  "predicate": "could work fully remote without on-site equipment",
+  "rows": 24,
+  "model": "jev-latest",
+  "pricing": {
+    "source": "TypeSafe official Jev rate",
+    "input_usd_per_mtok": 0.042,
+    "output": "free"
+  },
+  "before": {
+    "path": "naive sequential runRowSemanticMatch (concurrency 1, no cache)",
+    "wall_ms": 5411,
+    "input_tokens": 11833,
+    "output_tokens": 792,
+    "usd": 0.00049699,
+    "include": 11,
+    "exclude": 9,
+    "review": 4
+  },
+  "after": {
+    "path": "DecisionHarness mapRows concurrency=8",
+    "wall_ms": 965,
+    "input_tokens": 11713,
+    "output_tokens": 792,
+    "usd": 0.00049195,
+    "include": 9,
+    "exclude": 9,
+    "review": 6
+  },
+  "cache_hit": {
+    "path": "mapRows warm in-memory cache",
+    "wall_ms": 0,
+    "cached_rows": 24,
+    "input_tokens": 0,
+    "usd": 0
+  },
+  "deltas": {
+    "wall_ms_saved": 4446,
+    "wall_speedup": 5.61,
+    "cache_vs_after_ms": 965
+  },
+  "sample_rows": [
+    {
+      "id": "jh-01",
+      "action": "include",
+      "noul": 0.91,
+      "strength": 1.87,
+      "confidence": 0.815
+    },
+    {
+      "id": "jh-02",
+      "action": "exclude",
+      "noul": 0.02,
+      "strength": 0.45,
+      "confidence": 0.64
+    },
+    {
+      "id": "jh-03",
+      "action": "review",
+      "noul": 0.37,
+      "strength": 0.7,
+      "confidence": 0.37
+    },
+    {
+      "id": "jh-04",
+      "action": "exclude",
+      "noul": 0.17,
+      "strength": 0.21,
+      "confidence": 0.675
+    },
+    {
+      "id": "jh-05",
+      "action": "include",
+      "noul": 0.9,
+      "strength": 1.84,
+      "confidence": 0.775
+    },
+    {
+      "id": "jh-06",
+      "action": "exclude",
+      "noul": 0.03,
+      "strength": 0.23,
+      "confidence": 0.8
+    },
+    {
+      "id": "jh-07",
+      "action": "include",
+      "noul": 0.91,
+      "strength": 1.75,
+      "confidence": 0.725
+    },
+    {
+      "id": "jh-08",
+      "action": "exclude",
+      "noul": 0.03,
+      "strength": 0.38,
+      "confidence": 0.685
+    },
+    {
+      "id": "jh-09",
+      "action": "review",
+      "noul": 0.84,
+      "strength": 1.45,
+      "confidence": 0.48
+    },
+    {
+      "id": "jh-10",
+      "action": "exclude",
+      "noul": 0.03,
+      "strength": 0.27,
+      "confidence": 0.765
+    },
+    {
+      "id": "jh-11",
+      "action": "include",
+      "noul": 0.92,
+      "strength": 1.91,
+      "confidence": 0.855
+    },
+    {
+      "id": "jh-12",
+      "action": "review",
+      "noul": 0.34,
+      "strength": 0.64,
+      "confidence": 0.37
+    },
+    {
+      "id": "jh-13",
+      "action": "include",
+      "noul": 0.96,
+      "strength": 1.99,
+      "confidence": 0.95
+    },
+    {
+      "id": "jh-14",
+      "action": "exclude",
+      "noul": 0.03,
+      "strength": 0.3,
+      "confidence": 0.745
+    },
+    {
+      "id": "jh-15",
+      "action": "review",
+      "noul": 0.21,
+      "strength": 0.55,
+      "confidence": 0.43
+    },
+    {
+      "id": "jh-16",
+      "action": "include",
+      "noul": 0.94,
+      "strength": 1.94,
+      "confidence": 0.895
+    },
+    {
+      "id": "jh-17",
+      "action": "include",
+      "noul": 0.86,
+      "strength": 1.53,
+      "confidence": 0.51
+    },
+    {
+      "id": "jh-18",
+      "action": "exclude",
+      "noul": 0.04,
+      "strength": 0.36,
+      "confidence": 0.69
+    },
+    {
+      "id": "jh-19",
+      "action": "include",
+      "noul": 0.81,
+      "strength": 1.63,
+      "confidence": 0.53
+    },
+    {
+      "id": "jh-20",
+      "action": "review",
+      "noul": 0.42,
+      "strength": 0.47,
+      "confidence": 0.23
+    },
+    {
+      "id": "jh-21",
+      "action": "include",
+      "noul": 0.89,
+      "strength": 1.76,
+      "confidence": 0.71
+    },
+    {
+      "id": "jh-22",
+      "action": "exclude",
+      "noul": 0.03,
+      "strength": 0.23,
+      "confidence": 0.795
+    },
+    {
+      "id": "jh-23",
+      "action": "review",
+      "noul": 0.86,
+      "strength": 1.47,
+      "confidence": 0.465
+    },
+    {
+      "id": "jh-24",
+      "action": "exclude",
+      "noul": 0.04,
+      "strength": 0.21,
+      "confidence": 0.8
+    }
+  ]
+}

@@ -1,0 +1,319 @@
+[
+  {
+    "id": "jh-01",
+    "name": "Amelia Rocha",
+    "title": "Staff Platform Eng",
+    "city": "Toronto",
+    "region": "CA-ON",
+    "work_mode": "remote",
+    "seniority_years": 9,
+    "tags": [
+      "async",
+      "on-call-light"
+    ],
+    "notes": "home office; ships via PRs"
+  },
+  {
+    "id": "jh-02",
+    "name": "Ben Okonkwo",
+    "title": "CNC Machinist",
+    "city": "Windsor",
+    "region": "CA-ON",
+    "work_mode": "on-site",
+    "seniority_years": 11,
+    "tags": [
+      "shop-floor"
+    ],
+    "notes": "requires plant floor access"
+  },
+  {
+    "id": "jh-03",
+    "name": "Chloe Park",
+    "title": "Product Designer",
+    "city": "Montreal",
+    "region": "CA-QC",
+    "work_mode": "hybrid",
+    "seniority_years": 6,
+    "tags": [
+      "figma",
+      "workshop"
+    ],
+    "notes": "2 days studio, rest remote"
+  },
+  {
+    "id": "jh-04",
+    "name": "Diego Alvarez",
+    "title": "Field Sales AE",
+    "city": "Calgary",
+    "region": "CA-AB",
+    "work_mode": "field",
+    "seniority_years": 5,
+    "tags": [
+      "travel"
+    ],
+    "notes": "customer sites 3 days/week"
+  },
+  {
+    "id": "jh-05",
+    "name": "Elena Petrova",
+    "title": "SRE",
+    "city": "Vancouver",
+    "region": "CA-BC",
+    "work_mode": "remote",
+    "seniority_years": 8,
+    "tags": [
+      "pager",
+      "k8s"
+    ],
+    "notes": "fully remote since 2019"
+  },
+  {
+    "id": "jh-06",
+    "name": "Farid Hassan",
+    "title": "Warehouse Lead",
+    "city": "Brampton",
+    "region": "CA-ON",
+    "work_mode": "on-site",
+    "seniority_years": 7,
+    "tags": [
+      "forklift"
+    ],
+    "notes": "shift lead on dock"
+  },
+  {
+    "id": "jh-07",
+    "name": "Grace Liu",
+    "title": "Data Engineer",
+    "city": "Ottawa",
+    "region": "CA-ON",
+    "work_mode": "remote",
+    "seniority_years": 4,
+    "tags": [
+      "dbt",
+      "spark"
+    ],
+    "notes": "WFH; async standup"
+  },
+  {
+    "id": "jh-08",
+    "name": "Hassan Iqbal",
+    "title": "Support L1",
+    "city": "Mississauga",
+    "region": "CA-ON",
+    "work_mode": "on-site",
+    "seniority_years": 2,
+    "tags": [
+      "phone-queue"
+    ],
+    "notes": "headset bay required"
+  },
+  {
+    "id": "jh-09",
+    "name": "Isla MacLeod",
+    "title": "PM",
+    "city": "Halifax",
+    "region": "CA-NS",
+    "work_mode": "remote",
+    "seniority_years": 10,
+    "tags": [
+      "roadmap"
+    ],
+    "notes": "remote lead; quarterly offsites"
+  },
+  {
+    "id": "jh-10",
+    "name": "Jonah Berg",
+    "title": "Lab Tech",
+    "city": "Hamilton",
+    "region": "CA-ON",
+    "work_mode": "on-site",
+    "seniority_years": 3,
+    "tags": [
+      "wet-lab"
+    ],
+    "notes": "BSL-2 bench work"
+  },
+  {
+    "id": "jh-11",
+    "name": "Keiko Tanaka",
+    "title": "Frontend Eng",
+    "city": "Remote",
+    "region": "JP-13",
+    "work_mode": "remote",
+    "seniority_years": 6,
+    "tags": [
+      "react"
+    ],
+    "notes": "Tokyo TZ; fully remote"
+  },
+  {
+    "id": "jh-12",
+    "name": "Liam O'Brien",
+    "title": "DevRel",
+    "city": "Dublin",
+    "region": "IE-D",
+    "work_mode": "hybrid",
+    "seniority_years": 5,
+    "tags": [
+      "events"
+    ],
+    "notes": "conference travel + home desk"
+  },
+  {
+    "id": "jh-13",
+    "name": "Maya Singh",
+    "title": "ML Eng",
+    "city": "Waterloo",
+    "region": "CA-ON",
+    "work_mode": "remote",
+    "seniority_years": 7,
+    "tags": [
+      "gpu-cloud"
+    ],
+    "notes": "trains on cloud; no office need"
+  },
+  {
+    "id": "jh-14",
+    "name": "Noah Feldman",
+    "title": "Electrician",
+    "city": "London",
+    "region": "CA-ON",
+    "work_mode": "field",
+    "seniority_years": 12,
+    "tags": [
+      "tickets"
+    ],
+    "notes": "job sites daily"
+  },
+  {
+    "id": "jh-15",
+    "name": "Olivia Chen",
+    "title": "Finance Analyst",
+    "city": "Toronto",
+    "region": "CA-ON",
+    "work_mode": "hybrid",
+    "seniority_years": 4,
+    "tags": [
+      "close"
+    ],
+    "notes": "month-end in office, else remote"
+  },
+  {
+    "id": "jh-16",
+    "name": "Priya Desai",
+    "title": "Contractor UX",
+    "city": "Remote",
+    "region": "IN-MH",
+    "work_mode": "remote",
+    "seniority_years": 8,
+    "tags": [
+      "1099",
+      "contract"
+    ],
+    "notes": "freelance; fully remote"
+  },
+  {
+    "id": "jh-17",
+    "name": "Quinn Morris",
+    "title": "Security Eng",
+    "city": "Austin",
+    "region": "US-TX",
+    "work_mode": "remote",
+    "seniority_years": 9,
+    "tags": [
+      "soc2"
+    ],
+    "notes": "async-first remote"
+  },
+  {
+    "id": "jh-18",
+    "name": "Ravi Patel",
+    "title": "Clinical Nurse",
+    "city": "Buffalo",
+    "region": "US-NY",
+    "work_mode": "on-site",
+    "seniority_years": 6,
+    "tags": [
+      "ward"
+    ],
+    "notes": "floor shifts only"
+  },
+  {
+    "id": "jh-19",
+    "name": "Sofia Mendes",
+    "title": "Growth Marketer",
+    "city": "Lisbon",
+    "region": "PT-11",
+    "work_mode": "remote",
+    "seniority_years": 5,
+    "tags": [
+      "campaigns"
+    ],
+    "notes": "home studio"
+  },
+  {
+    "id": "jh-20",
+    "name": "Theo Nguyen",
+    "title": "Backend Eng",
+    "city": "Seattle",
+    "region": "US-WA",
+    "work_mode": "hybrid",
+    "seniority_years": 3,
+    "tags": [
+      "golang"
+    ],
+    "notes": "1 office day / week"
+  },
+  {
+    "id": "jh-21",
+    "name": "Uma Bakari",
+    "title": "Recruiter",
+    "city": "Chicago",
+    "region": "US-IL",
+    "work_mode": "remote",
+    "seniority_years": 7,
+    "tags": [
+      "hiring"
+    ],
+    "notes": "Zoom-first recruiting"
+  },
+  {
+    "id": "jh-22",
+    "name": "Viktor Holm",
+    "title": "Facilities Tech",
+    "city": "Boston",
+    "region": "US-MA",
+    "work_mode": "on-site",
+    "seniority_years": 15,
+    "tags": [
+      "building"
+    ],
+    "notes": "badge + HVAC rounds"
+  },
+  {
+    "id": "jh-23",
+    "name": "Wendy Zhao",
+    "title": "Staff Data Sci",
+    "city": "SF Bay",
+    "region": "US-CA",
+    "work_mode": "remote",
+    "seniority_years": 11,
+    "tags": [
+      "experiments"
+    ],
+    "notes": "remote; rare all-hands"
+  },
+  {
+    "id": "jh-24",
+    "name": "Xavier Cole",
+    "title": "Barista Lead",
+    "city": "Portland",
+    "region": "US-OR",
+    "work_mode": "on-site",
+    "seniority_years": 4,
+    "tags": [
+      "retail"
+    ],
+    "notes": "storefront shifts"
+  }
+]

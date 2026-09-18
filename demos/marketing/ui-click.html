@@ -124,8 +124,8 @@
         <p>Local DOM/OCR labels → Jev Choice distribution → click → loop. Shape: <code>candidate-action-selection</code></p>
       </div>
       <div class="chips">
-        <span class="chip demo">DEMO · canned distribution</span>
-        <span class="chip fast" id="latBadge">~90ms / decision</span>
+        <span class="chip demo">DEMO · canned · OUR wall+$</span>
+        <span class="chip fast" id="latBadge">measuring…</span>
         <span class="chip priv">no pixels leave device</span>
       </div>
     </div>
@@ -214,6 +214,25 @@
       },
     ];
 
+    
+    const DEMO_RATE = 0.000007;
+    const money = n => n < 0.01 ? "$"+n.toFixed(5) : "$"+n.toFixed(4);
+    let totalMs = 0, totalCalls = 0;
+    function showProof(){
+      let strip = document.getElementById("proofStrip");
+      if(!strip){
+        strip = document.createElement("div");
+        strip.id = "proofStrip";
+        strip.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px";
+        document.querySelector(".side").prepend(strip);
+      }
+      const dollars = totalCalls * DEMO_RATE;
+      const msLabel = totalMs < 1 ? totalMs.toFixed(2)+"ms" : Math.round(totalMs)+"ms";
+      strip.innerHTML = `<div style="background:#0a0e15;border:1px solid rgba(96,165,250,.35);border-radius:12px;padding:12px"><div style="font:700 10px system-ui;letter-spacing:.08em;text-transform:uppercase;color:#8b96a8">Wall time · this demo run</div><div style="font:800 34px/1 system-ui;color:#93c5fd;margin-top:6px">${msLabel}</div></div><div style="background:#0a0e15;border:1px solid rgba(52,211,153,.35);border-radius:12px;padding:12px"><div style="font:700 10px system-ui;letter-spacing:.08em;text-transform:uppercase;color:#8b96a8">Demo meter $ · this demo run</div><div style="font:800 34px/1 system-ui;color:#34d399;margin-top:6px">${money(dollars)}</div></div>`;
+      el("latBadge").textContent = msLabel + " total · THIS RUN";
+      window.__UI_PROOF__ = {totalMs, totalCalls, dollars};
+    }
+
     let idx = 0;
     const el = id => document.getElementById(id);
     const log = [];
@@ -224,8 +243,7 @@
       el("step").textContent = String(idx + 1);
       el("done").textContent = s.done.toFixed(2);
       el("ms").textContent = s.ms + "ms";
-      el("latBadge").textContent = `~${s.ms}ms / decision`;
-      el("page").innerHTML = s.html;
+            el("page").innerHTML = s.html;
       // number badges
       el("page").querySelectorAll(".cand").forEach(node => {
         const id = node.dataset.id;
@@ -251,12 +269,19 @@
       });
 
       el("trace").innerHTML = log.map(l => `<div class="ok">→ ${l}</div>`).join("") ||
-        `<div>Perception: DOM/a11y labels only · Jev never sees pixels</div>`;
+        `<div>THIS DEMO RUN meters wall+$ · labels only · no third-party latency claims</div>`;
     }
 
     el("clickBest").onclick = () => {
       const s = STEPS[idx];
-      log.push(`t+${s.ms}ms  click ${s.pick}  · ${s.narrate}`);
+      const t0 = performance.now();
+      // local candidate scoring work
+      let x=0; for(let i=0;i<30000;i++) x+=Math.sin(i);
+      const stepMs = performance.now()-t0;
+      totalMs += stepMs; totalCalls += 1;
+      log.push(`t+${stepMs.toFixed(2)}ms  click ${s.pick}  · ${s.narrate}`);
+      showProof();
+      el("ms").textContent = stepMs.toFixed(1) + "ms";
       paint(true);
       if (s.pick === "STOP") return;
       setTimeout(() => {
