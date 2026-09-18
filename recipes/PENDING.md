@@ -6,7 +6,7 @@ Folders under `recipes/` use stable category IDs from `research/taxonomy.md`.
 
 | Folder | Contents |
 |---|---|
-| `candidate-action-selection/` | candidate-action-select, browser-next-action, tool-picker, stop-or-continue, esports-reflex |
+| `candidate-action-selection/` | candidate-action-select, browser-next-action, tool-picker, skill-roster-pick, stop-or-continue, esports-reflex |
 | `row-judgment/` | row-semantic-match (+ batch helpers) |
 | `confidence-front-door/` | model-router, alert-gate, inbox-triage, incident-severity, oncall-page, cyber-alert-triage |
 | `verify-gate/` | llm-verifier, injection-check, tool-call-allowlist, ship-gate, shell-command-gate, agent-stuck-drift, pr-risk-gate, edge-content-mod |
@@ -26,3 +26,5 @@ Crazy-fast map: `research/crazy-fast-decisions.md`. Catalog `category` values ma
 **2026-09-18 (ecosystem sync #1):** added `agent-stuck-drift` (verify-gate) — Foreman-shaped stuck/drift/tests/progress supervisor.
 
 **2026-09-18 (ecosystem sync #2):** added `pr-risk-gate` (verify-gate) — jev-review-shaped PR/diff severity → merge_ok / request_changes / block.
+
+**2026-09-18 (ecosystem sync #3):** added `skill-roster-pick` (candidate-action-selection) — skill_suggestion / SkillRanker-shaped roster Choice + need/fit → suggest or abstain.

@@ -83,3 +83,49 @@ Hard rules: no invented APIs/numbers; not `/compact`; community metrics ≠ ours
 - Persona/Crowdcheck multi-Score blast
 - Email thread/webhook scale demo beyond `inbox-triage`
 - Live Polymarket / Kalshi measured fixtures
+
+
+---
+
+## 2026-09-18 ET — sync #3
+
+**Time:** Fri Sep 18, 2026 ~2:46 ET (America/Toronto)
+
+### Inputs read
+- `research/ecosystem-sync-log.md` (sync #1 + #2)
+- `recipes/catalog.ts`
+- `research/taxonomy.md` (P0 stub `skill-roster-pick`; P1 `citation-support`)
+- `recipes/PENDING.md`
+
+### Quick web scan (newer than sync #2?)
+- [awesomejev.com](https://awesomejev.com/) stamped **Refreshed 2026-09-18** — **488 entries / 21,644★** (was 485 / 21,175★ at sync #2 ~12:45 ET). Catalog growth, not our metrics.
+- Confirmed public skill-routing evidence: [Dicklesworthstone/skillranker](https://github.com/Dicklesworthstone/skillranker) README documents Jev-backed next-step skill ranking (needs_skill gate + Choice over roster + fit / abstain; builds on TypeSafe skill_suggestion cookbook). GitHub ★~43 at fetch (community ≠ ours).
+- Adjacent (same shape, not new roots): jev-skill-gate, typesafe-skill-router / typesafe-mod, skill-router listings on awesomejev § Agent tooling.
+- Fresh GitHub noise since sync #2 mostly thin 0★ packaging (sqlite-jev, bouncer, noulgate, job matchers) — overlaps existing row-judgment / tool-gate / model-router rather than new DecisionHarness gaps.
+- Skipped: compaction (`fast-jev-compaction` / winnow / yoshi — out of scope); SQL/Postgres/SQLite UDF packaging; Crowdcheck persona Score blast; citation-support (taxonomy P1 + cookbook, but weaker priority than P0 skill-roster this run); high-freq Polymarket/sports/RTB live measured demos still thin; HA/IoT / voice turn-end.
+
+### Gap chosen (1)
+**`skill-roster-pick`** (`candidate-action-selection`) — taxonomy P0 stub + skill_suggestion / SkillRanker deepening: Choice over skill roster + `needs_skill` + `fits_top` → `<skill-id>` / `none`.
+
+**Why this over others**
+- Explicit taxonomy P0 stub (`skill-roster-pick`) + official skill_suggestion cookbook cite.
+- Public OSS demo with documented need/fit/abstain workflow (not invented).
+- **Not** covered by `tool-picker` (tools ≠ SKILL.md procedures) or `who-speaks-next` / `stop-or-continue`.
+- Higher priority than deferred `citation-support` this sync.
+
+### Shipped
+- Recipe: `recipes/candidate-action-selection/skill-roster-pick.ts`
+- Fixture: `eval/fixtures/skill-roster-pick.jsonl`
+- Wired: `recipes/catalog.ts`, `recipes/index.ts`, `eval/cli.ts`, candidate-action-selection README, `recipes/PENDING.md`
+- `npm run build` + offline eval of that fixture (see commit)
+
+### Not shipped (deferred)
+- citation-support (verify-gate P1 stub; keep for a later sync)
+- Postgres/DuckDB/SQLite UDF contract (packaging ≠ DecisionHarness core)
+- Persona/Crowdcheck multi-Score blast
+- Compaction / context-sieve plugins (out of scope)
+- Live Polymarket / Kalshi / RTB measured fixtures
+
+### Proof note
+- `skill-roster-pick` has offline fixtures only — **no** live measured wall under `demos/proof/multi/` yet. Next proof candidate when a TypeSafe API key + recording pass is available (do not invent timings).
+- Existing multi-use-case proof pack still measuring: NL row filter, shell gate, keystroke launcher, alert gate, model cost router (our numbers only).

@@ -102,6 +102,24 @@ export const catalog = [
     tags: ["tools", "planning", "candidates"],
   },
   {
+    id: "skill-roster-pick",
+    name: "Skill Roster Pick",
+    category: "candidate-action-selection",
+    description:
+      "Suggest which agent skill to load next from a roster, or abstain (skill_suggestion / SkillRanker shape).",
+    module: "recipes/candidate-action-selection/skill-roster-pick.ts",
+    runner: "runSkillRosterPick",
+    questions: [
+      { name: "skill", kind: "choice" },
+      { name: "needs_skill", kind: "noul" },
+      { name: "fits_top", kind: "noul" },
+    ],
+    actions: ["<skill-id>", "none"],
+    defaultMinConfidence: 0.5,
+    defaultOnLowConfidence: "review",
+    tags: ["skills", "skill-suggestion", "roster", "candidates", "skillranker"],
+  },
+  {
     id: "stop-or-continue",
     name: "Stop or Continue",
     category: "candidate-action-selection",

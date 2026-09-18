@@ -30,6 +30,15 @@ export {
   type ToolPickAction,
 } from "./candidate-action-selection/tool-picker.js";
 export {
+  skillRosterPickRecipe,
+  skillRosterPickQuestions,
+  runSkillRosterPick,
+  type SkillRosterPickAction,
+  type SkillRosterPickState,
+  type SkillOption,
+  type SkillRosterPickQuestions,
+} from "./candidate-action-selection/skill-roster-pick.js";
+export {
   stopOrContinueQuestions,
   runStopOrContinue,
   type StopOrContinueAction,

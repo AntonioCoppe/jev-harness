@@ -55,6 +55,7 @@ import { esportsReflexQuestions } from "../recipes/candidate-action-selection/es
 import { keystrokeLauncherQuestions } from "../recipes/candidate-action-selection/keystroke-launcher.js";
 import { agentStuckDriftQuestions } from "../recipes/verify-gate/agent-stuck-drift.js";
 import { prRiskGateQuestions } from "../recipes/verify-gate/pr-risk-gate.js";
+import { skillRosterPickQuestions } from "../recipes/candidate-action-selection/skill-roster-pick.js";
 import { edgeContentModQuestions } from "../recipes/verify-gate/edge-content-mod.js";
 import { cyberAlertTriageQuestions } from "../recipes/confidence-front-door/cyber-alert-triage.js";
 import { rtbBidGateQuestions } from "../recipes/high-freq-reflex/rtb-bid-gate.js";
@@ -512,6 +513,17 @@ function decideShellCommandGate(c: FixtureCase, answers: Record<string, AnyAnswe
 }
 
 
+
+function decideSkillRosterPick(answers: Record<string, AnyAnswer>): string {
+  const skill = answers.skill as { choice: string };
+  const needsSkill = answers.needs_skill as { noul: number };
+  const fitsTop = answers.fits_top as { noul: number };
+  if (needsSkill.noul < 0.4) return "none";
+  if (skill.choice === "none") return "none";
+  if (fitsTop.noul < 0.4) return "none";
+  return skill.choice;
+}
+
 function decideAgentStuckDrift(answers: Record<string, AnyAnswer>): string {
   const stuck = answers.stuck as { noul: number };
   const drifted = answers.drifted as { noul: number };
@@ -647,6 +659,8 @@ function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
       return decideShellCommandGate(c, answers);
     case "keystroke-launcher":
       return decideKeystrokeLauncher(c, answers);
+    case "skill-roster-pick":
+      return decideSkillRosterPick(answers);
     case "agent-stuck-drift":
       return decideAgentStuckDrift(answers);
     case "pr-risk-gate":
@@ -763,6 +777,10 @@ function questionsFor(c: FixtureCase) {
     case "keystroke-launcher": {
       const candidates = (state.candidates as { id: string; label: string; habit_score?: number }[]) ?? [];
       return keystrokeLauncherQuestions(candidates);
+    }
+    case "skill-roster-pick": {
+      const skills = (state.skills as { id: string; description: string }[]) ?? [];
+      return skillRosterPickQuestions(skills);
     }
     case "agent-stuck-drift":
       return agentStuckDriftQuestions();
