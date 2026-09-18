@@ -1,5 +1,8 @@
 # Compaction-level use case — find & pick
 
+> **Caveat (2026-09-18):** The filename is historical. This note picked a *marketing bar* twin (scarce resource = $ + speed), not a product commitment to agent-transcript keep/drop. Probability keep/drop compaction is **out of scope** for jev-harness; prefer lab `/compact` defaults (Theo: https://x.com/theo/status/2100762304862384257). Winner below remains the row-filter equation.
+
+
 **Date:** Thu Sep 17, 2026 (ET / America/Toronto)  
 **Bar:** [tamaratran/fast-jev-compaction](https://github.com/tamaratran/fast-jev-compaction) — everyday pain, crystal equation, undeniable proof, not abstract harness.  
 **Equation template:** `<scarce resource people feel> = <money> + <speed>`

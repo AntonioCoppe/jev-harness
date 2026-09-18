@@ -1,5 +1,8 @@
 # Path to ~200 stars — EXECUTE checklist
 
+> **Caveat (2026-09-18):** Do not QT or endorse Jev keep/drop as a `/compact` strategy. Transcript probability filtering is out of scope for this repo; prefer lab defaults (Theo: https://x.com/theo/status/2100762304862384257). Historical references to fast-jev-compaction as a "bar" are marketing-equation notes only.
+
+
 **Repo:** https://github.com/AntonioCoppe/jev-harness  
 **Baseline:** 0 stars (Thu Sep 17, 2026 ET) · competitor `fast-jev-compaction` ≈661  
 **Rule:** legitimate only — no bought stars, no spam, no API auto-post. Parent pastes drafts manually.  

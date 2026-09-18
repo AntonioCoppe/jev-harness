@@ -1,31 +1,20 @@
 # Decisions with proof — jev-harness proof bar
 
 **Date:** Thu Sep 17, 2026 (ET / America/Toronto)  
-**Bar (competitor energy):** [fast-jev-compaction](https://github.com/tamaratran/fast-jev-compaction) — one everyday decision + undeniable proof (never summarize; keep/drop only; paths/errors stay verbatim).  
+**Proof bar:** one everyday decision + undeniable, screenshotable before→after.  
 **Our bar:** every entry below leads with a scarce-resource equation people feel:
 
 > **`<scarce resource>` = `<money>` + `<speed/latency>`**
 
 No abstract “better decisions.” Only screenshotable before→after. Metrics labeled **measured** (repo/community cites) vs **illustrative** (fixture / design target). Grounded in `research/taxonomy.md`, `research/x-usecases-a.md`, `research/product-surface.md`, and docs.typesafe.ai pattern names cited in taxonomy.
 
-**Compaction note:** for context pruning, **context window = money savings + speed** (fewer tokens billed, fewer ms to next completion).
+**Caveat (2026-09-18):** probability keep/drop on agent transcripts is **out of scope** for this repo. Compaction is not a noise filter; it should run sparingly when context is too long, with enough thread state (and without casually dropping encrypted reasoning or busting prompt cache). Prefer Claude Code / Codex defaults for history compaction. See Theo: https://x.com/theo/status/2100762304862384257
 
 ---
 
-## Catalog (10)
+## Catalog (9)
 
-### 1. Context keep/drop (compaction) — *complementary to fast-jev-compaction*
-
-- **Equation:** **context window tokens = $ + completion latency**
-- **Everyday pain:** `/compact` summarizes; a path, error, or constraint vanishes and the agent re-reads or fails.
-- **Exact questions:**  
-  - `Noul keep_call` — “Does knowing this tool call (with its input) still matter for the goal?”  
-  - `Noul keep_result` — “Are the verbatim contents of this tool result still needed (re-run would not do)?”
-- **Proof metric:** before→after message/char counts + keep/drop/truncate counts; **never rewrite** kept text. Competitor demo: prune tool noise while preserving exact paths. *(measured pattern: fast-jev-compaction README; we do not own Claude Code `/compact` UX)*
-- **Why LLM-agent/prompt-parse fails:** summarizers invent paraphrases; paths and stack traces are lossy under “condense.”
-- **Recipe status:** **Need adjacent recipe** if we want a harness-native keep/drop; today we **point to** fast-jev-compaction for Claude Code. Harness owns the general policy/eval plane.
-
-### 2. Model cost router (cheap-first tier)
+### 1. Model cost router (cheap-first tier)
 
 - **Equation:** **tokens sent to frontier = $ + TTFT/latency**
 - **Everyday pain:** every prompt hits GPT-class; FAQ and formatting burn frontier budget.
@@ -36,7 +25,7 @@ No abstract “better decisions.” Only screenshotable before→after. Metrics 
 - **Why LLM-agent/prompt-parse fails:** the router must be cheaper/faster than the models it selects; free-form “pick a model” essays have no confidence band and no offline action assert.
 - **Recipe status:** **HAVE** — `recipes/confidence-front-door/model-cost-router.ts` (extends `model-router` with cheap-first bias).
 
-### 3. Ship gate (suppress on low confidence)
+### 2. Ship gate (suppress on low confidence)
 
 - **Equation:** **bad ships to prod = incident $ + rollback latency**
 - **Everyday pain:** “looks fine” outputs leak secrets, invent SLAs, or ship unsafe shell.
@@ -48,7 +37,7 @@ No abstract “better decisions.” Only screenshotable before→after. Metrics 
 - **Why LLM-agent/prompt-parse fails:** a chat critic returns prose without a hard `onLowConfidence: suppress` policy you can `jev-eval`.
 - **Recipe status:** **HAVE** — `recipes/verify-gate/ship-gate.ts` (hardens `llm-verifier` defaults).
 
-### 4. Alert / page gate
+### 3. Alert / page gate
 
 - **Equation:** **pages to on-call = pager fatigue $ + wake latency (sleep)**
 - **Everyday pain:** flaky alerts page at 3am; humans mute everything.
@@ -60,7 +49,7 @@ No abstract “better decisions.” Only screenshotable before→after. Metrics 
 - **Why LLM-agent/prompt-parse fails:** pager policy needs discrete actions + confidence floor, not a paragraph of “maybe page.”
 - **Recipe status:** **HAVE** — `alert-gate`, `oncall-page`.
 
-### 5. NL row filter (semantic WHERE)
+### 4. NL row filter (semantic WHERE)
 
 - **Equation:** **rows scanned without embeddings = $ + query latency**
 - **Everyday pain:** spin up a vector index for “could work from home” over a people table.
@@ -71,7 +60,7 @@ No abstract “better decisions.” Only screenshotable before→after. Metrics 
 - **Why LLM-agent/prompt-parse fails:** per-row LLM chat dominates cost/latency; embeddings add index ops tax.
 - **Recipe status:** **HAVE** — `row-semantic-match` + batch helpers.
 
-### 6. UI / DOM candidate click
+### 5. UI / DOM candidate click
 
 - **Equation:** **pixels to frontier vision = $ + step latency**
 - **Everyday pain:** computer-use sends screenshots every step; booking a flight takes forever and $$.
@@ -82,7 +71,7 @@ No abstract “better decisions.” Only screenshotable before→after. Metrics 
 - **Why LLM-agent/prompt-parse fails:** vision+plan invents clicks; closed candidate set + distribution is the product.
 - **Recipe status:** **HAVE** — `candidate-action-select`, `browser-next-action`.
 
-### 7. Tool-call allowlist before exec
+### 6. Tool-call allowlist before exec
 
 - **Equation:** **irreversible shell = blast-radius $ + recovery latency**
 - **Everyday pain:** agent runs `rm -rf` / wire-money tool with a confident wrong parse.
@@ -94,7 +83,7 @@ No abstract “better decisions.” Only screenshotable before→after. Metrics 
 - **Why LLM-agent/prompt-parse fails:** regex allowlists miss intent; LLM “be careful” has no calibrated hold.
 - **Recipe status:** **HAVE** — `tool-call-allowlist`.
 
-### 8. Injection / untrusted-input gate
+### 7. Injection / untrusted-input gate
 
 - **Equation:** **poisoned context tokens = breach $ + incident response latency**
 - **Everyday pain:** tool results / web pages say “ignore previous instructions.”
@@ -106,7 +95,7 @@ No abstract “better decisions.” Only screenshotable before→after. Metrics 
 - **Why LLM-agent/prompt-parse fails:** string filters miss paraphrases; need typed Noul + action policy.
 - **Recipe status:** **HAVE** — `injection-check`.
 
-### 9. Helpdesk intent → cascade (lookup vs LLM vs human)
+### 8. Helpdesk intent → cascade (lookup vs LLM vs human)
 
 - **Equation:** **tickets that hit a frontier reply = support $ + first-response latency**
 - **Everyday pain:** every ticket opens a long LLM thread; order-status never needed generation.
@@ -118,7 +107,7 @@ No abstract “better decisions.” Only screenshotable before→after. Metrics 
 - **Why LLM-agent/prompt-parse fails:** agents always generate; front-door must refuse or route with confidence.
 - **Recipe status:** **HAVE** — `inbox-triage` (+ model-cost-router for model half).
 
-### 10. RAG passage / citation keep filter
+### 9. RAG passage / citation keep filter
 
 - **Equation:** **passages stuffed into context = $ + generation latency**
 - **Everyday pain:** retrieve-wide dumps 40 chunks; model slows and hallucinates citations.
@@ -150,4 +139,4 @@ npm run eval -- eval/fixtures/ship-gate.jsonl
 
 - `research/taxonomy.md`, `research/seeds.md`, `research/x-usecases-a.md`, `research/product-surface.md`, `research/marketing-why-us.md`
 - docs.typesafe.ai patterns cited in taxonomy: intent-routing, confidence-routing, llm_guardrails, citation_check, semantic_find, composite-scoring
-- Competitor clarity: [fast-jev-compaction](https://github.com/tamaratran/fast-jev-compaction) (context window = $ + speed)
+- Out of scope: agent-transcript keep/drop compaction (prefer lab `/compact`; see caveat above)

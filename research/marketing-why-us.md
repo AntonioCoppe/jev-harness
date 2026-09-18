@@ -1,17 +1,18 @@
-# Marketing brief — proof bar = compaction; proof artifact = OUR screenshots
+# Marketing brief — proof artifact = OUR screenshots
 
 **Date:** Thu Sep 17, 2026 (ET / America/Toronto)  
+**Updated:** Fri Sep 18, 2026 (Theo compaction caveat)  
 **Product:** [jev-harness](https://github.com/AntonioCoppe/jev-harness)  
-**Proof bar:** [fast-jev-compaction](https://github.com/tamaratran/fast-jev-compaction)  
+**Proof bar:** measured DecisionHarness jobs with screenshotable before→after (alerts, routing, verify, row filter, UI click).  
 **Hard rule (Antonio):** README savings gallery embeds **our timing/cost screenshots** as proof. A repo link is **not** proof. **Do not** cite @iam_zachi / other tweet $·ms as *ours*.
 
 ---
 
-## Compaction equation (the bar)
+## Out of scope: transcript keep/drop
 
-> **context window = money + speed**
+Do **not** market jev-harness (or Jev) as a Claude Code / Codex `/compact` replacement via probability keep/drop on tool history. Compaction is not a filter; labs tune their own flows; mid-history deletes bust cache and can drop reasoning. Prefer lab defaults. Caveat source: https://x.com/theo/status/2100762304862384257
 
-Soft complementary line only: they own context→$ for Claude Code `/compact`. We own the **next equations** (alerts, routing, verify, filter, UI click) as DecisionHarness + shadow + eval.
+Own the **app decision** equations (alerts, routing, verify, filter, UI click) as DecisionHarness + shadow + eval, with full state in each call.
 
 ---
 
@@ -40,7 +41,7 @@ Six cards (aligned with `demos/marketing/cards/manifest.json`):
 
 | PNG | Equation |
 |---|---|
-| `card-tool-retain.png` | Context tokens = money + speed |
+| `card-tool-retain.png` | *(legacy demo card; do not pitch as `/compact` replacement; prefer other cards)* |
 | `card-model-router.png` | Always-frontier = $ waste; smart route = $ + latency |
 | `card-ship-gate.png` | Ungated ship = incident $; gate = catch before prod |
 | `card-alert-fp.png` | Alert flood = pager burn; gate = eng hours + sleep |
@@ -55,13 +56,13 @@ Plus hero: `our-eval-proof.png` (fixture runs) and `savings.png` (tile overview)
 
 > **Typed decisions with proof — confidence, shadow, and policies you can eval.**
 
-Sub: Compaction owns context→$; we ship the next equations — **screenshots carry the $ / ms**.
+Sub: App decisions with proof — **screenshots carry the $ / ms**. Not transcript compaction.
 
 ---
 
 ## Checklist
 
-- [x] Hook + soft compaction complementary line
+- [x] Hook without endorsing keep/drop compaction
 - [x] Gallery embeds our PNGs as proof
 - [x] No @iam_zachi (or other tweet) numbers claimed as ours
 - [x] Paste-prompts under each card

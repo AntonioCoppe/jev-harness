@@ -129,10 +129,13 @@ UI mock cards for the common jobs (not the measured terminal proof above):
 
 See [`demos/marketing/`](demos/marketing/) and paste prompts in [`demos/marketing/PROMPTS.md`](demos/marketing/PROMPTS.md).
 
+## What this is not
+
+This is **not** a Claude Code / Codex `/compact` replacement. Line-by-line keep/drop on agent history (probability filter, incomplete tool results, mid-thread deletes) is a different problem: it can bust prompt cache, drop encrypted reasoning traces, and push the model into retry loops. Prefer the lab defaults for transcript compaction. Use this harness when your app already has structured state and needs a policy + confidence gate on a decision.
+
 ## Related
 
 - [TypeSafe Jev docs](https://docs.typesafe.ai) — the model this wraps
-- [fast-jev-compaction](https://github.com/tamaratran/fast-jev-compaction) — complementary tool for Claude Code `/compact` (keep/drop tool results, never summarize). This repo is the general decision layer around Jev.
 
 ## License
 
