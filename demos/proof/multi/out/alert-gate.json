@@ -1,0 +1,128 @@
+{
+  "id": "alert-gate",
+  "label": "alert-gate (~15 synthetic alerts)",
+  "recipe": "recipes/confidence-front-door/alert-gate.ts",
+  "measured": "MEASURED_LIVE",
+  "wall_ms": 1181,
+  "started_at": "2026-09-18T16:41:43.086Z",
+  "finished_at": "2026-09-18T16:41:44.269Z",
+  "n": 15,
+  "quality": {
+    "actions": {
+      "queue_review": 7,
+      "suppress": 5,
+      "review": 3
+    },
+    "concurrency": 5,
+    "input_tokens": 7966,
+    "output_tokens": 1136,
+    "per_alert_avg_ms": 79
+  },
+  "items": [
+    {
+      "id": "a01",
+      "source": "pagerduty",
+      "summary": "checkout-api p99 latency 2.4s (baseline 180ms) us-east-1",
+      "action": "queue_review",
+      "confidence": 0.7166666666666668
+    },
+    {
+      "id": "a02",
+      "source": "datadog",
+      "summary": "Disk usage 72% on staging-worker-3",
+      "action": "queue_review",
+      "confidence": 0.5733333333333334
+    },
+    {
+      "id": "a03",
+      "source": "sentry",
+      "summary": "New TypeError in cart.js affecting 340 users in 5m",
+      "action": "queue_review",
+      "confidence": 0.7600000000000001
+    },
+    {
+      "id": "a04",
+      "source": "cloudwatch",
+      "summary": "CPU 41% on prod-web-2 (expected diurnal)",
+      "action": "suppress",
+      "confidence": 0.6166666666666666
+    },
+    {
+      "id": "a05",
+      "source": "pagerduty",
+      "summary": "Duplicate of INC-4412: same checkout latency spike",
+      "action": "review",
+      "confidence": 0.49
+    },
+    {
+      "id": "a06",
+      "source": "k8s",
+      "summary": "Pod CrashLoopBackOff payments-worker x12 restarts",
+      "action": "queue_review",
+      "confidence": 0.63
+    },
+    {
+      "id": "a07",
+      "source": "uptime",
+      "summary": "Status page probe failed for api.example.com from EU",
+      "action": "review",
+      "confidence": 0.4933333333333334
+    },
+    {
+      "id": "a08",
+      "source": "datadog",
+      "summary": "Known flaky canary: synthetic login flake rate 3%",
+      "action": "suppress",
+      "confidence": 0.62
+    },
+    {
+      "id": "a09",
+      "source": "security",
+      "summary": "Unusual IAM role assumption from new geo for prod-deploy",
+      "action": "queue_review",
+      "confidence": 0.7733333333333334
+    },
+    {
+      "id": "a10",
+      "source": "billing",
+      "summary": "Stripe webhook backlog depth 0 (healthy)",
+      "action": "suppress",
+      "confidence": 0.7833333333333333
+    },
+    {
+      "id": "a11",
+      "source": "pagerduty",
+      "summary": "Redis primary failover completed; replica lag 12ms",
+      "action": "review",
+      "confidence": 0.3133333333333333
+    },
+    {
+      "id": "a12",
+      "source": "logs",
+      "summary": "ERROR spam from debug logger left on in staging",
+      "action": "suppress",
+      "confidence": 0.8033333333333333
+    },
+    {
+      "id": "a13",
+      "source": "cdn",
+      "summary": "Origin 5xx rate 8% on checkout assets",
+      "action": "queue_review",
+      "confidence": 0.73
+    },
+    {
+      "id": "a14",
+      "source": "db",
+      "summary": "Primary Postgres connection saturation 95%",
+      "action": "queue_review",
+      "confidence": 0.67
+    },
+    {
+      "id": "a15",
+      "source": "slack-bot",
+      "summary": "Reminder: on-call swap tomorrow (not an incident)",
+      "action": "suppress",
+      "confidence": 0.7266666666666666
+    }
+  ]
+}

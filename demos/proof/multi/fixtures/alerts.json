@@ -1,0 +1,20 @@
+{
+  "policy": "Page only for customer-impacting production incidents; suppress duplicates and known flaky noise",
+  "alerts": [
+    {"id": "a01", "source": "pagerduty", "summary": "checkout-api p99 latency 2.4s (baseline 180ms) us-east-1", "signals": {"p99_ms": 2400, "baseline_ms": 180, "error_rate": 0.02}},
+    {"id": "a02", "source": "datadog", "summary": "Disk usage 72% on staging-worker-3", "signals": {"disk_pct": 72, "env": "staging"}},
+    {"id": "a03", "source": "sentry", "summary": "New TypeError in cart.js affecting 340 users in 5m", "signals": {"users": 340, "window_m": 5}},
+    {"id": "a04", "source": "cloudwatch", "summary": "CPU 41% on prod-web-2 (expected diurnal)", "signals": {"cpu_pct": 41}},
+    {"id": "a05", "source": "pagerduty", "summary": "Duplicate of INC-4412: same checkout latency spike", "signals": {"duplicate_of": "INC-4412"}},
+    {"id": "a06", "source": "k8s", "summary": "Pod CrashLoopBackOff payments-worker x12 restarts", "signals": {"restarts": 12}},
+    {"id": "a07", "source": "uptime", "summary": "Status page probe failed for api.example.com from EU", "signals": {"region": "eu", "status": 503}},
+    {"id": "a08", "source": "datadog", "summary": "Known flaky canary: synthetic login flake rate 3%", "signals": {"flake": true, "known": true}},
+    {"id": "a09", "source": "security", "summary": "Unusual IAM role assumption from new geo for prod-deploy", "signals": {"geo": "new", "role": "prod-deploy"}},
+    {"id": "a10", "source": "billing", "summary": "Stripe webhook backlog depth 0 (healthy)", "signals": {"backlog": 0}},
+    {"id": "a11", "source": "pagerduty", "summary": "Redis primary failover completed; replica lag 12ms", "signals": {"lag_ms": 12, "event": "failover_done"}},
+    {"id": "a12", "source": "logs", "summary": "ERROR spam from debug logger left on in staging", "signals": {"env": "staging", "noise": true}},
+    {"id": "a13", "source": "cdn", "summary": "Origin 5xx rate 8% on checkout assets", "signals": {"origin_5xx": 0.08}},
+    {"id": "a14", "source": "db", "summary": "Primary Postgres connection saturation 95%", "signals": {"conn_pct": 95}},
+    {"id": "a15", "source": "slack-bot", "summary": "Reminder: on-call swap tomorrow (not an incident)", "signals": {"kind": "calendar"}}
+  ]
+}

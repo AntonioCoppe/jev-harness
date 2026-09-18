@@ -1,0 +1,169 @@
+{
+  "id": "row-semantic-match",
+  "label": "row-semantic-match / mapRows (24 people)",
+  "recipe": "recipes/row-judgment/row-semantic-match.ts + batch.mapRows",
+  "measured": "MEASURED_LIVE",
+  "wall_ms": 1257,
+  "started_at": "2026-09-18T16:41:37.362Z",
+  "finished_at": "2026-09-18T16:41:38.622Z",
+  "n": 24,
+  "quality": {
+    "actions": {
+      "include": 14,
+      "exclude": 8,
+      "review": 2
+    },
+    "cached": 0,
+    "concurrency": 8,
+    "predicate": "could reasonably work from home most of the week",
+    "input_tokens": 11761,
+    "output_tokens": 792,
+    "per_row_avg_ms": 52
+  },
+  "items": [
+    {
+      "id": "jh-01",
+      "action": "include",
+      "confidence": 0.975,
+      "cached": false
+    },
+    {
+      "id": "jh-02",
+      "action": "exclude",
+      "confidence": 0.74,
+      "cached": false
+    },
+    {
+      "id": "jh-03",
+      "action": "include",
+      "confidence": 0.8899999999999999,
+      "cached": false
+    },
+    {
+      "id": "jh-04",
+      "action": "review",
+      "confidence": 0.38,
+      "cached": false
+    },
+    {
+      "id": "jh-05",
+      "action": "include",
+      "confidence": 0.98,
+      "cached": false
+    },
+    {
+      "id": "jh-06",
+      "action": "exclude",
+      "confidence": 0.8,
+      "cached": false
+    },
+    {
+      "id": "jh-07",
+      "action": "include",
+      "confidence": 0.975,
+      "cached": false
+    },
+    {
+      "id": "jh-08",
+      "action": "exclude",
+      "confidence": 0.63,
+      "cached": false
+    },
+    {
+      "id": "jh-09",
+      "action": "include",
+      "confidence": 0.965,
+      "cached": false
+    },
+    {
+      "id": "jh-10",
+      "action": "exclude",
+      "confidence": 0.77,
+      "cached": false
+    },
+    {
+      "id": "jh-11",
+      "action": "include",
+      "confidence": 0.98,
+      "cached": false
+    },
+    {
+      "id": "jh-12",
+      "action": "review",
+      "confidence": 0.42500000000000004,
+      "cached": false
+    },
+    {
+      "id": "jh-13",
+      "action": "include",
+      "confidence": 0.975,
+      "cached": false
+    },
+    {
+      "id": "jh-14",
+      "action": "exclude",
+      "confidence": 0.74,
+      "cached": false
+    },
+    {
+      "id": "jh-15",
+      "action": "include",
+      "confidence": 0.8300000000000001,
+      "cached": false
+    },
+    {
+      "id": "jh-16",
+      "action": "include",
+      "confidence": 0.98,
+      "cached": false
+    },
+    {
+      "id": "jh-17",
+      "action": "include",
+      "confidence": 0.965,
+      "cached": false
+    },
+    {
+      "id": "jh-18",
+      "action": "exclude",
+      "confidence": 0.71,
+      "cached": false
+    },
+    {
+      "id": "jh-19",
+      "action": "include",
+      "confidence": 0.96,
+      "cached": false
+    },
+    {
+      "id": "jh-20",
+      "action": "include",
+      "confidence": 0.73,
+      "cached": false
+    },
+    {
+      "id": "jh-21",
+      "action": "include",
+      "confidence": 0.96,
+      "cached": false
+    },
+    {
+      "id": "jh-22",
+      "action": "exclude",
+      "confidence": 0.76,
+      "cached": false
+    },
+    {
+      "id": "jh-23",
+      "action": "include",
+      "confidence": 0.96,
+      "cached": false
+    },
+    {
+      "id": "jh-24",
+      "action": "exclude",
+      "confidence": 0.84,
+      "cached": false
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "status": "SKIPPED",
+  "reason": "BEFORE requires Mac Claude CLI",
+  "fair_cases": ["row-semantic-match", "shell-command-gate"],
+  "skipped_as_unfair_or_awkward": ["keystroke-launcher", "alert-gate", "model-cost-router"],
+  "how_to_run_on_mac": [
+    "export PATH=\"/opt/homebrew/bin:$HOME/.local/bin:$PATH\"",
+    "bash demos/proof/row-filter/mac-llm-cli-bakeoff.sh",
+    "For shell gate: loop each fixtures/shell-commands.json command through `claude -p` asking allow|deny|ask JSON only; time wall clock"
+  ]
+}

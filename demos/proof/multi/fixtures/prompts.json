@@ -1,0 +1,14 @@
+{
+  "prompts": [
+    {"id": "c01", "prompt": "Rewrite this sentence to be clearer: The meeting was moved to Thursday.", "label": "cheap"},
+    {"id": "c02", "prompt": "What is the capital of France?", "label": "cheap"},
+    {"id": "c03", "prompt": "Format this list as markdown bullets: apples bananas cherries", "label": "cheap"},
+    {"id": "c04", "prompt": "Explain what a REST API is in two sentences for a junior eng.", "label": "cheap"},
+    {"id": "m01", "prompt": "Review this TypeScript function for edge cases and suggest tests: function parseId(s: string) { return Number(s) }", "label": "mid"},
+    {"id": "m02", "prompt": "Draft a migration plan from Express to Fastify for a 20-route service.", "label": "mid"},
+    {"id": "m03", "prompt": "Help debug: Node process OOMs after 2h under load; heap dumps show growing Map of sessions.", "label": "mid"},
+    {"id": "f01", "prompt": "Design a multi-region failover strategy for a payments ledger with exactly-once settlement constraints.", "label": "frontier"},
+    {"id": "f02", "prompt": "Legal-sensitive: draft customer notice language for a data breach involving payment tokens (high stakes).", "label": "frontier"},
+    {"id": "f03", "prompt": "Prove correctness sketch for a lock-free ring buffer under ABA; high irreversibility if wrong in prod.", "label": "frontier"}
+  ]
+}

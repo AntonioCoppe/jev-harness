@@ -1,0 +1,27 @@
+{
+  "candidates": [
+    {"id": "vscode", "label": "Visual Studio Code", "habit_score": 0.9},
+    {"id": "terminal", "label": "Terminal.app", "habit_score": 0.85},
+    {"id": "chrome", "label": "Google Chrome", "habit_score": 0.7},
+    {"id": "slack", "label": "Slack", "habit_score": 0.6},
+    {"id": "notion", "label": "Notion", "habit_score": 0.4},
+    {"id": "spotify", "label": "Spotify", "habit_score": 0.3},
+    {"id": "figma", "label": "Figma", "habit_score": 0.35},
+    {"id": "obsidian", "label": "Obsidian", "habit_score": 0.45},
+    {"id": "docker", "label": "Docker Desktop", "habit_score": 0.25},
+    {"id": "postman", "label": "Postman", "habit_score": 0.2}
+  ],
+  "prefixes": [
+    {"id": "p01", "typed_prefix": "vs"},
+    {"id": "p02", "typed_prefix": "code"},
+    {"id": "p03", "typed_prefix": "term"},
+    {"id": "p04", "typed_prefix": "chr"},
+    {"id": "p05", "typed_prefix": "sla"},
+    {"id": "p06", "typed_prefix": "spot"},
+    {"id": "p07", "typed_prefix": "fig"},
+    {"id": "p08", "typed_prefix": "obs"},
+    {"id": "p09", "typed_prefix": "doc"},
+    {"id": "p10", "typed_prefix": "xyzzy"}
+  ],
+  "recent_launches": ["vscode", "terminal", "chrome"]
+}

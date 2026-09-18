@@ -1,0 +1,85 @@
+{
+  "id": "keystroke-launcher",
+  "label": "keystroke-launcher (~10 prefixes)",
+  "recipe": "recipes/candidate-action-selection/keystroke-launcher.ts",
+  "measured": "MEASURED_LIVE",
+  "wall_ms": 885,
+  "started_at": "2026-09-18T16:41:41.416Z",
+  "finished_at": "2026-09-18T16:41:42.303Z",
+  "n": 10,
+  "quality": {
+    "actions": {
+      "vscode": 1,
+      "review": 8,
+      "WAIT": 1
+    },
+    "launchedish": 1,
+    "wait_or_review": 9,
+    "concurrency": 4,
+    "input_tokens": 9711,
+    "output_tokens": 1329,
+    "per_prefix_avg_ms": 89
+  },
+  "items": [
+    {
+      "id": "p01",
+      "typed_prefix": "vs",
+      "action": "vscode",
+      "confidence": 0.65
+    },
+    {
+      "id": "p02",
+      "typed_prefix": "code",
+      "action": "review",
+      "confidence": 0.3833333333333333
+    },
+    {
+      "id": "p03",
+      "typed_prefix": "term",
+      "action": "review",
+      "confidence": 0.35666666666666663
+    },
+    {
+      "id": "p04",
+      "typed_prefix": "chr",
+      "action": "review",
+      "confidence": 0.3166666666666667
+    },
+    {
+      "id": "p05",
+      "typed_prefix": "sla",
+      "action": "WAIT",
+      "confidence": 0.5133333333333333
+    },
+    {
+      "id": "p06",
+      "typed_prefix": "spot",
+      "action": "review",
+      "confidence": 0.3266666666666667
+    },
+    {
+      "id": "p07",
+      "typed_prefix": "fig",
+      "action": "review",
+      "confidence": 0.37333333333333335
+    },
+    {
+      "id": "p08",
+      "typed_prefix": "obs",
+      "action": "review",
+      "confidence": 0.3433333333333333
+    },
+    {
+      "id": "p09",
+      "typed_prefix": "doc",
+      "action": "review",
+      "confidence": 0.18333333333333332
+    },
+    {
+      "id": "p10",
+      "typed_prefix": "xyzzy",
+      "action": "review",
+      "confidence": 0.45999999999999996
+    }
+  ]
+}
