@@ -7,7 +7,7 @@ description: Catalog recipes grouped by taxonomy shape ID
 
 Machine-readable entries from `recipes/catalog.ts`, grouped by taxonomy ID (`research/taxonomy.md`).
 
-14 recipes in catalog.
+20 recipes in catalog.
 
 ## `candidate-action-selection` {#candidate-action-selection}
 
@@ -62,17 +62,26 @@ Composite rubric. See [taxonomy](/taxonomy).
 
 Semantic find. See [taxonomy](/taxonomy).
 
-_No catalog recipes yet for this shape._
+| Recipe | Description |
+|---|---|
+| [`line-semantic-find`](/recipes/line-semantic-find) — **Line Semantic Find** | Pick the best doc line for an NL query, or NONE if nothing fits. |
+| [`span-pick`](/recipes/span-pick) — **Span Pick** | Pick a pre-parsed value/span that satisfies a request, or NONE. |
 
 ## `live-multi-judgment` {#live-multi-judgment}
 
 Live multi-judgment. See [taxonomy](/taxonomy).
 
-_No catalog recipes yet for this shape._
+| Recipe | Description |
+|---|---|
+| [`typewriter-panel`](/recipes/typewriter-panel) — **Typewriter Panel** | Live multi-score editor panel: tone, clarity, urgency, AI-written, intent on a draft. |
+| [`ticket-fanout`](/recipes/ticket-fanout) — **Ticket Fanout** | Speculative multi-question ticket briefing in one RTT; route or escalate. |
 
 ## `high-freq-reflex` {#high-freq-reflex}
 
 High-freq reflex. See [taxonomy](/taxonomy).
 
-_No catalog recipes yet for this shape._
+| Recipe | Description |
+|---|---|
+| [`mm-buy-sell`](/recipes/mm-buy-sell) — **MM Buy Sell** | Block-time buy/sell/hold reflex from a compact book snapshot. |
+| [`hot-path-allow`](/recipes/hot-path-allow) — **Hot Path Allow** | Sub-100ms allow/deny reflex on a compact hot-path event. |
 
