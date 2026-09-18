@@ -1,0 +1,57 @@
+{
+  "replied": [
+    {
+      "id": "2100759813135253817",
+      "url": "https://x.com/vinicius2prg/status/2100759813135253817",
+      "handle": "vinicius2prg",
+      "reply_url": "https://x.com/Antoniocoppe/status/2100761155350200518",
+      "why": "Counter 'throw away agent harness' with docs-grounded nuance: drop agent loop, keep policy+confidence gate",
+      "at": "2026-09-17T21:40:00-04:00"
+    },
+    {
+      "id": "2100609341145465325",
+      "url": "https://x.com/VacekvVita/status/2100609341145465325",
+      "handle": "VacekvVita",
+      "reply_url": "https://x.com/Antoniocoppe/status/2100761226250952829",
+      "why": "Gomoku Jev harness already does candidate prune; reinforced failure mode when tiers empty + low discrimination",
+      "at": "2026-09-17T21:40:00-04:00"
+    },
+    {
+      "id": "2100759127752651186",
+      "url": "https://x.com/madhu_sd16/status/2100759127752651186",
+      "handle": "madhu_sd16",
+      "reply_url": "https://x.com/Antoniocoppe/status/2100761548558065958",
+      "why": "What changes for agents + when-not (math/counting/generation) from System One + jaggedness docs",
+      "at": "2026-09-17T21:40:00-04:00"
+    }
+  ],
+  "skipped": [
+    {
+      "id": "2100759784991371393",
+      "url": "https://x.com/Antoniocoppe/status/2100759784991371393",
+      "why": "Anchor itself; 0 replies/quotes at engage time",
+      "at": "2026-09-17T21:40:00-04:00"
+    },
+    {
+      "id": "2100645515214168573",
+      "url": "https://x.com/petertcg_/status/2100645515214168573",
+      "handle": "petertcg_",
+      "why": "TCG harness idea overlaps Gomoku reply insight; skipped to avoid parallel spam",
+      "at": "2026-09-17T21:40:00-04:00"
+    },
+    {
+      "id": "2100225581447049238",
+      "url": "https://x.com/mlipman13/status/2100225581447049238",
+      "handle": "mlipman13",
+      "why": "Older thread misunderstanding (jev harness => write code); madhu covered agents angle fresher",
+      "at": "2026-09-17T21:40:00-04:00"
+    },
+    {
+      "id": "2100756930054504776",
+      "url": "https://x.com/dabit3/status/2100756930054504776",
+      "handle": "dabit3",
+      "why": "Praise/hype without a concrete question",
+      "at": "2026-09-17T21:40:00-04:00"
+    }
+  ]
+}
