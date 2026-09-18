@@ -14,14 +14,24 @@
     "output": "free"
   },
   "before": {
-    "path": "naive sequential runRowSemanticMatch (concurrency 1, no cache)",
-    "wall_ms": 5411,
-    "input_tokens": 11833,
-    "output_tokens": 792,
-    "usd": 0.00049699,
-    "include": 11,
-    "exclude": 9,
-    "review": 4
+    "claude_cli": {
+      "path": "Claude Code CLI (`claude -p`, sonnet, tools disabled) — same 24 rows, one batch prompt",
+      "wall_ms": 19725,
+      "wall_s": 19.725,
+      "include": 3,
+      "exclude": 21,
+      "model": "claude sonnet via local CLI (signed-in session)",
+      "measured_on": "MacBookPro ~/.local/bin/claude",
+      "usd_note": "Claude Code CLI subscription session — $ not metered; wall_ms is the scarce-resource baseline"
+    },
+    "jev_naive_sequential": {
+      "path": "naive sequential runRowSemanticMatch (concurrency 1, no cache)",
+      "wall_ms": 5411,
+      "input_tokens": 11833,
+      "output_tokens": 792,
+      "usd": 0.00049699,
+      "note": "Jev sequential — not the LLM baseline; kept for harness-internal contrast only"
+    }
   },
   "after": {
     "path": "DecisionHarness mapRows concurrency=8",
@@ -41,9 +51,10 @@
     "usd": 0
   },
   "deltas": {
-    "wall_ms_saved": 4446,
-    "wall_speedup": 5.61,
-    "cache_vs_after_ms": 965
+    "wall_ms_saved": 18760,
+    "wall_speedup": 20.44,
+    "cache_vs_claude_speedup": 19725,
+    "note": "BEFORE = Claude CLI wall; AFTER = live Jev DecisionHarness mapRows concurrency=8; CACHE = warm harness cache"
   },
   "sample_rows": [
     {
@@ -214,5 +225,7 @@
       "strength": 0.21,
       "confidence": 0.8
     }
-  ]
+  ],
+  "equation": "semantic row judgments = money + speed",
+  "headline": "19.725s Claude CLI → 0.96s Jev (20.44×) · $0.00049195"
 }
