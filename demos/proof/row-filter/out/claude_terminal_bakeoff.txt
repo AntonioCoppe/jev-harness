@@ -1,0 +1,27 @@
+========================================================================
+BAKEOFF BASELINE — Claude Code CLI (signed-in local session)
+========================================================================
+host        : MacBookPro
+tool        : claude 2.1.223 (Claude Code)
+model       : sonnet
+rows        : 24
+predicate   : could reasonably work from home most of the week
+WALL CLOCK  : 48.856 seconds
+per row avg : 2036 ms
+========================================================================
+RAW OUTPUT (truncated):
+=== CLAUDE CLI BASELINE ===
+host: MacBookPro
+claude: 2.1.223 (Claude Code)
+  File "<string>", line 1
+    import json;print(len(json.load(open(\"people.json\"))))
+                                          ^
+SyntaxError: unexpected character after line continuation character
+rows: 
+predicate: could reasonably work from home most of the week
+started: 2026-09-18T01:50:00Z
+[{"id":"p1","match":false},{"id":"p2","match":false},{"id":"p3","match":true},{"id":"p4","match":false},{"id":"p5","match":false},{"id":"p6","match":false},{"id":"p7","match":false},{"id":"p8","match":false},{"id":"p9","match":false},{"id":"p10","match":false},{"id":"p11","match":false},{"id":"p12","match":false},{"id":"p13","match":true},{"id":"p14","match":false},{"id":"p15","match":false},{"id":"p16","match":false},{"id":"p17","match":false},{"id":"p18","match":false},{"id":"p19","match":false},{"id":"p20","match":false},{"id":"p21","match":false},{"id":"p22","match":false},{"id":"p23","match":true},{"id":"p24","match":false}]
+finished: 2026-09-18T01:50:49Z
+WALL_CLOCK_SECONDS=48.856
+=== END CLAUDE CLI ===
+========================================================================

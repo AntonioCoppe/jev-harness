@@ -1,0 +1,39 @@
+========================================================================
+BAKEOFF — Jev + jev-harness (LIVE TypeSafe API)
+========================================================================
+host        : jev-harness box
+tool        : DecisionHarness + row-semantic-match
+rows        : 24
+predicate   : could reasonably work from home most of the week
+started     : 2026-09-18T01:51:40.515Z
+{"ts":"2026-09-18T01:51:40.984Z","id":"row-2","mode":"live","model":"jev-1.13.0","confidence":0.715,"intendedAction":"include","action":"include","reason":"confidence 0.715 ≥ 0.5","usage":{"input_tokens":449,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:40.991Z","id":"row-1","mode":"live","model":"jev-1.13.0","confidence":0.78,"intendedAction":"exclude","action":"exclude","reason":"confidence 0.780 ≥ 0.5","usage":{"input_tokens":448,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.008Z","id":"row-6","mode":"live","model":"jev-1.13.0","confidence":0.745,"intendedAction":"exclude","action":"exclude","reason":"confidence 0.745 ≥ 0.5","usage":{"input_tokens":451,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.011Z","id":"row-4","mode":"live","model":"jev-1.13.0","confidence":0.32,"intendedAction":"include","action":"review","reason":"confidence 0.320 < 0.5 → review","usage":{"input_tokens":450,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.019Z","id":"row-5","mode":"live","model":"jev-1.13.0","confidence":0.24,"intendedAction":"exclude","action":"review","reason":"confidence 0.240 < 0.5 → review","usage":{"input_tokens":447,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.040Z","id":"row-0","mode":"live","model":"jev-1.13.0","confidence":0.345,"intendedAction":"include","action":"review","reason":"confidence 0.345 < 0.5 → review","usage":{"input_tokens":450,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.102Z","id":"row-7","mode":"live","model":"jev-1.13.0","confidence":0.44,"intendedAction":"exclude","action":"review","reason":"confidence 0.440 < 0.5 → review","usage":{"input_tokens":446,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.112Z","id":"row-3","mode":"live","model":"jev-1.13.0","confidence":0.78,"intendedAction":"exclude","action":"exclude","reason":"confidence 0.780 ≥ 0.5","usage":{"input_tokens":448,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.275Z","id":"row-12","mode":"live","model":"jev-1.13.0","confidence":0.725,"intendedAction":"include","action":"include","reason":"confidence 0.725 ≥ 0.5","usage":{"input_tokens":452,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.277Z","id":"row-9","mode":"live","model":"jev-1.13.0","confidence":0.55,"intendedAction":"exclude","action":"exclude","reason":"confidence 0.550 ≥ 0.5","usage":{"input_tokens":452,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.335Z","id":"row-10","mode":"live","model":"jev-1.13.0","confidence":0.385,"intendedAction":"include","action":"review","reason":"confidence 0.385 < 0.5 → review","usage":{"input_tokens":453,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.345Z","id":"row-8","mode":"live","model":"jev-1.13.0","confidence":0.445,"intendedAction":"include","action":"review","reason":"confidence 0.445 < 0.5 → review","usage":{"input_tokens":451,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.346Z","id":"row-11","mode":"live","model":"jev-1.13.0","confidence":0.745,"intendedAction":"exclude","action":"exclude","reason":"confidence 0.745 ≥ 0.5","usage":{"input_tokens":451,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.355Z","id":"row-13","mode":"live","model":"jev-1.13.0","confidence":0.76,"intendedAction":"exclude","action":"exclude","reason":"confidence 0.760 ≥ 0.5","usage":{"input_tokens":451,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.384Z","id":"row-14","mode":"live","model":"jev-1.13.0","confidence":0.345,"intendedAction":"include","action":"review","reason":"confidence 0.345 < 0.5 → review","usage":{"input_tokens":453,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.567Z","id":"row-15","mode":"live","model":"jev-1.13.0","confidence":0.28,"intendedAction":"exclude","action":"review","reason":"confidence 0.280 < 0.5 → review","usage":{"input_tokens":450,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.722Z","id":"row-23","mode":"live","model":"jev-1.13.0","confidence":0.795,"intendedAction":"exclude","action":"exclude","reason":"confidence 0.795 ≥ 0.5","usage":{"input_tokens":451,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.732Z","id":"row-17","mode":"live","model":"jev-1.13.0","confidence":0.425,"intendedAction":"exclude","action":"review","reason":"confidence 0.425 < 0.5 → review","usage":{"input_tokens":449,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.745Z","id":"row-16","mode":"live","model":"jev-1.13.0","confidence":0.715,"intendedAction":"exclude","action":"exclude","reason":"confidence 0.715 ≥ 0.5","usage":{"input_tokens":454,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.749Z","id":"row-21","mode":"live","model":"jev-1.13.0","confidence":0.675,"intendedAction":"exclude","action":"exclude","reason":"confidence 0.675 ≥ 0.5","usage":{"input_tokens":451,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.781Z","id":"row-18","mode":"live","model":"jev-1.13.0","confidence":0.455,"intendedAction":"include","action":"review","reason":"confidence 0.455 < 0.5 → review","usage":{"input_tokens":454,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.803Z","id":"row-20","mode":"live","model":"jev-1.13.0","confidence":0.415,"intendedAction":"include","action":"review","reason":"confidence 0.415 < 0.5 → review","usage":{"input_tokens":453,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.832Z","id":"row-19","mode":"live","model":"jev-1.13.0","confidence":0.67,"intendedAction":"exclude","action":"exclude","reason":"confidence 0.670 ≥ 0.5","usage":{"input_tokens":452,"output_tokens":33}}
+{"ts":"2026-09-18T01:51:41.838Z","id":"row-22","mode":"live","model":"jev-1.13.0","confidence":0.73,"intendedAction":"include","action":"include","reason":"confidence 0.730 ≥ 0.5","usage":{"input_tokens":452,"output_tokens":33}}
+finished    : 2026-09-18T01:51:41.838Z
+WALL CLOCK  : 1.320 seconds
+per row avg : 55 ms
+actions     : include=3 exclude=10 review=11
+tokens      : in=10818 out=792
+est USD     : $0.000454 (input @ $0.042/MTok)
+========================================================================

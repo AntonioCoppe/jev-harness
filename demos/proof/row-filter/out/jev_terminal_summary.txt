@@ -1,0 +1,15 @@
+========================================================================
+BAKEOFF — Jev + jev-harness (LIVE TypeSafe API)
+========================================================================
+host        : jev-harness box
+tool        : DecisionHarness + row-semantic-match
+rows        : 24
+predicate   : could reasonably work from home most of the week
+started     : 2026-09-18T01:51:40.515Z
+finished    : 2026-09-18T01:51:41.838Z
+WALL CLOCK  : 1.320 seconds
+per row avg : 55 ms
+actions     : include=3 exclude=10 review=11
+tokens      : in=10818 out=792
+est USD     : $0.000454 (input @ $0.042/MTok)
+========================================================================

@@ -14,34 +14,24 @@
     "output": "free"
   },
   "before": {
-    "claude_cli": {
-      "path": "Claude Code CLI (`claude -p`, sonnet, tools disabled) — same 24 rows, one batch prompt",
-      "wall_ms": 19725,
-      "wall_s": 19.725,
-      "include": 3,
-      "exclude": 21,
-      "model": "claude sonnet via local CLI (signed-in session)",
-      "measured_on": "MacBookPro ~/.local/bin/claude",
-      "usd_note": "Claude Code CLI subscription session — $ not metered; wall_ms is the scarce-resource baseline"
-    },
-    "jev_naive_sequential": {
-      "path": "naive sequential runRowSemanticMatch (concurrency 1, no cache)",
-      "wall_ms": 5411,
-      "input_tokens": 11833,
-      "output_tokens": 792,
-      "usd": 0.00049699,
-      "note": "Jev sequential — not the LLM baseline; kept for harness-internal contrast only"
-    }
+    "path": "Claude Code CLI on MacBookPro (signed-in session, claude -p, sonnet, tools off)",
+    "wall_ms": 48856,
+    "wall_s": 48.856,
+    "rows": 24,
+    "model": "claude sonnet via local CLI",
+    "source_log": "claude_terminal_bakeoff.txt"
   },
   "after": {
-    "path": "DecisionHarness mapRows concurrency=8",
-    "wall_ms": 965,
-    "input_tokens": 11713,
+    "path": "DecisionHarness + row-semantic-match live TypeSafe API, concurrency=8",
+    "wall_ms": 1320,
+    "wall_s": 1.32,
+    "usd": 0.000454356,
+    "input_tokens": 10818,
     "output_tokens": 792,
-    "usd": 0.00049195,
-    "include": 9,
-    "exclude": 9,
-    "review": 6
+    "include": 3,
+    "exclude": 10,
+    "review": 11,
+    "source_log": "jev_terminal.txt"
   },
   "cache_hit": {
     "path": "mapRows warm in-memory cache",
@@ -51,10 +41,9 @@
     "usd": 0
   },
   "deltas": {
-    "wall_ms_saved": 18760,
-    "wall_speedup": 20.44,
-    "cache_vs_claude_speedup": 19725,
-    "note": "BEFORE = Claude CLI wall; AFTER = live Jev DecisionHarness mapRows concurrency=8; CACHE = warm harness cache"
+    "wall_ms_saved": 47536,
+    "wall_speedup": 37.01,
+    "note": "BEFORE=Claude CLI wall; AFTER=live Jev harness; screenshots must be real terminal captures of these logs"
   },
   "sample_rows": [
     {
@@ -227,5 +216,6 @@
     }
   ],
   "equation": "semantic row judgments = money + speed",
-  "headline": "19.725s Claude CLI → 0.96s Jev (20.44×) · $0.00049195"
+  "headline": "48.856s Claude CLI \u2192 1.32s Jev (37.01\u00d7)",
+  "screenshot_policy": "real terminal only \u2014 no AI images, no designed HTML cards as proof"
 }
