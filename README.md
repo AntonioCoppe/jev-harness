@@ -32,8 +32,7 @@ Same job: filter 24 people rows with a natural-language predicate.
 ## Install
 
 ```sh
-# until the package is on npm:
-npm install github:AntonioCoppe/jev-harness
+npm install jev-harness
 export TYPESAFE_API_KEY=tsk_...
 ```
 
