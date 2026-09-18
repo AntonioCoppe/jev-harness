@@ -7,8 +7,7 @@ export type SwarmConsensusAction =
   | "adopt"
   | "another_round"
   | "escalate_human"
-  | "abort"
-  | string;
+  | "abort";
 
 export type SwarmProposal = {
   id: string;
@@ -16,19 +15,16 @@ export type SwarmProposal = {
 };
 
 export interface SwarmConsensusState {
-  /** Task / debate topic. */
   task: string;
-  /** Competing proposals from agents (ids used as Choice keys + `none`). */
   proposals: SwarmProposal[];
-  /** Optional transcript excerpt or claim bullets. */
   transcript?: string;
   round?: number;
   max_rounds?: number;
 }
 
 /**
- * Debate judge / swarm consensus gate — stop-or-continue + rubric patterns.
- * Shape: composite-rubric / live multi-judgment (judge, not generator).
+ * Debate judge / swarm consensus gate — extends stop-or-continue + rubric.
+ * Shape: composite-rubric (judge, not generator). Also packed under agent-comm-harness.
  *
  * Proof equation: **debate tokens until consensus = $ + time-to-consensus**.
  */
@@ -51,55 +47,62 @@ export const swarmConsensusRecipe = defineRecipe<
     { name: "fatal_objection", kind: "noul" },
     { name: "disposition", kind: "choice" },
   ],
-  actions: ["adopt", "another_round", "escalate_human", "abort", "<proposal-id>"],
-  defaultMinConfidence: 0.5,
+  actions: ["adopt", "another_round", "escalate_human", "abort"],
+  defaultMinConfidence: 0.55,
   defaultOnLowConfidence: "review",
-  tags: ["swarm-consensus", "agent-comm", "debate", "terminate"],
+  tags: ["swarm", "debate", "consensus", "multi-agent", "judge", "agent-comm-harness"],
   buildQuestions: (state) => buildSwarmConsensusQuestions(state.proposals),
   decide: ({ answers }, state) => {
-    const maxRounds = state.max_rounds ?? 5;
-    const round = state.round ?? 1;
-    if (answers.fatal_objection.noul >= 0.6) return "abort";
+    if (answers.fatal_objection.noul >= 0.65) {
+      return answers.disposition.choice === "abort" ? "abort" : "escalate_human";
+    }
+    if (
+      answers.consensus_reached.noul >= 0.6 &&
+      answers.evidence_quality.score >= 1.0 &&
+      answers.winner.choice !== "none"
+    ) {
+      return "adopt";
+    }
     if (answers.disposition.choice === "abort") return "abort";
     if (answers.disposition.choice === "escalate_human") return "escalate_human";
-    if (
-      answers.consensus_reached.noul >= 0.55 &&
-      answers.winner.choice !== "none" &&
-      answers.evidence_quality.score >= 0.9
-    ) {
-      return answers.disposition.choice === "adopt" || answers.disposition.choice === "another_round"
-        ? "adopt"
-        : (answers.disposition.choice as SwarmConsensusAction);
-    }
+    const maxRounds = state.max_rounds ?? 5;
+    const round = state.round ?? 1;
     if (round >= maxRounds) return "escalate_human";
     return "another_round";
   },
+  entryState: (state) => ({
+    task: state.task,
+    proposals: state.proposals,
+    transcript: state.transcript,
+    round: state.round,
+    max_rounds: state.max_rounds,
+  }),
 });
 
 function buildSwarmConsensusQuestions(proposals: SwarmProposal[]) {
-  const winnerOpts: Record<string, string> = {
+  const winnerOptions: Record<string, string> = {
     none: "No proposal is ready to adopt",
   };
   for (const p of proposals) {
-    winnerOpts[p.id] = p.summary;
+    winnerOptions[p.id] = p.summary;
   }
   return {
-    consensus_reached: noul("Do the claims agree enough to act?", {
-      true: "Agreement is sufficient to ship a decision",
-      false: "Material disagreement remains",
+    consensus_reached: noul("Have the agents agreed enough to act?", {
+      true: "Claims agree enough to adopt a winner",
+      false: "Still material disagreement",
     }),
-    winner: choice("Which proposal wins, if any?", winnerOpts),
-    evidence_quality: score("How strong is the supporting evidence?", [
+    winner: choice("Which proposal should win if we adopt?", winnerOptions),
+    evidence_quality: score("How strong is the evidence behind the leading proposal?", [
       "Weak",
       "Mixed",
       "Strong",
     ]),
     fatal_objection: noul("Is there an unresolved fatal objection?", {
-      true: "A blocker remains unresolved",
-      false: "No fatal objection outstanding",
+      true: "Blocker remains — do not adopt",
+      false: "No fatal unresolved objection",
     }),
     disposition: choice("What should the swarm do next?", {
-      adopt: "Adopt the winning proposal and stop",
+      adopt: "Adopt the winner and terminate debate",
       another_round: "Run another debate round",
       escalate_human: "Escalate to a human judge",
       abort: "Abort the task",

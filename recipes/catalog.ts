@@ -504,7 +504,7 @@ export const catalog = [
     category: "composite-rubric",
     description:
       "Judge multi-agent debate: consensus?, winner, evidence quality, fatal objection → disposition.",
-    module: "recipes/agent-comm-harness/swarm-consensus.ts",
+    module: "recipes/composite-rubric/swarm-consensus.ts",
     runner: "runSwarmConsensus",
     questions: [
       { name: "consensus_reached", kind: "noul" },

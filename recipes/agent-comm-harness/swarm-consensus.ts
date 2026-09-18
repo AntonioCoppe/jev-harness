@@ -1,4 +1,4 @@
-/** Re-export: swarm-consensus lives under composite-rubric. */
+/** Re-export: swarm-consensus lives under composite-rubric (taxonomy shape). */
 export {
   swarmConsensusRecipe,
   swarmConsensusQuestions,

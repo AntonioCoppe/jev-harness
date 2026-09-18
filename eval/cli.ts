@@ -47,7 +47,7 @@ import { messageRouteQuestions } from "../recipes/agent-comm-harness/message-rou
 import { orderAllowDenyQuestions } from "../recipes/high-freq-reflex/order-allow-deny.js";
 import { predictionMarketGateQuestions } from "../recipes/prediction-market-gate/prediction-market-gate.js";
 import { sportsBetGateQuestions } from "../recipes/sports-bet-gate/sports-bet-gate.js";
-import { swarmConsensusQuestions } from "../recipes/agent-comm-harness/swarm-consensus.js";
+import { swarmConsensusQuestions } from "../recipes/composite-rubric/swarm-consensus.js";
 import { toolExecGateQuestions } from "../recipes/agent-comm-harness/tool-exec-gate.js";
 import { fraudScoreGateQuestions } from "../recipes/high-freq-reflex/fraud-score-gate.js";
 import { esportsReflexQuestions } from "../recipes/candidate-action-selection/esports-reflex.js";

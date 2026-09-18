@@ -4,4 +4,4 @@
 
 **Equation:** tokens / tickets / pages routed wrong = **$ + latency** (or pager wake time).
 
-Recipes: `model-router`, `model-cost-router` (proof: % routed cheap), `alert-gate`, `inbox-triage`, `incident-severity`, `oncall-page`.
+Recipes: `model-router`, `model-cost-router` (proof: % routed cheap), `alert-gate`, `inbox-triage`, `incident-severity`, `oncall-page`., `cyber-alert-triage`

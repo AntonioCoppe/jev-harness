@@ -190,7 +190,7 @@ export {
   type SwarmConsensusState,
   type SwarmProposal,
   type SwarmConsensusQuestions,
-} from "./agent-comm-harness/swarm-consensus.js";
+} from "./composite-rubric/swarm-consensus.js";
 
 export {
   orderAllowDenyRecipe,
@@ -230,6 +230,7 @@ export {
   runSportsBetGate,
   type SportsBetAction,
   type SportsBetGateState,
+  type SportsBetOffering,
 } from "./sports-bet-gate/sports-bet-gate.js";
 
 export {
