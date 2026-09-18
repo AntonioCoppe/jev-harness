@@ -10,9 +10,19 @@
 TypeSafe [Jev](https://docs.typesafe.ai) answers `Choice` / `Score` / `Noul` with calibrated confidence. **This harness** turns answers into shipable actions: policy, confidence gates, shadow, recipes, evals.
 
 > Compaction’s magic equation: **context window = money + speed.**  
-> Below: the **next** equations — proof is the **screenshot** (our timing/cost cards + our offline eval), not a repo link.
+> Below: the **next** equations. **Measured proof = real terminal screenshots**; demo UI cards are labeled mocks.
 
 [fast-jev-compaction](https://github.com/tamaratran/fast-jev-compaction) owns context→$ for Claude Code `/compact`. **jev-harness** owns the next pack: alerts, routing, verify, filters, UI clicks — DecisionHarness + shadow + eval.
+
+### Measured terminal proof (Claude CLI → Jev)
+
+Same 24-row semantic filter bakeoff — wall clock from real terminals:
+
+![Claude Code CLI baseline — WALL CLOCK 48.856s](docs/assets/marketing/proof/terminal/claude-cli.png)
+
+![Live Jev + jev-harness — WALL CLOCK 1.320s](docs/assets/marketing/proof/terminal/jev-harness.png)
+
+Offline fixture proof (`pctRoutedCheap` / `suppressOnLowConf`):
 
 ![Our offline eval proof — pctRoutedCheap / suppressOnLowConf](docs/assets/marketing/our-eval-proof.png)
 
@@ -29,7 +39,7 @@ npm run eval -- eval/fixtures/alert-gate.jsonl
 ## Savings gallery — equations with screenshots
 
 Each card opens like compaction: **`<pain> = $<savings> + speed`**.  
-**The PNG is the proof.** Numbers live in the image (our share cards under `demos/marketing/cards/`). We do **not** claim third-party tweet benchmarks as ours.
+Demo UI cards below are **mocks for the equation** (re-shot from `demos/marketing/`). **Measured wall-clock proof** is the terminal pair above — not these cards. We do **not** claim third-party tweet benchmarks as ours.
 
 ![Savings gallery](docs/assets/marketing/savings.png)
 
