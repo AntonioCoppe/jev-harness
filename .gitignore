@@ -6,3 +6,8 @@ dist/
 .DS_Store
 coverage/
 *.tsbuildinfo
+
+# VitePress
+docs-site/.vitepress/dist
+docs-site/.vitepress/cache
+docs-site/.vitepress/generated-sidebar.json

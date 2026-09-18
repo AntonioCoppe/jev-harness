@@ -26,7 +26,10 @@
     "build": "tsc",
     "example:alert": "tsx examples/alert-gate.ts",
     "example:router": "tsx examples/model-router.ts",
-    "eval": "tsx eval/cli.ts"
+    "eval": "tsx eval/cli.ts",
+    "docs:gen": "tsx docs-site/scripts/generate.mts",
+    "docs:dev": "npm run docs:gen && vitepress dev docs-site",
+    "docs:build": "npm run docs:gen && vitepress build docs-site"
   },
   "keywords": [
     "typesafe",
@@ -49,7 +52,8 @@
   "devDependencies": {
     "@types/node": "^22.13.10",
     "tsx": "^4.19.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitepress": "^1.6.3"
   },
   "repository": {
     "type": "git",
@@ -65,5 +69,13 @@
     "src",
     "LICENSE",
     "README.md"
-  ]
+  ],
+  "peerDependencies": {
+    "@opentelemetry/api": "^1.9.0"
+  },
+  "peerDependenciesMeta": {
+    "@opentelemetry/api": {
+      "optional": true
+    }
+  }
 }

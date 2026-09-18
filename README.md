@@ -9,6 +9,9 @@
 
 > LLMs generate. **Jev decides.** This harness owns **policy**, **confidence**, and **shadow**.
 
+**Docs site** (VitePress): run locally with `npm run docs:dev`, or browse [taxonomy](research/taxonomy.md) and the [recipe catalog](recipes/catalog.ts). Source lives under [`docs-site/`](docs-site/).
+
+
 ---
 
 ## Why
@@ -273,6 +276,19 @@ Research notes that drive the use-case TOC live under `research/` (`seeds.md`, `
 
 ---
 
+## Docs
+
+Static site under [`docs-site/`](docs-site/) (VitePress):
+
+| Command | Purpose |
+|---|---|
+| `npm run docs:dev` | Generate pages from catalog + serve locally |
+| `npm run docs:build` | Generate + build static output |
+
+Pages: home, [taxonomy](research/taxonomy.md) mirror, recipes index grouped by taxonomy ID, one page per catalog recipe.
+
+---
+
 ## Roadmap
 
 - [ ] Expand eval fixtures to every catalog recipe
@@ -280,7 +296,7 @@ Research notes that drive the use-case TOC live under `research/` (`seeds.md`, `
 - [ ] Pluggable decision log sinks (OpenTelemetry, PostHog, file)
 - [ ] Typed recipe SDK helpers (`defineRecipe`) shared by runners + catalog
 - [ ] Batch helpers for semantic row/filter maps with concurrency + cache
-- [ ] Docs site mirroring cookbook recipes ↔ taxonomy clusters
+- [x] Docs site mirroring cookbook recipes ↔ taxonomy clusters (`docs-site/`, `npm run docs:dev`)
 
 ---
 
