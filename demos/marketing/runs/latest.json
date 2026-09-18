@@ -1,0 +1,95 @@
+{
+  "stamp": "2026-09-18T01:44:18.869Z",
+  "demoRateUsdPerCall": 0.000007,
+  "note": "Wall times are performance.now() around OUR canned decision loops (no TypeSafe API). $ = calls × demoRate (labeled DEMO meter, not a vendor price quote). Contrast columns are illustrative classes, not third-party benchmarks.",
+  "results": {
+    "toolRetain": {
+      "name": "tool-retain",
+      "ms": 0.30428500000000724,
+      "calls": 128,
+      "kept": 55,
+      "dropped": 73,
+      "wallLabel": "128 keep/drop decisions",
+      "before": {
+        "tokensProxy": 75936,
+        "rewritten": true,
+        "ttftProxyMs": 4800
+      },
+      "after": {
+        "tokensProxy": 32005,
+        "rewritten": 0,
+        "kept": 55,
+        "dropped": 73
+      },
+      "savePct": 57.9,
+      "dollars": 0.000896
+    },
+    "modelRouter": {
+      "name": "model-router",
+      "ms": 0.37416100000000085,
+      "calls": 1000,
+      "mix": {
+        "cheap": 720,
+        "mid": 210,
+        "frontier": 70
+      },
+      "spend": 1.964,
+      "frontierSpend": 20,
+      "savePct": 90.2,
+      "p50proxyMs": 624,
+      "alwaysFrontierP50": 2100,
+      "dollars": 0.007,
+      "wallLabel": "1000 routed prompts (canned)"
+    },
+    "shipGate": {
+      "name": "ship-gate",
+      "ms": 0.09403200000001277,
+      "calls": 240,
+      "allow": 120,
+      "revise": 110,
+      "block": 10,
+      "dollars": 0.00168,
+      "wallLabel": "240 verify-gate decisions",
+      "blockedPct": 4.2
+    },
+    "alertFp": {
+      "name": "alert-fp",
+      "ms": 0.15749300000000233,
+      "calls": 280,
+      "notify": 40,
+      "suppress": 200,
+      "queue": 40,
+      "beforePages": 280,
+      "fpDropPct": 71.4,
+      "dollars": 0.00196,
+      "wallLabel": "280 alert-gate decisions"
+    },
+    "rowFilter": {
+      "name": "row-filter",
+      "ms": 0.14558999999999855,
+      "calls": 96,
+      "include": 37,
+      "exclude": 48,
+      "review": 11,
+      "rows": 96,
+      "dollars": 0.000672,
+      "llmClassDollars": 7.68,
+      "wallLabel": "96 row-judgments"
+    },
+    "uiAction": {
+      "name": "ui-action",
+      "ms": 3.6437760000000026,
+      "calls": 3,
+      "steps": 3,
+      "meanStepMs": 1.14,
+      "stepMs": [
+        1.3,
+        1.28,
+        0.85
+      ],
+      "dollars": 0.000021,
+      "wallLabel": "3-step candidate loop",
+      "visionClassMs": 3200
+    }
+  }
+}

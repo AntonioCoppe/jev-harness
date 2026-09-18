@@ -29,7 +29,9 @@
     "eval": "tsx eval/cli.ts",
     "docs:gen": "tsx docs-site/scripts/generate.mts",
     "docs:dev": "npm run docs:gen && vitepress dev docs-site",
-    "docs:build": "npm run docs:gen && vitepress build docs-site"
+    "docs:build": "npm run docs:gen && vitepress build docs-site",
+    "demo:measure": "node demos/marketing/runs/measure.mjs",
+    "demo:shot": "node demos/marketing/runs/screenshot.mjs"
   },
   "keywords": [
     "typesafe",
