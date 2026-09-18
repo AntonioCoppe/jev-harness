@@ -1,0 +1,30 @@
+{
+  "arm": "B",
+  "timestamp_et": "2026-09-17 22:06:26 EDT",
+  "send_to_agent_available": false,
+  "parent_can_send_to_agent": true,
+  "blocker": "Executor subagent tool surface lacks SendToAgent; parent fires wakes from WAKE lines.",
+  "wake_handoff": "WAKE <serverId> <role> printed + wake-queue.jsonl / wake-lines.txt",
+  "agents_resolved": {
+    "3966998": {
+      "name": "Harness Researcher",
+      "uuid": "f5732640-a55c-4edc-94ef-4254e4837634",
+      "role": "researcher"
+    },
+    "3967000": {
+      "name": "Harness Critic",
+      "uuid": "c4b09365-a392-41d3-b130-db1e4435a5d1",
+      "role": "critic"
+    },
+    "3967001": {
+      "name": "Harness Synthesizer",
+      "uuid": "f455e857-22fa-4f2b-8ea1-91caf8069263",
+      "role": "synthesizer"
+    },
+    "channel": {
+      "name": "Bakeoff B \u2014 Jev harness",
+      "serverId": "3967016",
+      "uuid": "ca14cd6e-f0e7-4fcc-b414-afd390ee7c31"
+    }
+  }
+}
