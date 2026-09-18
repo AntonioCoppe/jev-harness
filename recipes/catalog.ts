@@ -100,6 +100,25 @@ export const catalog = [
     tags: ["loops", "control", "stop-noul"],
   },
   {
+    id: "who-speaks-next",
+    name: "Who Speaks Next",
+    category: "candidate-action-selection",
+    description:
+      "Pick the next multi-agent speaker (agent id / user / none) with handoff + user-turn gates.",
+    module: "recipes/agent-comm-harness/who-speaks-next.ts",
+    runner: "runWhoSpeaksNext",
+    questions: [
+      { name: "next_speaker", kind: "choice" },
+      { name: "progress", kind: "score" },
+      { name: "needs_handoff", kind: "noul" },
+      { name: "user_turn", kind: "noul" },
+    ],
+    actions: ["<agent-id>", "user", "none"],
+    defaultMinConfidence: 0.5,
+    defaultOnLowConfidence: "review",
+    tags: ["agent-comm-harness", "multi-agent", "handoff", "selector", "candidates"],
+  },
+  {
     id: "row-semantic-match",
     name: "Row Semantic Match",
     category: "row-judgment",

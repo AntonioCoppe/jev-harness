@@ -41,6 +41,7 @@ import { lineSemanticFindQuestions } from "../recipes/semantic-find/line-semanti
 import { spanPickQuestions } from "../recipes/semantic-find/span-pick.js";
 import { mmBuySellQuestions } from "../recipes/high-freq-reflex/mm-buy-sell.js";
 import { hotPathAllowQuestions } from "../recipes/high-freq-reflex/hot-path-allow.js";
+import { whoSpeaksNextQuestions } from "../recipes/agent-comm-harness/who-speaks-next.js";
 
 type RecipeId = (typeof catalog)[number]["id"];
 
@@ -252,6 +253,26 @@ function decideHotPathAllow(answers: Record<string, AnyAnswer>): string {
   return allow.noul >= 0.55 ? "allow" : "deny";
 }
 
+
+function decideWhoSpeaksNext(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  const next = answers.next_speaker as { choice: string };
+  const progress = answers.progress as { score: number };
+  const needsHandoff = answers.needs_handoff as { noul: number };
+  const userTurn = answers.user_turn as { noul: number };
+  const current = typeof state.current_speaker === "string" ? state.current_speaker : undefined;
+  const agents = Array.isArray(state.agents)
+    ? (state.agents as { id: string }[])
+    : [];
+  if (userTurn.noul >= 0.6) return "user";
+  if (next.choice === "none") return "none";
+  if (needsHandoff.noul < 0.4 && current) {
+    if (agents.some((a) => a.id === current)) return current;
+  }
+  if (progress.score < 0.35 && needsHandoff.noul < 0.35) return "none";
+  return next.choice;
+}
+
 function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
   switch (c.recipe) {
     case "candidate-action-select":
@@ -297,6 +318,8 @@ function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
       return decideMmBuySell(answers);
     case "hot-path-allow":
       return decideHotPathAllow(answers);
+    case "who-speaks-next":
+      return decideWhoSpeaksNext(c, answers);
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);
@@ -364,6 +387,10 @@ function questionsFor(c: FixtureCase) {
       return mmBuySellQuestions();
     case "hot-path-allow":
       return hotPathAllowQuestions();
+    case "who-speaks-next": {
+      const agents = (state.agents as { id: string; description: string }[]) ?? [];
+      return whoSpeaksNextQuestions(agents);
+    }
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);

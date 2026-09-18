@@ -26,6 +26,16 @@ export {
 } from "./candidate-action-selection/stop-or-continue.js";
 
 export {
+  whoSpeaksNextRecipe,
+  whoSpeaksNextQuestions,
+  runWhoSpeaksNext,
+  type WhoSpeaksNextAction,
+  type WhoSpeaksNextState,
+  type AgentOption,
+  type WhoSpeaksNextQuestions,
+} from "./agent-comm-harness/who-speaks-next.js";
+
+export {
   rowSemanticMatchQuestions,
   runRowSemanticMatch,
   type RowMatchAction,
