@@ -1,0 +1,9 @@
+{
+  "arm": "A",
+  "mode": "free_for_all",
+  "rounds_fired": 3,
+  "agents_per_round": 3,
+  "actual_wakes": 9,
+  "agent_ids": ["3966990", "3966992", "3966994"],
+  "note": "Parent fired 1:1 SendToAgent; channel post blocked (not a member)."
+}

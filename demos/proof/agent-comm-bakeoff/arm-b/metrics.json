@@ -1,0 +1,36 @@
+{
+  "arm": "B",
+  "mode": "jev_who_speaks_gate",
+  "agents": 3,
+  "rounds": 6,
+  "planned_wakes": 6,
+  "actual_wakes_sent": 0,
+  "wakes_via_parent": true,
+  "wake_protocol": "Parent SendToAgent on WAKE <serverId> <role> lines",
+  "jev_selector_ms_p50": 239,
+  "jev_selector_ms_samples": [
+    556,
+    375,
+    161,
+    262,
+    170,
+    239
+  ],
+  "fallback_selections": 6,
+  "vs_arm_a_wake_reduction": {
+    "arm_a_planned_wakes": 18,
+    "arm_b_planned_wakes": 6,
+    "absolute_reduction": 12,
+    "pct_reduction": 66.7
+  },
+  "wasted_speaker_estimate": 0,
+  "wasted_speaker_estimate_pct": 0,
+  "wasted_speaker_note": "Gated: one speaker/round. Waste ≈ 0 relative to free-for-all redundant wakes; residual risk is wrong specialist once.",
+  "started_et": "2026-09-18T02:05:13.205Z",
+  "finished_et": "2026-09-18T02:05:14.990Z",
+  "notes": [
+    "Live TypeSafe Jev via DecisionHarness + recipes/agent-comm-harness/who-speaks-next.ts",
+    "Executor cannot SendToAgent; parent fires wakes from WAKE lines / wake-queue.jsonl",
+    "proxy_utterance used for transcript continuity until live agent claims arrive"
+  ]
+}

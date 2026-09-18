@@ -1,0 +1,8 @@
+{
+  "round": 6,
+  "wall_ms": 531,
+  "action": "synthesizer",
+  "confidence": 0.625,
+  "intendedAction": "synthesizer",
+  "reason": "confidence 0.625 ≥ 0.5"
+}
