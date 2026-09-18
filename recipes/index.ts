@@ -145,6 +145,15 @@ export {
 } from "./verify-gate/shell-command-gate.js";
 
 export {
+  agentStuckDriftRecipe,
+  agentStuckDriftQuestions,
+  runAgentStuckDrift,
+  type AgentStuckDriftAction,
+  type AgentStuckDriftState,
+  type AgentStuckDriftQuestions,
+} from "./verify-gate/agent-stuck-drift.js";
+
+export {
   rubricQuestions,
   runRubricScorer,
   type RubricAction,

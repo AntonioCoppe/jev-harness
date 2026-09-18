@@ -9,7 +9,7 @@ Folders under `recipes/` use stable category IDs from `research/taxonomy.md`.
 | `candidate-action-selection/` | candidate-action-select, browser-next-action, tool-picker, stop-or-continue, esports-reflex |
 | `row-judgment/` | row-semantic-match (+ batch helpers) |
 | `confidence-front-door/` | model-router, alert-gate, inbox-triage, incident-severity, oncall-page, cyber-alert-triage |
-| `verify-gate/` | llm-verifier, injection-check, tool-call-allowlist, ship-gate, edge-content-mod |
+| `verify-gate/` | llm-verifier, injection-check, tool-call-allowlist, ship-gate, shell-command-gate, agent-stuck-drift, edge-content-mod |
 | `composite-rubric/` | rubric-scorer, swarm-consensus |
 | `live-multi-judgment/` | typewriter-panel, ticket-fanout |
 | `semantic-find/` | line-semantic-find, span-pick |
@@ -22,3 +22,5 @@ Folders under `recipes/` use stable category IDs from `research/taxonomy.md`.
 Crazy-fast map: `research/crazy-fast-decisions.md`. Catalog `category` values match taxonomy IDs.
 
 **2026-09-18:** added `shell-command-gate` (verify-gate) + `keystroke-launcher` (candidate-action-selection) for weekend proof demos.
+
+**2026-09-18 (ecosystem sync #1):** added `agent-stuck-drift` (verify-gate) — Foreman-shaped stuck/drift/tests/progress supervisor.

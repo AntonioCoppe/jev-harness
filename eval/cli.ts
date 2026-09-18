@@ -53,6 +53,7 @@ import { toolExecGateQuestions } from "../recipes/agent-comm-harness/tool-exec-g
 import { fraudScoreGateQuestions } from "../recipes/high-freq-reflex/fraud-score-gate.js";
 import { esportsReflexQuestions } from "../recipes/candidate-action-selection/esports-reflex.js";
 import { keystrokeLauncherQuestions } from "../recipes/candidate-action-selection/keystroke-launcher.js";
+import { agentStuckDriftQuestions } from "../recipes/verify-gate/agent-stuck-drift.js";
 import { edgeContentModQuestions } from "../recipes/verify-gate/edge-content-mod.js";
 import { cyberAlertTriageQuestions } from "../recipes/confidence-front-door/cyber-alert-triage.js";
 import { rtbBidGateQuestions } from "../recipes/high-freq-reflex/rtb-bid-gate.js";
@@ -509,6 +510,28 @@ function decideShellCommandGate(c: FixtureCase, answers: Record<string, AnyAnswe
   return "ask";
 }
 
+
+function decideAgentStuckDrift(answers: Record<string, AnyAnswer>): string {
+  const stuck = answers.stuck as { noul: number };
+  const drifted = answers.drifted as { noul: number };
+  const progress = answers.progress as { score: number };
+  const testsPass = answers.tests_pass as { noul: number };
+  const disposition = answers.disposition as { choice: string };
+  if (stuck.noul >= 0.65 && testsPass.noul < 0.45) return "recover";
+  if (stuck.noul >= 0.65) {
+    return disposition.choice === "stop_review" ? "stop_review" : "recover";
+  }
+  if (drifted.noul >= 0.65) {
+    return progress.score < 0.5 ? "recover" : "nudge";
+  }
+  if (testsPass.noul < 0.4 && progress.score < 0.5) return "stop_review";
+  if (disposition.choice === "stop_review") return "stop_review";
+  if (disposition.choice === "recover") return "recover";
+  if (disposition.choice === "nudge") return "nudge";
+  if (progress.score < 0.4) return "nudge";
+  return "continue";
+}
+
 function decideKeystrokeLauncher(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
   const state = asRecord(c.state);
   const prefix = String(state.typed_prefix ?? "");
@@ -597,6 +620,8 @@ function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
       return decideShellCommandGate(c, answers);
     case "keystroke-launcher":
       return decideKeystrokeLauncher(c, answers);
+    case "agent-stuck-drift":
+      return decideAgentStuckDrift(answers);
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);
@@ -710,6 +735,8 @@ function questionsFor(c: FixtureCase) {
       const candidates = (state.candidates as { id: string; label: string; habit_score?: number }[]) ?? [];
       return keystrokeLauncherQuestions(candidates);
     }
+    case "agent-stuck-drift":
+      return agentStuckDriftQuestions();
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);

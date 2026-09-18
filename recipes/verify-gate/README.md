@@ -4,4 +4,4 @@
 
 **Equation:** bad ships / irreversible exec / poisoned context = **$ + recovery latency**.
 
-Recipes: `llm-verifier`, `ship-gate` (proof: suppress on low confidence), `injection-check`, `tool-call-allowlist`, `shell-command-gate` (fx-style CLI string gate), `edge-content-mod`.
+Recipes: `llm-verifier`, `ship-gate` (proof: suppress on low confidence), `injection-check`, `tool-call-allowlist`, `shell-command-gate` (fx-style CLI string gate), `agent-stuck-drift` (Foreman-style stuck/drift/tests/progress), `edge-content-mod`.

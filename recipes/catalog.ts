@@ -362,6 +362,26 @@ export const catalog = [
     defaultOnLowConfidence: "suppress",
     tags: ["shell", "fx", "cli", "allowlist", "safety", "verify-gate", "proof"],
   },
+  {
+    id: "agent-stuck-drift",
+    name: "Agent Stuck Drift",
+    category: "verify-gate",
+    description:
+      "Foreman-style supervisor: stuck + drift + tests + progress → continue / nudge / recover / stop_review.",
+    module: "recipes/verify-gate/agent-stuck-drift.ts",
+    runner: "runAgentStuckDrift",
+    questions: [
+      { name: "stuck", kind: "noul" },
+      { name: "drifted", kind: "noul" },
+      { name: "progress", kind: "score" },
+      { name: "tests_pass", kind: "noul" },
+      { name: "disposition", kind: "choice" },
+    ],
+    actions: ["continue", "nudge", "recover", "stop_review"],
+    defaultMinConfidence: 0.55,
+    defaultOnLowConfidence: "review",
+    tags: ["foreman", "supervisor", "stuck", "drift", "agents", "verify-gate", "proof"],
+  },
 
   {
     id: "tool-gate",
