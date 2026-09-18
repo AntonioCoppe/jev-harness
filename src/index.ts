@@ -1,5 +1,5 @@
 export { DecisionHarness, type DecisionHarnessOptions } from "./harness.js";
-export { aggregateConfidence, answerConfidence } from "./confidence.js";
+export { answerConfidence, aggregateConfidence } from "./confidence.js";
 export { resolvePolicy, type PolicyResolution } from "./policy.js";
 export {
   ConsoleDecisionLogger,
@@ -16,8 +16,8 @@ export {
 } from "./logger.js";
 export {
   isChoiceAnswer,
-  isNoulAnswer,
   isScoreAnswer,
+  isNoulAnswer,
   type AnswersOf,
   type AnyAnswer,
   type DecisionAction,
@@ -49,11 +49,9 @@ export {
 } from "../recipes/catalog.js";
 
 export {
-  batchFilterRows,
-  mapRows,
   rowPredicateCacheKey,
+  type RowRecord,
+  type RowMatchResult,
   type BatchRowOptions,
   type MappedRow,
-  type RowMatchResult,
-  type RowRecord,
 } from "../recipes/row-judgment/batch.js";
