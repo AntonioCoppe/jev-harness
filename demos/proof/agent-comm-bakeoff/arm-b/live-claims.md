@@ -13,3 +13,7 @@ Kill: −$75/day, $50/window, consecutive-loss breaker, stale/API, t_rem <30s, l
 claim: Code owns books/limits/latency; Jev only gates place vs skip/paper on net-edge state.
 
 **Wakes to reach this:** 4 gated (+ 2 low-conf suppressions)
+
+## Critic (real, post-placeholder)
+Code fee/slip/stale/t_rem/depth gates are right, but conf≥0.8 as place authority over-trusts Jev (peak ≠ calibrated EV/fill). Fee blindness if Scout understates fees or feeds mid not ask. Late-window: RTT can still fire after stale-looking-safe t_rem. Phantom depth can clear 1.5× until size hits.
+claim: Keep code rejects; never let Jev conf≥0.8 alone authorize place — gate on post-fee EV Noul + fresh ask; conf is secondary.
