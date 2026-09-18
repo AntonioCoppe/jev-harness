@@ -382,6 +382,28 @@ export const catalog = [
     defaultOnLowConfidence: "review",
     tags: ["foreman", "supervisor", "stuck", "drift", "agents", "verify-gate", "proof"],
   },
+  {
+    id: "pr-risk-gate",
+    name: "PR Risk Gate",
+    category: "verify-gate",
+    description:
+      "PR/diff severity gate: risk + secrets + test gap → merge_ok / request_changes / block.",
+    module: "recipes/verify-gate/pr-risk-gate.ts",
+    runner: "runPrRiskGate",
+    questions: [
+      { name: "risk", kind: "score" },
+      { name: "severity", kind: "choice" },
+      { name: "secrets", kind: "noul" },
+      { name: "security_issue", kind: "noul" },
+      { name: "test_gap", kind: "noul" },
+      { name: "correctness", kind: "score" },
+      { name: "disposition", kind: "choice" },
+    ],
+    actions: ["merge_ok", "request_changes", "block"],
+    defaultMinConfidence: 0.55,
+    defaultOnLowConfidence: "review",
+    tags: ["pr", "diff", "review", "severity", "secrets", "verify-gate", "proof"],
+  },
 
   {
     id: "tool-gate",

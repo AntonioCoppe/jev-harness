@@ -154,6 +154,15 @@ export {
 } from "./verify-gate/agent-stuck-drift.js";
 
 export {
+  prRiskGateRecipe,
+  prRiskGateQuestions,
+  runPrRiskGate,
+  type PrRiskGateAction,
+  type PrRiskGateState,
+  type PrRiskGateQuestions,
+} from "./verify-gate/pr-risk-gate.js";
+
+export {
   rubricQuestions,
   runRubricScorer,
   type RubricAction,

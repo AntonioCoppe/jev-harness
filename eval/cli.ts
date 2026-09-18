@@ -54,6 +54,7 @@ import { fraudScoreGateQuestions } from "../recipes/high-freq-reflex/fraud-score
 import { esportsReflexQuestions } from "../recipes/candidate-action-selection/esports-reflex.js";
 import { keystrokeLauncherQuestions } from "../recipes/candidate-action-selection/keystroke-launcher.js";
 import { agentStuckDriftQuestions } from "../recipes/verify-gate/agent-stuck-drift.js";
+import { prRiskGateQuestions } from "../recipes/verify-gate/pr-risk-gate.js";
 import { edgeContentModQuestions } from "../recipes/verify-gate/edge-content-mod.js";
 import { cyberAlertTriageQuestions } from "../recipes/confidence-front-door/cyber-alert-triage.js";
 import { rtbBidGateQuestions } from "../recipes/high-freq-reflex/rtb-bid-gate.js";
@@ -532,6 +533,32 @@ function decideAgentStuckDrift(answers: Record<string, AnyAnswer>): string {
   return "continue";
 }
 
+
+function decidePrRiskGate(answers: Record<string, AnyAnswer>): string {
+  const risk = answers.risk as { score: number };
+  const severity = answers.severity as { choice: string };
+  const secrets = answers.secrets as { noul: number };
+  const securityIssue = answers.security_issue as { noul: number };
+  const testGap = answers.test_gap as { noul: number };
+  const correctness = answers.correctness as { score: number };
+  const disposition = answers.disposition as { choice: string };
+  if (secrets.noul >= 0.65) return "block";
+  if (securityIssue.noul >= 0.7 && severity.choice === "critical") return "block";
+  if (disposition.choice === "block") return "block";
+  if (
+    (severity.choice === "critical" || severity.choice === "high") &&
+    risk.score >= 1.4
+  ) {
+    return "request_changes";
+  }
+  if (correctness.score < 0.7) return "request_changes";
+  if (testGap.noul >= 0.65) return "request_changes";
+  if (securityIssue.noul >= 0.55) return "request_changes";
+  if (disposition.choice === "request_changes") return "request_changes";
+  if (risk.score >= 1.6) return "request_changes";
+  return "merge_ok";
+}
+
 function decideKeystrokeLauncher(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
   const state = asRecord(c.state);
   const prefix = String(state.typed_prefix ?? "");
@@ -622,6 +649,8 @@ function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
       return decideKeystrokeLauncher(c, answers);
     case "agent-stuck-drift":
       return decideAgentStuckDrift(answers);
+    case "pr-risk-gate":
+      return decidePrRiskGate(answers);
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);
@@ -737,6 +766,8 @@ function questionsFor(c: FixtureCase) {
     }
     case "agent-stuck-drift":
       return agentStuckDriftQuestions();
+    case "pr-risk-gate":
+      return prRiskGateQuestions();
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);
