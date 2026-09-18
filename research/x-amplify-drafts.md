@@ -1,5 +1,8 @@
 # X amplify drafts — Diogo / Jev System One → jev-harness
 
+> **Caveat (2026-09-18):** Do not QT or endorse Jev keep/drop as a `/compact` strategy. Transcript probability filtering is out of scope for this repo; prefer lab defaults (Theo: https://x.com/theo/status/2100762304862384257). Historical references to fast-jev-compaction as a "bar" are marketing-equation notes only.
+
+
 **Author voice:** Antonio Coppe (CTO) — builder, concrete, crisp. Not corporate.  
 **Source:** [@CompleteSkeptic](https://x.com/CompleteSkeptic/status/2099925682726002904) — Jev launch (20–200× faster, 40–400× cheaper, decisions not chat)  
 **Repo:** https://github.com/AntonioCoppe/jev-harness  
