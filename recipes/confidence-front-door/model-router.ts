@@ -1,14 +1,43 @@
-import { choice, score } from "../../src/index.js";
+import { choice, score } from "@typesafe-ai/sdk";
+import { defineRecipe } from "../../src/define-recipe.js";
 import type { DecisionHarness } from "../../src/harness.js";
 import type { DecisionResult } from "../../src/types.js";
 
 export type ModelTier = "cheap" | "mid" | "frontier";
 
+export type ModelRouterState = { prompt: string };
+
 /**
  * Route a user prompt to a model tier by difficulty / risk.
  * Shape: confidence-front-door.
  */
-export function modelRouterQuestions() {
+export const modelRouterRecipe = defineRecipe<
+  ReturnType<typeof buildModelRouterQuestions>,
+  ModelTier,
+  ModelRouterState
+>({
+  id: "model-router",
+  name: "Model Router",
+  category: "confidence-front-door",
+  description: "Route a user prompt to cheap / mid / frontier tiers by difficulty and risk.",
+  module: "recipes/confidence-front-door/model-router.ts",
+  runner: "runModelRouter",
+  questions: [
+    { name: "tier", kind: "choice" },
+    { name: "risk", kind: "score" },
+  ],
+  actions: ["cheap", "mid", "frontier"],
+  defaultMinConfidence: 0.5,
+  defaultOnLowConfidence: "escalate_llm",
+  tags: ["routing", "cost", "llm"],
+  buildQuestions: (_state) => buildModelRouterQuestions(),
+  decide: ({ answers }) => {
+    if (answers.risk.score >= 1.5) return "frontier";
+    return answers.tier.choice as ModelTier;
+  },
+});
+
+function buildModelRouterQuestions() {
   return {
     tier: choice("Which model tier should handle this request?", {
       cheap: "Simple FAQ, formatting, or lookup-style work",
@@ -23,6 +52,10 @@ export function modelRouterQuestions() {
   } as const;
 }
 
+export function modelRouterQuestions() {
+  return buildModelRouterQuestions();
+}
+
 export type ModelRouterQuestions = ReturnType<typeof modelRouterQuestions>;
 
 export async function runModelRouter(
@@ -30,19 +63,5 @@ export async function runModelRouter(
   prompt: string,
   opts?: { mode?: "live" | "shadow"; id?: string },
 ): Promise<DecisionResult<ModelRouterQuestions, ModelTier>> {
-  const questions = modelRouterQuestions();
-  return harness.run({
-    id: opts?.id,
-    mode: opts?.mode,
-    state: { prompt },
-    questions,
-    policy: {
-      minConfidence: 0.5,
-      onLowConfidence: "escalate_llm",
-      decide: ({ answers }) => {
-        if (answers.risk.score >= 1.5) return "frontier";
-        return answers.tier.choice as ModelTier;
-      },
-    },
-  });
+  return modelRouterRecipe.run(harness, { prompt }, opts);
 }

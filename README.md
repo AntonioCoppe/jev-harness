@@ -193,21 +193,33 @@ Recipe names below come from `recipes/catalog.ts`. Lead order = evidence frequen
 
 **Shape:** Candidate list already in hand; Choice (or per-item Score) for best match to one NL query; optional `exists` Noul.
 
-No dedicated catalog recipe yet — compose `Choice` over shortlists, or reuse [`row-semantic-match`](recipes/row-judgment/row-semantic-match.ts) when the product story is corpus filter rather than rank UI. See `research/taxonomy.md` for relation to `row-judgment`.
+| Catalog recipe | Role |
+|---|---|
+| [`line-semantic-find`](recipes/semantic-find/line-semantic-find.ts) | Best doc line for a query, or `NONE`. |
+| [`span-pick`](recipes/semantic-find/span-pick.ts) | Pre-parsed value/span pick, or `NONE`. |
+
+See `research/taxonomy.md` for relation to `row-judgment` (rank-among vs corpus filter).
 
 ### 7. `live-multi-judgment`
 
-**Shape:** As text/state changes, fan out many independent Scores/Nouls; UI updates in <~200 ms.
+**Shape:** As text/state changes, fan out many independent Scores/Nouls; UI updates in <~200 ms.
 
-No first-party recipe yet — call `harness.run` with a fixed multi-question set on debounce. Evidence: typewriter / editor demos in the taxonomy.
+| Catalog recipe | Role |
+|---|---|
+| [`typewriter-panel`](recipes/live-multi-judgment/typewriter-panel.ts) | Live tone / clarity / urgency / AI-written / intent on a draft. |
+| [`ticket-fanout`](recipes/live-multi-judgment/ticket-fanout.ts) | Speculative multi-Q ticket briefing → route or escalate. |
 
 ### 8. `high-freq-reflex`
 
 **Shape:** Hot loop ≤ few hundred ms; Jev returns a typed branch; deterministic code executes. Split from `candidate-action-selection` when **throughput/budget** (not UI grounding) is the claim.
 
-Reuse [`candidate-action-select`](recipes/candidate-action-selection/candidate-action-select.ts) / [`browser-next-action`](recipes/candidate-action-selection/browser-next-action.ts) with tight `minConfidence` and a shadow soak before live.
+| Catalog recipe | Role |
+|---|---|
+| [`mm-buy-sell`](recipes/high-freq-reflex/mm-buy-sell.ts) | Block-time buy / sell / hold from a compact book snapshot. |
+| [`hot-path-allow`](recipes/high-freq-reflex/hot-path-allow.ts) | Sub-100ms allow / deny on a compact event. |
 
-> Recipe folders `recipes/ops|agents|guardrails|emergent` are **provisional layout** (pre-taxonomy). Prefer the stable IDs above when writing docs or new recipes (`research/taxonomy.md` § Recipe-folder mapping).
+Soak in shadow with tight `minConfidence` before live.
+
 
 ## Shadow mode + eval CLI
 
@@ -258,23 +270,103 @@ recipes/
   confidence-front-door/       # model-router, alert-gate, inbox-triage, …
   verify-gate/                 # llm-verifier, injection-check, tool-call-allowlist
   composite-rubric/            # rubric-scorer
-  live-multi-judgment/         # stub
-  high-freq-reflex/            # stub
+  live-multi-judgment/         # typewriter-panel, ticket-fanout
+  semantic-find/               # line-semantic-find, span-pick
+  high-freq-reflex/            # mm-buy-sell, hot-path-allow
 ```
 
 ```ts
-import { catalog, getRecipe, recipesByCategory } from "jev-harness";
+import { catalog, getRecipe, recipesByCategory, defineRecipe } from "jev-harness";
 
 catalog.filter((r) => r.tags.includes("computer-use"));
 getRecipe("alert-gate");
-recipesByCategory("emergent");
+recipesByCategory("live-multi-judgment");
 ```
 
 Each catalog entry lists `id`, `module`, `runner`, question kinds, actions, default confidence policy, and tags.
 
+### `defineRecipe`
+
+Typed helper in `src/define-recipe.ts` that pairs catalog metadata with `buildQuestions` + `decide` and a `run(harness, state, opts)` wrapper around `DecisionHarness.run`. Migrated examples: [`model-router`](recipes/confidence-front-door/model-router.ts), [`alert-gate`](recipes/confidence-front-door/alert-gate.ts) (export `*Recipe.catalogEntry`).
+
+```ts
+import { defineRecipe, choice, DecisionHarness } from "jev-harness";
+
+const recipe = defineRecipe({
+  id: "my-recipe",
+  name: "My Recipe",
+  category: "confidence-front-door",
+  description: "…",
+  module: "recipes/…/my-recipe.ts",
+  runner: "runMyRecipe",
+  questions: [{ name: "tier", kind: "choice" }],
+  actions: ["cheap", "mid"],
+  defaultMinConfidence: 0.5,
+  tags: ["example"],
+  buildQuestions: () => ({
+    tier: choice("Which tier?", { cheap: "…", mid: "…" }),
+  }),
+  decide: ({ answers }) => answers.tier.choice,
+});
+
+await recipe.run(new DecisionHarness(), { prompt: "…" });
+// recipe.catalogEntry → RecipeCatalogEntry
+```
+
+
 Research notes that drive the use-case TOC live under `research/` (`seeds.md`, `taxonomy.md`).
 
 ---
+
+## Advanced
+
+### Pluggable decision log sinks
+
+`DecisionHarness` accepts `loggers: DecisionLogger[]` (or the legacy single `logger`). Built-in sinks:
+
+| Sink | Notes |
+|---|---|
+| `ConsoleDecisionLogger` | Default — one JSON object per decision on stdout |
+| `MemoryDecisionLogger` | In-process buffer (tests / evals) |
+| `FileDecisionLogger` | Append JSONL to a path |
+| `OtelDecisionLogger` | Soft-loads optional peer `@opentelemetry/api`; no-op if missing |
+| `PostHogDecisionLogger` | HTTP capture; reads `POSTHOG_API_KEY` (optional `POSTHOG_HOST`) |
+
+```ts
+import {
+  DecisionHarness,
+  FileDecisionLogger,
+  OtelDecisionLogger,
+  PostHogDecisionLogger,
+} from "jev-harness";
+
+const harness = new DecisionHarness({
+  loggers: [
+    new FileDecisionLogger("logs/decisions.jsonl"),
+    new OtelDecisionLogger(),
+    new PostHogDecisionLogger(), // no-op without POSTHOG_API_KEY
+  ],
+});
+```
+
+Implement `DecisionLogger.logDecision(result)` for custom sinks.
+
+### Batch row map / filter
+
+For `row-judgment`, use concurrency-pooled helpers with an in-memory cache keyed by `hash(row)+predicate`:
+
+```ts
+import { DecisionHarness, batchFilterRows, mapRows } from "jev-harness";
+// or: import { batchFilterRows, mapRows } from "jev-harness/recipes";
+
+const cache = new Map();
+const included = await batchFilterRows(harness, rows, "could work from home", {
+  concurrency: 8,
+  cache,
+});
+const mapped = await mapRows(harness, rows, "senior IC", { concurrency: 8, cache });
+```
+
 
 ## Docs
 
@@ -292,10 +384,10 @@ Pages: home, [taxonomy](research/taxonomy.md) mirror, recipes index grouped by t
 ## Roadmap
 
 - [ ] Expand eval fixtures to every catalog recipe
-- [ ] More catalog entries for clusters C / G / H as public patterns harden
-- [ ] Pluggable decision log sinks (OpenTelemetry, PostHog, file)
-- [ ] Typed recipe SDK helpers (`defineRecipe`) shared by runners + catalog
-- [ ] Batch helpers for semantic row/filter maps with concurrency + cache
+- [x] More catalog entries for clusters C / G / H (`live-multi-judgment`, `semantic-find`, `high-freq-reflex`)
+- [x] Pluggable decision log sinks (OpenTelemetry, PostHog, file)
+- [x] Typed recipe SDK helpers (`defineRecipe`) shared by runners + catalog
+- [x] Batch helpers for semantic row/filter maps with concurrency + cache
 - [x] Docs site mirroring cookbook recipes ↔ taxonomy clusters (`docs-site/`, `npm run docs:dev`)
 
 ---

@@ -1,4 +1,5 @@
-import { choice, noul, score } from "../../src/index.js";
+import { choice, noul, score } from "@typesafe-ai/sdk";
+import { defineRecipe } from "../../src/define-recipe.js";
 import type { DecisionHarness } from "../../src/harness.js";
 import type { DecisionResult } from "../../src/types.js";
 
@@ -15,7 +16,38 @@ export interface AlertEventState {
  * Gate noisy automated alerts before they page a human.
  * Shape: confidence-front-door (Choice + Score + Noul).
  */
-export function alertGateQuestions() {
+export const alertGateRecipe = defineRecipe<
+  ReturnType<typeof buildAlertGateQuestions>,
+  AlertAction,
+  AlertEventState
+>({
+  id: "alert-gate",
+  name: "Alert Gate",
+  category: "confidence-front-door",
+  description: "Gate noisy automated alerts before they page a human.",
+  module: "recipes/confidence-front-door/alert-gate.ts",
+  runner: "runAlertGate",
+  questions: [
+    { name: "disposition", kind: "choice" },
+    { name: "severity", kind: "score" },
+    { name: "needs_human", kind: "noul" },
+  ],
+  actions: ["notify", "queue_review", "suppress"],
+  defaultMinConfidence: 0.55,
+  defaultOnLowConfidence: "review",
+  tags: ["alerts", "paging", "on-call", "routing"],
+  buildQuestions: (_state) => buildAlertGateQuestions(),
+  decide: ({ answers }) => {
+    if (answers.disposition.choice === "suppress") return "suppress";
+    if (answers.needs_human.noul >= 0.6) return "queue_review";
+    if (answers.disposition.choice === "notify" && answers.severity.score >= 1.2) {
+      return "notify";
+    }
+    return "queue_review";
+  },
+});
+
+function buildAlertGateQuestions() {
   return {
     disposition: choice("How should we handle this alert?", {
       notify: "Page or push to on-call / customer now",
@@ -34,6 +66,10 @@ export function alertGateQuestions() {
   } as const;
 }
 
+export function alertGateQuestions() {
+  return buildAlertGateQuestions();
+}
+
 export type AlertQuestions = ReturnType<typeof alertGateQuestions>;
 
 export async function runAlertGate(
@@ -41,23 +77,5 @@ export async function runAlertGate(
   state: AlertEventState,
   opts?: { mode?: "live" | "shadow"; id?: string; minConfidence?: number },
 ): Promise<DecisionResult<AlertQuestions, AlertAction>> {
-  const questions = alertGateQuestions();
-  return harness.run({
-    id: opts?.id,
-    mode: opts?.mode,
-    state,
-    questions,
-    policy: {
-      minConfidence: opts?.minConfidence ?? 0.55,
-      onLowConfidence: "review",
-      decide: ({ answers }) => {
-        if (answers.disposition.choice === "suppress") return "suppress";
-        if (answers.needs_human.noul >= 0.6) return "queue_review";
-        if (answers.disposition.choice === "notify" && answers.severity.score >= 1.2) {
-          return "notify";
-        }
-        return "queue_review";
-      },
-    },
-  });
+  return alertGateRecipe.run(harness, state, opts);
 }

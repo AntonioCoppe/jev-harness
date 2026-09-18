@@ -4,7 +4,15 @@ export { resolvePolicy, type PolicyResolution } from "./policy.js";
 export {
   ConsoleDecisionLogger,
   MemoryDecisionLogger,
+  MultiDecisionLogger,
+  FileDecisionLogger,
+  OtelDecisionLogger,
+  PostHogDecisionLogger,
+  decisionLogPayload,
   type DecisionLogger,
+  type FileDecisionLoggerOptions,
+  type OtelDecisionLoggerOptions,
+  type PostHogDecisionLoggerOptions,
 } from "./logger.js";
 export {
   isChoiceAnswer,
@@ -22,6 +30,12 @@ export {
   type Questions,
   type RunMode,
 } from "./types.js";
+export {
+  defineRecipe,
+  type DefineRecipeConfig,
+  type DefinedRecipe,
+  type RecipeRunOptions,
+} from "./define-recipe.js";
 
 export { TypeSafeClient, choice, noul, score } from "@typesafe-ai/sdk";
 
@@ -33,3 +47,13 @@ export {
   type RecipeCategory,
   type RecipeQuestionKind,
 } from "../recipes/catalog.js";
+
+export {
+  batchFilterRows,
+  mapRows,
+  rowPredicateCacheKey,
+  type BatchRowOptions,
+  type MappedRow,
+  type RowMatchResult,
+  type RowRecord,
+} from "../recipes/row-judgment/batch.js";

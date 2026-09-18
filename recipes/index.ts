@@ -30,9 +30,25 @@ export {
   runRowSemanticMatch,
   type RowMatchAction,
 } from "./row-judgment/row-semantic-match.js";
-
-export { modelRouterQuestions, runModelRouter, type ModelTier } from "./confidence-front-door/model-router.js";
 export {
+  batchFilterRows,
+  mapRows,
+  rowPredicateCacheKey,
+  type BatchRowOptions,
+  type MappedRow,
+  type RowMatchResult,
+  type RowRecord,
+} from "./row-judgment/batch.js";
+
+export {
+  modelRouterRecipe,
+  modelRouterQuestions,
+  runModelRouter,
+  type ModelTier,
+  type ModelRouterState,
+} from "./confidence-front-door/model-router.js";
+export {
+  alertGateRecipe,
   alertGateQuestions,
   runAlertGate,
   type AlertAction,
@@ -72,3 +88,44 @@ export {
   type RubricAction,
   type RubricDimension,
 } from "./composite-rubric/rubric-scorer.js";
+
+export {
+  typewriterPanelQuestions,
+  runTypewriterPanel,
+  type TypewriterPanelAction,
+  type TypewriterPanelState,
+} from "./live-multi-judgment/typewriter-panel.js";
+export {
+  ticketFanoutQuestions,
+  runTicketFanout,
+  type TicketFanoutAction,
+  type TicketFanoutState,
+} from "./live-multi-judgment/ticket-fanout.js";
+
+export {
+  lineSemanticFindQuestions,
+  runLineSemanticFind,
+  type LineSemanticFindAction,
+  type LineCandidate,
+  type LineSemanticFindState,
+} from "./semantic-find/line-semantic-find.js";
+export {
+  spanPickQuestions,
+  runSpanPick,
+  type SpanPickAction,
+  type SpanCandidate,
+  type SpanPickState,
+} from "./semantic-find/span-pick.js";
+
+export {
+  mmBuySellQuestions,
+  runMmBuySell,
+  type MmBuySellAction,
+  type MmBuySellState,
+} from "./high-freq-reflex/mm-buy-sell.js";
+export {
+  hotPathAllowQuestions,
+  runHotPathAllow,
+  type HotPathAllowAction,
+  type HotPathAllowState,
+} from "./high-freq-reflex/hot-path-allow.js";

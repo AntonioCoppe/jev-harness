@@ -33,7 +33,7 @@ export interface RecipeCatalogEntry {
   tags: string[];
 }
 
-export const catalog: readonly RecipeCatalogEntry[] = [
+export const catalog = [
   {
     id: "candidate-action-select",
     name: "Candidate Action Select",
@@ -263,7 +263,109 @@ export const catalog: readonly RecipeCatalogEntry[] = [
     defaultOnLowConfidence: "review",
     tags: ["rubric", "scoring", "multi-score"],
   },
-] as const;
+  {
+    id: "typewriter-panel",
+    name: "Typewriter Panel",
+    category: "live-multi-judgment",
+    description: "Live multi-score editor panel: tone, clarity, urgency, AI-written, intent on a draft.",
+    module: "recipes/live-multi-judgment/typewriter-panel.ts",
+    runner: "runTypewriterPanel",
+    questions: [
+      { name: "tone", kind: "score" },
+      { name: "clarity", kind: "score" },
+      { name: "urgent", kind: "noul" },
+      { name: "ai_written", kind: "noul" },
+      { name: "intent", kind: "choice" },
+    ],
+    actions: ["update_ui"],
+    defaultMinConfidence: 0.4,
+    defaultOnLowConfidence: "proceed",
+    tags: ["live", "fan-out", "editor", "typewriter"],
+  },
+  {
+    id: "ticket-fanout",
+    name: "Ticket Fanout",
+    category: "live-multi-judgment",
+    description: "Speculative multi-question ticket briefing in one RTT; route or escalate.",
+    module: "recipes/live-multi-judgment/ticket-fanout.ts",
+    runner: "runTicketFanout",
+    questions: [
+      { name: "category", kind: "choice" },
+      { name: "severity", kind: "score" },
+      { name: "refund", kind: "noul" },
+      { name: "has_repro", kind: "noul" },
+      { name: "frustration", kind: "score" },
+    ],
+    actions: ["billing", "bug", "how_to", "account", "other", "escalate"],
+    defaultMinConfidence: 0.5,
+    defaultOnLowConfidence: "review",
+    tags: ["live", "fan-out", "support", "ticket"],
+  },
+  {
+    id: "line-semantic-find",
+    name: "Line Semantic Find",
+    category: "semantic-find",
+    description: "Pick the best doc line for an NL query, or NONE if nothing fits.",
+    module: "recipes/semantic-find/line-semantic-find.ts",
+    runner: "runLineSemanticFind",
+    questions: [
+      { name: "best", kind: "choice" },
+      { name: "answer_exists", kind: "noul" },
+    ],
+    actions: ["<line-id>", "NONE"],
+    defaultMinConfidence: 0.5,
+    defaultOnLowConfidence: "review",
+    tags: ["search", "rank", "lines", "rag"],
+  },
+  {
+    id: "span-pick",
+    name: "Span Pick",
+    category: "semantic-find",
+    description: "Pick a pre-parsed value/span that satisfies a request, or NONE.",
+    module: "recipes/semantic-find/span-pick.ts",
+    runner: "runSpanPick",
+    questions: [
+      { name: "span", kind: "choice" },
+      { name: "none_fit", kind: "noul" },
+    ],
+    actions: ["<span-id>", "NONE"],
+    defaultMinConfidence: 0.5,
+    defaultOnLowConfidence: "review",
+    tags: ["extraction", "spans", "candidates"],
+  },
+  {
+    id: "mm-buy-sell",
+    name: "MM Buy Sell",
+    category: "high-freq-reflex",
+    description: "Block-time buy/sell/hold reflex from a compact book snapshot.",
+    module: "recipes/high-freq-reflex/mm-buy-sell.ts",
+    runner: "runMmBuySell",
+    questions: [
+      { name: "side", kind: "choice" },
+      { name: "edge", kind: "score" },
+    ],
+    actions: ["buy", "sell", "hold"],
+    defaultMinConfidence: 0.45,
+    defaultOnLowConfidence: "suppress",
+    tags: ["latency", "trading", "reflex"],
+  },
+  {
+    id: "hot-path-allow",
+    name: "Hot Path Allow",
+    category: "high-freq-reflex",
+    description: "Sub-100ms allow/deny reflex on a compact hot-path event.",
+    module: "recipes/high-freq-reflex/hot-path-allow.ts",
+    runner: "runHotPathAllow",
+    questions: [
+      { name: "allow", kind: "noul" },
+      { name: "severity", kind: "score" },
+    ],
+    actions: ["allow", "deny"],
+    defaultMinConfidence: 0.5,
+    defaultOnLowConfidence: "review",
+    tags: ["latency", "gate", "reflex"],
+  },
+] as const satisfies readonly RecipeCatalogEntry[];
 
 export function getRecipe(id: string): RecipeCatalogEntry | undefined {
   return catalog.find((r) => r.id === id);
