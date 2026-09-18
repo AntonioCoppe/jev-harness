@@ -20,3 +20,5 @@ Folders under `recipes/` use stable category IDs from `research/taxonomy.md`.
 | `rtb-bid-gate/` | alias re-export → high-freq-reflex/rtb-bid-gate |
 
 Crazy-fast map: `research/crazy-fast-decisions.md`. Catalog `category` values match taxonomy IDs.
+
+**2026-09-18:** added `shell-command-gate` (verify-gate) + `keystroke-launcher` (candidate-action-selection) for weekend proof demos.

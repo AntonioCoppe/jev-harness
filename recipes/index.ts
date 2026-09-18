@@ -14,6 +14,16 @@ export {
   type CandidateOption,
 } from "./candidate-action-selection/candidate-action-select.js";
 export { runBrowserNextAction, type BrowserNextAction } from "./candidate-action-selection/browser-next-action.js";
+
+export {
+  keystrokeLauncherRecipe,
+  keystrokeLauncherQuestions,
+  runKeystrokeLauncher,
+  type KeystrokeLauncherAction,
+  type KeystrokeLauncherState,
+  type LauncherCandidate,
+  type KeystrokeLauncherQuestions,
+} from "./candidate-action-selection/keystroke-launcher.js";
 export {
   toolPickerQuestions,
   runToolPicker,
@@ -124,6 +134,15 @@ export {
   runToolCallAllowlist,
   type ToolAllowAction,
 } from "./verify-gate/tool-call-allowlist.js";
+
+export {
+  shellCommandGateRecipe,
+  shellCommandGateQuestions,
+  runShellCommandGate,
+  type ShellCommandAction,
+  type ShellCommandGateState,
+  type ShellCommandGateQuestions,
+} from "./verify-gate/shell-command-gate.js";
 
 export {
   rubricQuestions,

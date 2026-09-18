@@ -67,6 +67,25 @@ export const catalog = [
     tags: ["ui-grounding", "browser", "computer-use"],
   },
   {
+    id: "keystroke-launcher",
+    name: "Keystroke Launcher",
+    category: "candidate-action-selection",
+    description:
+      "Per-keystroke intent Choice over launcher candidates; WAIT when unsure (dabit3-style oracle).",
+    module: "recipes/candidate-action-selection/keystroke-launcher.ts",
+    runner: "runKeystrokeLauncher",
+    questions: [
+      { name: "best", kind: "choice" },
+      { name: "match_quality", kind: "score" },
+      { name: "ready", kind: "noul" },
+    ],
+    actions: ["<candidate-id>", "NONE", "WAIT"],
+    defaultMinConfidence: 0.5,
+    defaultOnLowConfidence: "review",
+    tags: ["launcher", "keystroke", "oracle", "candidates", "live", "proof"],
+  },
+
+  {
     id: "tool-picker",
     name: "Tool Picker",
     category: "candidate-action-selection",
@@ -323,6 +342,27 @@ export const catalog = [
     defaultOnLowConfidence: "review",
     tags: ["tools", "allowlist", "gate"],
   },
+  {
+    id: "shell-command-gate",
+    name: "Shell Command Gate",
+    category: "verify-gate",
+    description:
+      "CLI command string → allow / deny / ask with irreversible class + known-safe allowlist (fx-style).",
+    module: "recipes/verify-gate/shell-command-gate.ts",
+    runner: "runShellCommandGate",
+    questions: [
+      { name: "verdict", kind: "choice" },
+      { name: "risk_class", kind: "choice" },
+      { name: "irreversible", kind: "noul" },
+      { name: "intent_ok", kind: "noul" },
+      { name: "blast_radius", kind: "score" },
+    ],
+    actions: ["allow", "deny", "ask"],
+    defaultMinConfidence: 0.6,
+    defaultOnLowConfidence: "suppress",
+    tags: ["shell", "fx", "cli", "allowlist", "safety", "verify-gate", "proof"],
+  },
+
   {
     id: "tool-gate",
     name: "Tool Gate",

@@ -31,6 +31,7 @@ import { llmVerifierQuestions } from "../recipes/verify-gate/llm-verifier.js";
 import { shipGateQuestions } from "../recipes/verify-gate/ship-gate.js";
 import { injectionCheckQuestions } from "../recipes/verify-gate/injection-check.js";
 import { toolCallAllowlistQuestions } from "../recipes/verify-gate/tool-call-allowlist.js";
+import { shellCommandGateQuestions } from "../recipes/verify-gate/shell-command-gate.js";
 import {
   rubricQuestions,
   type RubricDimension,
@@ -51,6 +52,7 @@ import { swarmConsensusQuestions } from "../recipes/composite-rubric/swarm-conse
 import { toolExecGateQuestions } from "../recipes/agent-comm-harness/tool-exec-gate.js";
 import { fraudScoreGateQuestions } from "../recipes/high-freq-reflex/fraud-score-gate.js";
 import { esportsReflexQuestions } from "../recipes/candidate-action-selection/esports-reflex.js";
+import { keystrokeLauncherQuestions } from "../recipes/candidate-action-selection/keystroke-launcher.js";
 import { edgeContentModQuestions } from "../recipes/verify-gate/edge-content-mod.js";
 import { cyberAlertTriageQuestions } from "../recipes/confidence-front-door/cyber-alert-triage.js";
 import { rtbBidGateQuestions } from "../recipes/high-freq-reflex/rtb-bid-gate.js";
@@ -477,6 +479,49 @@ function decideRtbBidGate(answers: Record<string, AnyAnswer>): string {
   return "pass";
 }
 
+
+function decideShellCommandGate(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  const command = String(state.command ?? "");
+  const knownSafeList = Array.isArray(state.known_safe) ? (state.known_safe as string[]) : [];
+  const knownSafe = knownSafeList.some((s) => {
+    const t = String(s).trim();
+    const cmd = command.trim();
+    return t.length > 0 && (cmd === t || cmd.startsWith(`${t} `));
+  });
+  const verdict = answers.verdict as { choice: string };
+  const risk = answers.risk_class as { choice: string };
+  const irreversible = answers.irreversible as { noul: number };
+  const intentOk = answers.intent_ok as { noul: number };
+  const blast = answers.blast_radius as { score: number };
+  if (verdict.choice === "deny" || risk.choice === "forbidden") return "deny";
+  if (
+    irreversible.noul >= 0.55 ||
+    blast.score >= 1.5 ||
+    risk.choice === "irreversible" ||
+    verdict.choice === "ask"
+  ) {
+    return "ask";
+  }
+  if (intentOk.noul < 0.45) return "ask";
+  if (risk.choice === "reversible" && !knownSafe && verdict.choice !== "allow") return "ask";
+  if (knownSafe || verdict.choice === "allow") return "allow";
+  return "ask";
+}
+
+function decideKeystrokeLauncher(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  const prefix = String(state.typed_prefix ?? "");
+  const best = answers.best as { choice: string };
+  const match = answers.match_quality as { score: number };
+  const ready = answers.ready as { noul: number };
+  if (prefix.trim().length < 1) return "WAIT";
+  if (best.choice === "NONE") return ready.noul >= 0.45 ? "NONE" : "WAIT";
+  if (ready.noul < 0.45 || match.score < 0.7) return "WAIT";
+  return best.choice;
+}
+
+
 function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
   switch (c.recipe) {
     case "candidate-action-select":
@@ -548,6 +593,10 @@ function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
       return decideCyberAlertTriage(answers);
     case "rtb-bid-gate":
       return decideRtbBidGate(answers);
+    case "shell-command-gate":
+      return decideShellCommandGate(c, answers);
+    case "keystroke-launcher":
+      return decideKeystrokeLauncher(c, answers);
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);
@@ -655,6 +704,12 @@ function questionsFor(c: FixtureCase) {
       return cyberAlertTriageQuestions();
     case "rtb-bid-gate":
       return rtbBidGateQuestions();
+    case "shell-command-gate":
+      return shellCommandGateQuestions();
+    case "keystroke-launcher": {
+      const candidates = (state.candidates as { id: string; label: string; habit_score?: number }[]) ?? [];
+      return keystrokeLauncherQuestions(candidates);
+    }
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);
