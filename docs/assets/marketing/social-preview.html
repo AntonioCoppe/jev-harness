@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>jev-harness · measured terminal bakeoff</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1280px;
+    height: 640px;
+    overflow: hidden;
+    background: #070a12;
+    color: #f4f7ff;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  body {
+    background:
+      radial-gradient(900px 420px at 8% -20%, #1a3a5c 0%, transparent 55%),
+      radial-gradient(700px 380px at 100% 0%, #2a1840 0%, transparent 50%),
+      #070a12;
+  }
+  .frame {
+    width: 1280px;
+    height: 640px;
+    padding: 28px 32px 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 16px;
+  }
+  .brand {
+    font: 700 14px/1.2 ui-monospace, Menlo, Consolas, monospace;
+    color: #5eead4;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .chip {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(52, 211, 153, 0.45);
+    color: #34d399;
+    font: 700 11px/1 system-ui;
+    letter-spacing: 0.06em;
+    vertical-align: middle;
+  }
+  h1 {
+    font-size: 42px;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin-top: 6px;
+    font-weight: 900;
+  }
+  .hero-time {
+    font: 900 56px/1 system-ui;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+  }
+  .hero-time .from { color: #fb7185; }
+  .hero-time .arrow { color: #60a5fa; margin: 0 10px; }
+  .hero-time .to { color: #34d399; }
+  .sub {
+    color: #8b9bb2;
+    font-size: 15px;
+    margin-top: 6px;
+    max-width: 620px;
+  }
+  .grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    min-height: 0;
+  }
+  .panel {
+    border-radius: 16px;
+    border: 2px solid #2a3550;
+    background: #0a0e15;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .panel.before { border-color: rgba(251, 113, 133, 0.65); }
+  .panel.after { border-color: rgba(52, 211, 153, 0.65); }
+  .panel-label {
+    font: 800 12px/1 system-ui;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8b9bb2;
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid #1c2436;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .panel.before .panel-label span.t { color: #fb7185; }
+  .panel.after .panel-label span.t { color: #34d399; }
+  .shot {
+    flex: 1;
+    min-height: 0;
+    background: #000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .foot {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    font: 12px/1.35 ui-monospace, Menlo, Consolas, monospace;
+    color: #6b7a94;
+  }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill {
+    font: 700 12px system-ui;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid #2a3550;
+    background: #151c28;
+    color: #e8eefc;
+  }
+  .pill b { color: #5eead4; }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="top">
+      <div>
+        <div class="brand">jev-harness · measured terminal bakeoff <span class="chip">LIVE MEASURED</span></div>
+        <h1>Same 24-row NL filter</h1>
+        <div class="sub">Claude Code CLI (claude -p, tools off) vs Jev + DecisionHarness (live API, concurrency 8). Our machine — not someone else’s numbers.</div>
+      </div>
+      <div class="hero-time" aria-label="48.9 seconds to 1.3 seconds">
+        <span class="from">48.9s</span><span class="arrow">→</span><span class="to">1.3s</span>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="panel before">
+        <div class="panel-label"><span>BEFORE · Claude Code CLI</span><span class="t">48.9s</span></div>
+        <div class="shot"><img src="proof/terminal/claude-cli.png" alt="Terminal bakeoff baseline Claude CLI 48.9s"/></div>
+      </div>
+      <div class="panel after">
+        <div class="panel-label"><span>AFTER · Jev + jev-harness</span><span class="t">1.3s</span></div>
+        <div class="shot"><img src="proof/terminal/jev-harness.png" alt="Terminal bakeoff Jev harness 1.3s"/></div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="pills">
+        <div class="pill"><b>~37×</b> wall speedup</div>
+        <div class="pill">predicate: work-from-home</div>
+        <div class="pill">rows <b>24</b></div>
+        <div class="pill">cost ~<b>$0.00045</b></div>
+      </div>
+      <div>github.com/AntonioCoppe/jev-harness</div>
+    </div>
+  </div>
+</body>
+</html>
