@@ -1,4 +1,10 @@
-import { TypeSafeClient, type EntryType, type Questions } from "@typesafe-ai/sdk";
+import {
+  TypeSafeClient,
+  type EntryType,
+  type Questions,
+  type SystemOneRequest,
+  type SystemOneResult,
+} from "@typesafe-ai/sdk";
 import { aggregateConfidence } from "./confidence.js";
 import {
   ConsoleDecisionLogger,
@@ -13,6 +19,16 @@ import type {
   RunMode,
 } from "./types.js";
 
+/**
+ * Anything that answers System One requests: the TypeSafe client (default), a client pointed at a
+ * self-hosted `/v1/systemone` server via `baseURL`, or an in-process model / rules stub.
+ * Answers should carry calibrated `confidence` — the confidence gate is only as good as that.
+ */
+export interface DecisionBackend {
+  readonly defaultModel?: string;
+  systemOne<const Q extends Questions>(request: SystemOneRequest<Q>): PromiseLike<SystemOneResult<Q>>;
+}
+
 export interface DecisionHarnessOptions {
   apiKey?: string;
   /** Defaults to jev-latest */
@@ -24,11 +40,12 @@ export interface DecisionHarnessOptions {
   logger?: DecisionLogger | false;
   /** Prefer this for multiple sinks (file, OTEL, PostHog, …). */
   loggers?: DecisionLogger[];
-  client?: TypeSafeClient;
+  /** Decision backend. Defaults to a `TypeSafeClient` built from `apiKey`. */
+  client?: DecisionBackend;
 }
 
 export class DecisionHarness {
-  private readonly client: TypeSafeClient;
+  private readonly client: DecisionBackend;
   private readonly defaultModel: string;
   private readonly logger: DecisionLogger | null;
 
@@ -39,7 +56,7 @@ export class DecisionHarness {
         apiKey: options.apiKey ?? process.env.TYPESAFE_API_KEY,
         defaultModel: options.defaultModel ?? "jev-latest",
       });
-    this.defaultModel = options.defaultModel ?? this.client.defaultModel;
+    this.defaultModel = options.defaultModel ?? this.client.defaultModel ?? "jev-latest";
     this.logger = resolveLoggers(options);
   }
 
