@@ -166,3 +166,30 @@ Hard rules: no invented APIs/numbers; not `/compact`; community metrics ≠ ours
 - Feed slop / spoiler / sponsor filters (Jev-Slop-Guard, PlotVeil, Jev-Skip) — near `edge-content-mod`; possible future `feed-item-filter`.
 - Expense-claim approval, insurance claims triage, agent-trace observability, entity alignment — official use cases; candidates for a later sync.
 - Game/robotics control (Pokemon Red, Jev-Drone, Snake, Chess) — covered by `esports-reflex` / `candidate-action-select`.
+
+
+---
+
+## 2026-09-25 ET — sync #5 (top-8 follow-up)
+
+**Requested scope:** implement the 8 strongest uncovered candidates from sync #4's "seen but not shipped" research (same sources; no new scan).
+
+| Recipe | Category | Evidence |
+|---|---|---|
+| `tool-arg-dispatch` | candidate-action-selection | TypeSafe function_calling cookbook / "Typed function and tool dispatch"; taxonomy stub |
+| `agent-trace-review` | verify-gate | "Agent-trace observability" use case; Jev Logs; [agent-beacon](https://github.com/Asymptote-Labs/agent-beacon) |
+| `expense-approval` | confidence-front-door | "Expense-claim approval" use case |
+| `claims-triage` | confidence-front-door | "Confidence-aware insurance claims triage" use case |
+| `entity-pair-merge` | composite-rubric | entity_alignment cookbook; taxonomy stub |
+| `taxonomy-rollup` | confidence-front-door | "High-cardinality / confidence-aware hierarchical classification" use cases; Jev-Tree |
+| `convention-lint` | verify-gate | "Semantic code and writing linting" use case; Jev-Pref; Jev.nvim |
+| `policy-doc-check` | verify-gate | "Policy, compliance, and document verification" + "Batched regulatory review" use cases |
+
+### Shipped
+- 8 recipes + offline fixtures (3–4 cases each), wired into catalog / index / eval CLI / category READMEs / PENDING.
+- Each recipe exports its `decide*` function; the eval CLI reuses it instead of duplicating thresholds.
+- `npm run build` clean; full offline eval 199/199. No live timings.
+
+### Still deferred (from sync #4 medium list)
+- Search rerank, extraction cascade, self-consistency, multi-action customer service, smart-home commands, feed filter, commit-vs-diff, wake gate, translation QC, dataset curation, topic tagging.
+- Harness feature: per-question confidence-threshold fitting from labeled fixtures (Jevcal / Janus).
