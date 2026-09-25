@@ -4,4 +4,4 @@
 
 **Equation:** bad ships / irreversible exec / poisoned context = **$ + recovery latency**.
 
-Recipes: `llm-verifier`, `ship-gate` (proof: suppress on low confidence), `injection-check`, `tool-call-allowlist`, `shell-command-gate` (fx-style CLI string gate), `agent-stuck-drift` (Foreman-style stuck/drift/tests/progress), `pr-risk-gate` (jev-review-shaped PR/diff severity), `edge-content-mod`.
+Recipes: `llm-verifier`, `ship-gate` (proof: suppress on low confidence), `injection-check`, `tool-call-allowlist`, `shell-command-gate` (fx-style CLI string gate), `agent-stuck-drift` (Foreman-style stuck/drift/tests/progress), `pr-risk-gate` (jev-review-shaped PR/diff severity), `done-claim-check` (jev-belay-shaped Stop hook), `citation-support` (claim vs cited passage), `invoice-match-gate` (invoice vs PO/vendor/history), `agent-trace-review` (post-run breach/completion review), `convention-lint` (plain-language team conventions in CI), `policy-doc-check` (batched compliance checklist), `edge-content-mod`.

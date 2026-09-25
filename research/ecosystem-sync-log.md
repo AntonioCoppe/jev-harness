@@ -129,3 +129,67 @@ Hard rules: no invented APIs/numbers; not `/compact`; community metrics ≠ ours
 ### Proof note
 - `skill-roster-pick` has offline fixtures only — **no** live measured wall under `demos/proof/multi/` yet. Next proof candidate when a TypeSafe API key + recording pass is available (do not invent timings).
 - Existing multi-use-case proof pack still measuring: NL row filter, shell gate, keystroke launcher, alert gate, model cost router (our numbers only).
+
+
+---
+
+## 2026-09-25 ET — sync #4 (multi-gap)
+
+**Requested scope:** find latest public Jev use cases (web, X, Reddit) and add the uncovered ones to the harness.
+
+### Access note
+- This run's network policy blocked awesomejev.com, docs.typesafe.ai, x.com / fxtwitter, reddit.com, and most blogs (MindStudio, AY Automate, Substack, MarkTechPost). Evidence below comes from web-search snippets plus GitHub READMEs (reachable). X/Reddit threads were **not** read directly.
+
+### Sources scanned
+- [Anil-matcha/awesome-jev-by-typesafe](https://github.com/Anil-matcha/awesome-jev-by-typesafe) — 31 official use-case patterns + ~70 community builds.
+- [AbdelStark/awesome-typesafe-jev](https://github.com/AbdelStark/awesome-typesafe-jev) — source-backed community list.
+- Web search: MarkTechPost launch coverage (2026-09-19), Firecrawl / LangChain / Beam / flaviocopes explainers, X trending pages.
+
+### Gaps chosen (4)
+| Recipe | Category | Public evidence |
+|---|---|---|
+| `done-claim-check` | verify-gate | [valentynkit/jev-belay](https://github.com/valentynkit/jev-belay) (Claude Code Stop hook, 4-question call), [qkal/Canny](https://github.com/qkal/Canny) |
+| `citation-support` | verify-gate | taxonomy P1 stub (deferred at syncs #1–#3); TypeSafe citation_check cookbook; [MarissaFamularo/citation-verifier](https://github.com/MarissaFamularo/citation-verifier) |
+| `invoice-match-gate` | verify-gate | TypeSafe “Invoice matching and payment controls” use case ([evals.typesafe.ai/invoice_processing](https://evals.typesafe.ai/invoice_processing)) |
+| `passage-keep-drop` | row-judgment | taxonomy P0 stub; classifying_rag_passages cookbook; [WiktorB2004/llama-index-jev](https://github.com/WiktorB2004/llama-index-jev) |
+
+### Shipped
+- Recipes + offline fixtures (4 cases each), wired into `recipes/catalog.ts`, `recipes/index.ts`, `eval/cli.ts`, category READMEs, `recipes/PENDING.md`.
+- `npm run build` clean; full offline eval 171/171 passing.
+- No live timings added (no API key run).
+
+### Seen but not shipped (already covered or thin)
+- Commit-message vs diff check (jev-commit), pre-push secret scan (Jev-Git) — close to `pr-risk-gate`.
+- Tool-call deny/ask/allow (Jev-Guard, r2r-Jev) — covered by `tool-exec-gate` / `tool-call-allowlist`.
+- Model/reasoning routers (JevRouter, Switchboard, Jevonian, Jev Auto Router) — covered by `model-router` / `model-cost-router`.
+- Semantic grep/find/SQL (nlgrep, jgrep, jfind, JevQL, Pg-Jev, DuckDB-Jev) — covered by `row-semantic-match` / `line-semantic-find`.
+- Feed slop / spoiler / sponsor filters (Jev-Slop-Guard, PlotVeil, Jev-Skip) — near `edge-content-mod`; possible future `feed-item-filter`.
+- Expense-claim approval, insurance claims triage, agent-trace observability, entity alignment — official use cases; candidates for a later sync.
+- Game/robotics control (Pokemon Red, Jev-Drone, Snake, Chess) — covered by `esports-reflex` / `candidate-action-select`.
+
+
+---
+
+## 2026-09-25 ET — sync #5 (top-8 follow-up)
+
+**Requested scope:** implement the 8 strongest uncovered candidates from sync #4's "seen but not shipped" research (same sources; no new scan).
+
+| Recipe | Category | Evidence |
+|---|---|---|
+| `tool-arg-dispatch` | candidate-action-selection | TypeSafe function_calling cookbook / "Typed function and tool dispatch"; taxonomy stub |
+| `agent-trace-review` | verify-gate | "Agent-trace observability" use case; Jev Logs; [agent-beacon](https://github.com/Asymptote-Labs/agent-beacon) |
+| `expense-approval` | confidence-front-door | "Expense-claim approval" use case |
+| `claims-triage` | confidence-front-door | "Confidence-aware insurance claims triage" use case |
+| `entity-pair-merge` | composite-rubric | entity_alignment cookbook; taxonomy stub |
+| `taxonomy-rollup` | confidence-front-door | "High-cardinality / confidence-aware hierarchical classification" use cases; Jev-Tree |
+| `convention-lint` | verify-gate | "Semantic code and writing linting" use case; Jev-Pref; Jev.nvim |
+| `policy-doc-check` | verify-gate | "Policy, compliance, and document verification" + "Batched regulatory review" use cases |
+
+### Shipped
+- 8 recipes + offline fixtures (3–4 cases each), wired into catalog / index / eval CLI / category READMEs / PENDING.
+- Each recipe exports its `decide*` function; the eval CLI reuses it instead of duplicating thresholds.
+- `npm run build` clean; full offline eval 199/199. No live timings.
+
+### Still deferred (from sync #4 medium list)
+- Search rerank, extraction cascade, self-consistency, multi-action customer service, smart-home commands, feed filter, commit-vs-diff, wake gate, translation QC, dataset curation, topic tagging.
+- Harness feature: per-question confidence-threshold fitting from labeled fixtures (Jevcal / Janus).

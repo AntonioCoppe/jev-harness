@@ -55,6 +55,18 @@ import { esportsReflexQuestions } from "../recipes/candidate-action-selection/es
 import { keystrokeLauncherQuestions } from "../recipes/candidate-action-selection/keystroke-launcher.js";
 import { agentStuckDriftQuestions } from "../recipes/verify-gate/agent-stuck-drift.js";
 import { prRiskGateQuestions } from "../recipes/verify-gate/pr-risk-gate.js";
+import { doneClaimCheckQuestions } from "../recipes/verify-gate/done-claim-check.js";
+import { citationSupportQuestions } from "../recipes/verify-gate/citation-support.js";
+import { invoiceMatchGateQuestions } from "../recipes/verify-gate/invoice-match-gate.js";
+import { passageKeepDropQuestions } from "../recipes/row-judgment/passage-keep-drop.js";
+import { decideToolArgDispatch, toolArgDispatchQuestions, type ToolSpec } from "../recipes/candidate-action-selection/tool-arg-dispatch.js";
+import { decideAgentTraceReview, agentTraceReviewQuestions } from "../recipes/verify-gate/agent-trace-review.js";
+import { decideExpenseApproval, expenseApprovalQuestions } from "../recipes/confidence-front-door/expense-approval.js";
+import { decideClaimsTriage, claimsTriageQuestions } from "../recipes/confidence-front-door/claims-triage.js";
+import { decideEntityPairMerge, entityPairMergeQuestions } from "../recipes/composite-rubric/entity-pair-merge.js";
+import { decideTaxonomyRollup, taxonomyRollupQuestions, type TaxonomyNode } from "../recipes/confidence-front-door/taxonomy-rollup.js";
+import { decideConventionLint, conventionLintQuestions, type Convention } from "../recipes/verify-gate/convention-lint.js";
+import { decidePolicyDocCheck, policyDocCheckQuestions, type PolicyRequirement } from "../recipes/verify-gate/policy-doc-check.js";
 import { skillRosterPickQuestions } from "../recipes/candidate-action-selection/skill-roster-pick.js";
 import { edgeContentModQuestions } from "../recipes/verify-gate/edge-content-mod.js";
 import { cyberAlertTriageQuestions } from "../recipes/confidence-front-door/cyber-alert-triage.js";
@@ -571,6 +583,76 @@ function decidePrRiskGate(answers: Record<string, AnyAnswer>): string {
   return "merge_ok";
 }
 
+function decideDoneClaimCheck(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  const claimsDone = answers.claims_done as { noul: number };
+  const verificationApplies = answers.verification_applies as { noul: number };
+  const outcome = answers.outcome as { choice: string };
+  if (Number(state.file_changes ?? 0) === 0 || state.check_passed_after_change === true) {
+    return "allow_stop";
+  }
+  if (outcome.choice === "blocked") return "allow_stop";
+  if (claimsDone.noul >= 0.7 && verificationApplies.noul >= 0.5) return "block_stop";
+  return "allow_stop";
+}
+
+function decideCitationSupport(answers: Record<string, AnyAnswer>): string {
+  const support = answers.support as { choice: string };
+  const quotePresent = answers.quote_present as { noul: number };
+  if (support.choice === "contradicts") return "reject";
+  if (support.choice === "silent") return "flag";
+  if (quotePresent.noul < 0.4) return "flag";
+  return "accept";
+}
+
+function decideInvoiceMatchGate(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  const duplicate = answers.duplicate as { noul: number };
+  const fraudSignal = answers.fraud_signal as { noul: number };
+  const wrongVendor = answers.wrong_vendor as { noul: number };
+  const lineMismatch = answers.line_mismatch as { noul: number };
+  if (fraudSignal.noul >= 0.6 || duplicate.noul >= 0.6) return "hold";
+  if (wrongVendor.noul >= 0.6) return "request_correction";
+  if (state.totals_match !== true || lineMismatch.noul >= 0.6) return "dispute_lines";
+  if (state.over_approval_limit === true) return "route_approval";
+  return "pay";
+}
+
+function decidePassageKeepDrop(answers: Record<string, AnyAnswer>): string {
+  const relevance = answers.relevance as { score: number };
+  const contradicts = answers.contradicts as { noul: number };
+  const hasInjection = answers.has_injection as { noul: number };
+  if (hasInjection.noul >= 0.5) return "drop";
+  if (relevance.score < 1) return "drop";
+  if (contradicts.noul >= 0.6) return "keep_flag";
+  return "keep";
+}
+
+function decideToolArgDispatch_(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  return decideToolArgDispatch(answers as unknown as Parameters<typeof decideToolArgDispatch>[0], (state.tools as ToolSpec[]) ?? []);
+}
+
+function decideExpenseApproval_(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  return decideExpenseApproval(answers as unknown as Parameters<typeof decideExpenseApproval>[0], { receipt_attached: state.receipt_attached === true, over_limit: state.over_limit === true });
+}
+
+function decideTaxonomyRollup_(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  return decideTaxonomyRollup(answers as unknown as Parameters<typeof decideTaxonomyRollup>[0], Number(state.leaf_min_confidence ?? 0.6));
+}
+
+function decideConventionLint_(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  return decideConventionLint(answers as unknown as Parameters<typeof decideConventionLint>[0], (state.conventions as Convention[]) ?? []);
+}
+
+function decidePolicyDocCheck_(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
+  const state = asRecord(c.state);
+  return decidePolicyDocCheck(answers as unknown as Parameters<typeof decidePolicyDocCheck>[0], (state.requirements as PolicyRequirement[]) ?? []);
+}
+
 function decideKeystrokeLauncher(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
   const state = asRecord(c.state);
   const prefix = String(state.typed_prefix ?? "");
@@ -665,6 +747,30 @@ function decideFor(c: FixtureCase, answers: Record<string, AnyAnswer>): string {
       return decideAgentStuckDrift(answers);
     case "pr-risk-gate":
       return decidePrRiskGate(answers);
+    case "done-claim-check":
+      return decideDoneClaimCheck(c, answers);
+    case "citation-support":
+      return decideCitationSupport(answers);
+    case "invoice-match-gate":
+      return decideInvoiceMatchGate(c, answers);
+    case "passage-keep-drop":
+      return decidePassageKeepDrop(answers);
+    case "tool-arg-dispatch":
+      return decideToolArgDispatch_(c, answers);
+    case "agent-trace-review":
+      return decideAgentTraceReview(answers as unknown as Parameters<typeof decideAgentTraceReview>[0]);
+    case "expense-approval":
+      return decideExpenseApproval_(c, answers);
+    case "claims-triage":
+      return decideClaimsTriage(answers as unknown as Parameters<typeof decideClaimsTriage>[0]);
+    case "entity-pair-merge":
+      return decideEntityPairMerge(answers as unknown as Parameters<typeof decideEntityPairMerge>[0]);
+    case "taxonomy-rollup":
+      return decideTaxonomyRollup_(c, answers);
+    case "convention-lint":
+      return decideConventionLint_(c, answers);
+    case "policy-doc-check":
+      return decidePolicyDocCheck_(c, answers);
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);
@@ -786,6 +892,30 @@ function questionsFor(c: FixtureCase) {
       return agentStuckDriftQuestions();
     case "pr-risk-gate":
       return prRiskGateQuestions();
+    case "done-claim-check":
+      return doneClaimCheckQuestions();
+    case "citation-support":
+      return citationSupportQuestions();
+    case "invoice-match-gate":
+      return invoiceMatchGateQuestions();
+    case "passage-keep-drop":
+      return passageKeepDropQuestions();
+    case "tool-arg-dispatch":
+      return toolArgDispatchQuestions((state.tools as ToolSpec[]) ?? []);
+    case "agent-trace-review":
+      return agentTraceReviewQuestions();
+    case "expense-approval":
+      return expenseApprovalQuestions();
+    case "claims-triage":
+      return claimsTriageQuestions();
+    case "entity-pair-merge":
+      return entityPairMergeQuestions();
+    case "taxonomy-rollup":
+      return taxonomyRollupQuestions((state.taxonomy as TaxonomyNode[]) ?? []);
+    case "convention-lint":
+      return conventionLintQuestions((state.conventions as Convention[]) ?? []);
+    case "policy-doc-check":
+      return policyDocCheckQuestions((state.requirements as PolicyRequirement[]) ?? []);
     default: {
       const _exhaustive: never = c.recipe;
       throw new Error(`Unknown recipe: ${_exhaustive}`);

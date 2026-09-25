@@ -172,6 +172,127 @@ export {
 } from "./verify-gate/pr-risk-gate.js";
 
 export {
+  doneClaimCheckRecipe,
+  doneClaimCheckQuestions,
+  runDoneClaimCheck,
+  type DoneClaimCheckAction,
+  type DoneClaimCheckState,
+  type DoneClaimCheckQuestions,
+} from "./verify-gate/done-claim-check.js";
+
+export {
+  citationSupportRecipe,
+  citationSupportQuestions,
+  runCitationSupport,
+  type CitationSupportAction,
+  type CitationSupportState,
+  type CitationSupportQuestions,
+} from "./verify-gate/citation-support.js";
+
+export {
+  invoiceMatchGateRecipe,
+  invoiceMatchGateQuestions,
+  runInvoiceMatchGate,
+  type InvoiceMatchGateAction,
+  type InvoiceMatchGateState,
+  type InvoiceMatchGateQuestions,
+} from "./verify-gate/invoice-match-gate.js";
+
+export {
+  passageKeepDropRecipe,
+  passageKeepDropQuestions,
+  runPassageKeepDrop,
+  type PassageKeepDropAction,
+  type PassageKeepDropState,
+  type PassageKeepDropQuestions,
+} from "./row-judgment/passage-keep-drop.js";
+
+export {
+  toolArgDispatchRecipe,
+  toolArgDispatchQuestions,
+  decideToolArgDispatch,
+  runToolArgDispatch,
+  type ToolArgDispatchAction,
+  type ToolArgDispatchState,
+  type ToolArgDispatchQuestions,
+  type ToolSpec,
+  toolArgs,
+} from "./candidate-action-selection/tool-arg-dispatch.js";
+
+export {
+  agentTraceReviewRecipe,
+  agentTraceReviewQuestions,
+  decideAgentTraceReview,
+  runAgentTraceReview,
+  type AgentTraceReviewAction,
+  type AgentTraceReviewState,
+  type AgentTraceReviewQuestions,
+} from "./verify-gate/agent-trace-review.js";
+
+export {
+  expenseApprovalRecipe,
+  expenseApprovalQuestions,
+  decideExpenseApproval,
+  runExpenseApproval,
+  type ExpenseApprovalAction,
+  type ExpenseApprovalState,
+  type ExpenseApprovalQuestions,
+} from "./confidence-front-door/expense-approval.js";
+
+export {
+  claimsTriageRecipe,
+  claimsTriageQuestions,
+  decideClaimsTriage,
+  runClaimsTriage,
+  type ClaimsTriageAction,
+  type ClaimsTriageState,
+  type ClaimsTriageQuestions,
+} from "./confidence-front-door/claims-triage.js";
+
+export {
+  entityPairMergeRecipe,
+  entityPairMergeQuestions,
+  decideEntityPairMerge,
+  runEntityPairMerge,
+  type EntityPairMergeAction,
+  type EntityPairMergeState,
+  type EntityPairMergeQuestions,
+} from "./composite-rubric/entity-pair-merge.js";
+
+export {
+  taxonomyRollupRecipe,
+  taxonomyRollupQuestions,
+  decideTaxonomyRollup,
+  runTaxonomyRollup,
+  type TaxonomyRollupAction,
+  type TaxonomyRollupState,
+  type TaxonomyRollupQuestions,
+  type TaxonomyNode,
+} from "./confidence-front-door/taxonomy-rollup.js";
+
+export {
+  conventionLintRecipe,
+  conventionLintQuestions,
+  decideConventionLint,
+  runConventionLint,
+  type ConventionLintAction,
+  type ConventionLintState,
+  type ConventionLintQuestions,
+  type Convention,
+} from "./verify-gate/convention-lint.js";
+
+export {
+  policyDocCheckRecipe,
+  policyDocCheckQuestions,
+  decidePolicyDocCheck,
+  runPolicyDocCheck,
+  type PolicyDocCheckAction,
+  type PolicyDocCheckState,
+  type PolicyDocCheckQuestions,
+  type PolicyRequirement,
+} from "./verify-gate/policy-doc-check.js";
+
+export {
   rubricQuestions,
   runRubricScorer,
   type RubricAction,
