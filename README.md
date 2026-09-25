@@ -89,6 +89,34 @@ await harness.run({
 // result.intendedAction === what the policy wanted
 ```
 
+## Other backends (self-hosted / local)
+
+The harness talks to anything that implements `DecisionBackend` (`systemOne({ state, questions, model })` → `{ model, answers, usage }`):
+
+- **Self-hosted `/v1/systemone` server** (e.g. an open Jev-style model): set `TYPESAFE_BASE_URL=http://localhost:8000`. No code change.
+- **In-process model or rules**: pass your own backend.
+
+```ts
+import { DecisionHarness, type DecisionBackend } from "jev-harness";
+
+const local: DecisionBackend = {
+  async systemOne({ state, questions }) {
+    // run your BERT / SLM / rules here; return one typed answer per question,
+    // each with a calibrated `confidence`
+    return { model: "my-local", answers, usage: { input_tokens: 0, output_tokens: 0 } };
+  },
+};
+const harness = new DecisionHarness({ client: local });
+```
+
+Compare a backend against the recipe fixtures (pass/fail per case):
+
+```sh
+npm run eval -- --live --backend=./my-backend.ts --all   # default export = DecisionBackend
+```
+
+The confidence gate is only as good as the backend's calibration, so check the low-confidence cases too.
+
 ## Recipes
 
 Common decision shapes live under [`recipes/`](recipes/). A few:

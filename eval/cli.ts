@@ -5,14 +5,16 @@
  *   npx tsx eval/cli.ts eval/fixtures/alert-gate.jsonl
  *   npx tsx eval/cli.ts --all
  *   npx tsx eval/cli.ts --live eval/fixtures/alert-gate.jsonl
+ *   npx tsx eval/cli.ts --live --backend=./my-backend.ts --all
  *
  * Offline fixtures must include `answers` or `mockedAnswers`.
- * Live mode requires TYPESAFE_API_KEY and ignores fixture answers.
+ * Live mode ignores fixture answers. It uses TYPESAFE_API_KEY (and TYPESAFE_BASE_URL for a
+ * self-hosted server), or `--backend=<module>` whose default export is a DecisionBackend.
  */
 import { readdirSync, readFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import { DecisionHarness } from "../src/harness.js";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { DecisionHarness, type DecisionBackend } from "../src/harness.js";
 import { aggregateConfidence } from "../src/confidence.js";
 import { resolvePolicy } from "../src/policy.js";
 import type { AnyAnswer, LowConfidenceStrategy } from "../src/types.js";
@@ -1076,7 +1078,7 @@ async function main() {
   const fileArgs = argv.filter((a) => !a.startsWith("-"));
 
   if (!all && fileArgs.length === 0) {
-    console.error("Usage: jev-eval [--live] [--all | <fixture.jsonl>...]");
+    console.error("Usage: jev-eval [--live [--backend=<module>]] [--all | <fixture.jsonl>...]");
     process.exit(2);
   }
 
@@ -1086,7 +1088,19 @@ async function main() {
     process.exit(2);
   }
 
-  const harness = live ? new DecisionHarness({ logger: false }) : null;
+  const backendPath = argv.find((a) => a.startsWith("--backend="))?.slice("--backend=".length);
+  if (backendPath && !live) {
+    console.error("--backend only applies with --live (offline eval uses fixture answers)");
+    process.exit(2);
+  }
+  const client = backendPath
+    ? ((await import(pathToFileURL(resolve(backendPath)).href)).default as DecisionBackend)
+    : undefined;
+  if (backendPath && typeof client?.systemOne !== "function") {
+    console.error(`${backendPath}: default export must be a DecisionBackend with systemOne()`);
+    process.exit(2);
+  }
+  const harness = live ? new DecisionHarness({ logger: false, client }) : null;
   let total = 0;
   let passed = 0;
   let failed = 0;

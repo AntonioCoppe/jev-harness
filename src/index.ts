@@ -1,4 +1,8 @@
-export { DecisionHarness, type DecisionHarnessOptions } from "./harness.js";
+export {
+  DecisionHarness,
+  type DecisionBackend,
+  type DecisionHarnessOptions,
+} from "./harness.js";
 export { answerConfidence, aggregateConfidence } from "./confidence.js";
 export { resolvePolicy, type PolicyResolution } from "./policy.js";
 export {
