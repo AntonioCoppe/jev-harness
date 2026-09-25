@@ -1089,9 +1089,17 @@ async function main() {
   }
 
   const backendPath = argv.find((a) => a.startsWith("--backend="))?.slice("--backend=".length);
+  if (backendPath && !live) {
+    console.error("--backend only applies with --live (offline eval uses fixture answers)");
+    process.exit(2);
+  }
   const client = backendPath
     ? ((await import(pathToFileURL(resolve(backendPath)).href)).default as DecisionBackend)
     : undefined;
+  if (backendPath && typeof client?.systemOne !== "function") {
+    console.error(`${backendPath}: default export must be a DecisionBackend with systemOne()`);
+    process.exit(2);
+  }
   const harness = live ? new DecisionHarness({ logger: false, client }) : null;
   let total = 0;
   let passed = 0;
