@@ -172,6 +172,42 @@ export {
 } from "./verify-gate/pr-risk-gate.js";
 
 export {
+  doneClaimCheckRecipe,
+  doneClaimCheckQuestions,
+  runDoneClaimCheck,
+  type DoneClaimCheckAction,
+  type DoneClaimCheckState,
+  type DoneClaimCheckQuestions,
+} from "./verify-gate/done-claim-check.js";
+
+export {
+  citationSupportRecipe,
+  citationSupportQuestions,
+  runCitationSupport,
+  type CitationSupportAction,
+  type CitationSupportState,
+  type CitationSupportQuestions,
+} from "./verify-gate/citation-support.js";
+
+export {
+  invoiceMatchGateRecipe,
+  invoiceMatchGateQuestions,
+  runInvoiceMatchGate,
+  type InvoiceMatchGateAction,
+  type InvoiceMatchGateState,
+  type InvoiceMatchGateQuestions,
+} from "./verify-gate/invoice-match-gate.js";
+
+export {
+  passageKeepDropRecipe,
+  passageKeepDropQuestions,
+  runPassageKeepDrop,
+  type PassageKeepDropAction,
+  type PassageKeepDropState,
+  type PassageKeepDropQuestions,
+} from "./row-judgment/passage-keep-drop.js";
+
+export {
   rubricQuestions,
   runRubricScorer,
   type RubricAction,

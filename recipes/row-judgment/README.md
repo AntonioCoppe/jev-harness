@@ -4,7 +4,7 @@
 
 **Shape:** Map the same NL predicate over many rows/items; per-item Noul/Score/Choice + threshold/cache.
 
-Recipes: `row-semantic-match`.
+Recipes: `row-semantic-match`, `passage-keep-drop` (RAG passage filter before generation).
 
 **Batch helpers:** `mapRows` / `batchFilterRows` — concurrency pool + in-memory cache keyed by `hash(row)+predicate`.
 

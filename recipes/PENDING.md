@@ -7,9 +7,9 @@ Folders under `recipes/` use stable category IDs from `research/taxonomy.md`.
 | Folder | Contents |
 |---|---|
 | `candidate-action-selection/` | candidate-action-select, browser-next-action, tool-picker, skill-roster-pick, stop-or-continue, esports-reflex |
-| `row-judgment/` | row-semantic-match (+ batch helpers) |
+| `row-judgment/` | row-semantic-match, passage-keep-drop (+ batch helpers) |
 | `confidence-front-door/` | model-router, alert-gate, inbox-triage, incident-severity, oncall-page, cyber-alert-triage |
-| `verify-gate/` | llm-verifier, injection-check, tool-call-allowlist, ship-gate, shell-command-gate, agent-stuck-drift, pr-risk-gate, edge-content-mod |
+| `verify-gate/` | llm-verifier, injection-check, tool-call-allowlist, ship-gate, shell-command-gate, agent-stuck-drift, pr-risk-gate, done-claim-check, citation-support, invoice-match-gate, edge-content-mod |
 | `composite-rubric/` | rubric-scorer, swarm-consensus |
 | `live-multi-judgment/` | typewriter-panel, ticket-fanout |
 | `semantic-find/` | line-semantic-find, span-pick |
@@ -28,3 +28,5 @@ Crazy-fast map: `research/crazy-fast-decisions.md`. Catalog `category` values ma
 **2026-09-18 (ecosystem sync #2):** added `pr-risk-gate` (verify-gate) — jev-review-shaped PR/diff severity → merge_ok / request_changes / block.
 
 **2026-09-18 (ecosystem sync #3):** added `skill-roster-pick` (candidate-action-selection) — skill_suggestion / SkillRanker-shaped roster Choice + need/fit → suggest or abstain.
+
+**2026-09-25 (ecosystem sync #4):** added `done-claim-check`, `citation-support`, `invoice-match-gate` (verify-gate) and `passage-keep-drop` (row-judgment).
